@@ -1,0 +1,172 @@
+{
+    "administrador":{
+        "nombre":{
+            "type":"String",
+            "required":true
+        },
+        "apellido":{
+            "type":"String",
+            "required":true
+        },
+        "correo":{
+            "type": "String",
+            "required": true
+        }
+    },
+    "vecino":{
+        "nombre":{
+            "type":"String",
+            "required":true
+        },
+        "apellido":{
+            "type":"String",
+            "required":true
+        },
+        "vivienda":{
+            "type":"Number",
+            "required":true
+        },
+        "permiso":{
+            "type":"String",
+            "required":true,
+            "enum":[
+                "habilitado",
+                "inhabilitado"
+            ]
+        },
+        "correo":{
+            "type": "String",
+            "required": true
+        },
+        "password":{
+            "type": "String",
+            "required": true
+        },
+        "Horas Mensuales":{
+            "type": "Number",
+            "required": true
+        }
+    },
+    "servicio lavanderia":{
+        "nombre":{
+                "type":"String",
+                "required":true,
+                "enum":[
+                    "lavadora",
+                    "Secadora"
+                ]
+        },
+        "costo":{
+                "type":"Number",
+                "required":true
+            }
+    },
+    "reserva":{
+        "fecha":{
+            "type":"Date",
+            "required":true
+        },
+        "hora":{
+            "type":"String",
+            "required":true
+        },
+        "servicio":{
+            "type": "Schema.ObjectId",
+            "ref":"servicio",
+            "required": true
+        },
+        "vecino":{
+            "type":"Schema.ObjectId",
+            "ref":"vecino",
+            "required":true
+        }
+    },
+    "gasto":{
+        "gasto total mensual":{
+            "type":"Number",
+            "required":true
+        },
+        "gasto detallado":{
+            "type":["Number"],
+            "required":true
+        },
+        "cargos adicionales":{
+            "type":["Schema.ObjectId"],
+            "ref":"multa",
+            "required":false
+        },
+        "vecino":{
+            "type":"Schema.ObjectId",
+            "ref":"vecino",
+            "required":true
+        }
+    },
+    "mantencion":{
+        "nombre empresa":{
+            "type":"String",
+            "required":true
+        },
+        "rut empresa":{
+            "type":"String",
+            "required":true
+        },
+        "giro":{
+            "type":"String",
+            "required":true
+        },
+        "description":{
+            "type":"String",
+            "required":true
+        },
+        "valor":{
+            "type":"Number",
+            "required":true
+        },
+        "fecha":{
+            "type":"Date",
+            "required":true
+        },
+        "hora":{
+            "type":"String",
+            "required":true
+        },
+        "observaciones":{
+            "type":"String",
+            "required":false
+        }
+    },
+    "multa":{
+        "valor":{
+            "type":"Number",
+            "required":true
+        },
+        "causa":{
+            "type":"String",
+            "required":true
+        }
+    },
+    "mensaje":{
+        "destinatario":{
+            "type":["Schema.ObjectId"],
+            "ref":"vecino",
+            "required":true
+        },
+        "remitente":{
+            "type":"Schema.ObjectId",
+            "ref":"administrador",
+            "required":true
+        },
+        "fecha":{
+            "type":"Date",
+            "required":true
+        },
+        "hora":{
+            "type":"String",
+            "required":true
+        },
+        "contenido":{
+            "type":"String",
+            "required":true
+        }
+    }
+}
