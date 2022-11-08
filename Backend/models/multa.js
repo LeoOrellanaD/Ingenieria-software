@@ -10,7 +10,7 @@ const multaSchema = new Schema({
         type:'String',
         required: true
     },
-    test: {
+    test2: {
         type:'Number',
         required: true
     }
