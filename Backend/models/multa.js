@@ -9,6 +9,10 @@ const multaSchema = new Schema({
     causa: {
         type:'String',
         required: true
+    },
+    test: {
+        type:'Number',
+        required: true
     }
 })
 module.exports = mongoose.model('multa', multaSchema)
