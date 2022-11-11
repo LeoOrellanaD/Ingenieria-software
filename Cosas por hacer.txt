@@ -1,0 +1,36 @@
+
+1.  dejar bien establecido los modelos a utilizar.
+2.  trabajar en los requerimientos funcionales y dejar establecido bien los casos de uso.
+3.  reparticion casos de uso e implementacion individual.
+4.  realizacion de pruebas funcionales.
+5.  Juntar todas las branch con cuidado.
+6.  subir el proyecto al server de la u.
+7.  hacer pruebas en el server de la u.
+
+
+
+--- dudas
+1. como validar el nombre, una posibildad seria usar la caracteristica "unique" pero tenemos dividido el nombre en nombre y apellido.
+2. un posible caso de uso deplegar como un historial de uso del servicio pero tendria como condicional que solo mostrara los servicio utilizados en el mes.
+3. agregamos numero telefonico asi como para rellenar o mejor no nos complicamos??.
+4. duda de como implentar los gastos en general porque dado el detalle a partir de los servicios utilizados + cobros adicionales deberia sumar en total.
+5. como no vamos a usar sistema de correo sino de mensajes podemos eliminar ese atributo.
+6. la vista detallada de horarios deberia ser una tabla. SOLO si mantenemos el caso de uso
+7. la vista general de cobros deberia ser una tabla. SOLO si mantenemos el caso de uso
+
+
+
+
+
+
+-- conclusiones
+
+1- crear una tabla con los gastos donde se indentifique fecha, costo , tipo (multa o servicio).
+
+
+-- Metodos por revisar
+    controlador -> getmensaje
+    controlador -> Vecino y Administrador Login ¿como hacerlo?
+    controlador -> cobro ¿como manejar los calculos de los cobros?
+    controlador -> reserva ¿como calcular horas extras?
+    controlador -> multa ¿como manejar los calculos de los multas para la cancelacion de reserva post 4 horas?

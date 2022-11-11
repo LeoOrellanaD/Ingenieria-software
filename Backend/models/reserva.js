@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const reservaSchema = new Schema({
-
     fecha: {
         type: 'Date',
         required: true
@@ -19,6 +18,14 @@ const reservaSchema = new Schema({
         type: Schema.ObjectId,
         ref:'vecino',
         required: true
+    },
+    costo_base:{
+        type:'Number',
+        required:true
+    },
+    costo_extra:{
+        type:'Number',
+        required:false
     }
 
 })

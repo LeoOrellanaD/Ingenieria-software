@@ -6,12 +6,27 @@ const multaSchema = new Schema({
         type: 'Number',
         required: true
     },
-    causa: {
+    tipo: {
         type:'String',
-        required: true
+        required: true,
+        enum:[
+            'sancion leve',
+            'sancion media',
+            'sancion alta',
+            'por cancelacion'
+        ]
     },
-    test2: {
-        type:'Number',
+    fecha:{
+        type:'Date',
+        required:true
+    },
+    hora:{
+        type:'String',
+        required:true
+    },
+    vecino: {
+        type: Schema.ObjectId,
+        ref: 'vecino',
         required: true
     }
 })

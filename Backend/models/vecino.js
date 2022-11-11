@@ -10,6 +10,11 @@ const vecinoSchema = new Schema({
             type:'String',
             required:true
         },
+        rut:{
+            type:'String',
+            required: true,
+            unique: true
+        },
         vivienda:{
             type:'Number',
             required:true
@@ -22,15 +27,7 @@ const vecinoSchema = new Schema({
                 'inhabilitado'
             ]
         },
-        correo:{
-            type: 'String',
-            required: true
-        },
-        password:{
-            type: 'String',
-            required: true
-        },
-        Horas_Mensuales:{
+        horas:{
             type: 'Number',
             required: true
         }

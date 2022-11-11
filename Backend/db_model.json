@@ -8,7 +8,12 @@
             "type":"String",
             "required":true
         },
-        "correo":{
+        "rut":{
+            "type":"String",
+            "required":true,
+            "unique":true
+        },
+        "telefono":{
             "type": "String",
             "required": true
         }
@@ -34,20 +39,18 @@
                 "inhabilitado"
             ]
         },
-        "correo":{
+        "rut":{
             "type": "String",
-            "required": true
+            "required": true,
+            "unique":true
         },
-        "password":{
-            "type": "String",
-            "required": true
-        },
-        "Horas Mensuales":{
-            "type": "Number",
-            "required": true
+        "horas":{
+            "type":"Number",
+            "default":5,
+            "required":true
         }
     },
-    "servicio lavanderia":{
+    "servicio":{
         "nombre":{
                 "type":"String",
                 "required":true,
@@ -79,21 +82,29 @@
             "type":"Schema.ObjectId",
             "ref":"vecino",
             "required":true
+        },
+        "costo_base":{
+            "type": "Number",
+            "required": true
+        },
+        "costo_extra":{
+            "type": "Number",
+            "required": false
         }
+
     },
-    "gasto":{
-        "gasto total mensual":{
+    "cobro":{
+        "costo_total":{
             "type":"Number",
             "required":true
         },
-        "gasto detallado":{
-            "type":["Number"],
-            "required":true
+        "multa_total":{
+            "type":"Number",
+            "required": false
         },
-        "cargos adicionales":{
-            "type":["Schema.ObjectId"],
-            "ref":"multa",
-            "required":false
+        "reserva_total":{
+            "type":"Number",
+            "required":true
         },
         "vecino":{
             "type":"Schema.ObjectId",
@@ -102,11 +113,11 @@
         }
     },
     "mantencion":{
-        "nombre empresa":{
+        "nombre_empresa":{
             "type":"String",
             "required":true
         },
-        "rut empresa":{
+        "rut_empresa":{
             "type":"String",
             "required":true
         },
@@ -140,8 +151,26 @@
             "type":"Number",
             "required":true
         },
-        "causa":{
+        "tipo":{
             "type":"String",
+            "required":true,
+            "enum":[
+                "sancion leve",
+                "sancion media",
+                "sancion alta"
+            ]
+        },
+        "fecha":{
+                "type":"Date",
+                "required":true
+        },
+        "hora":{
+                "type":"String",
+                "required":true
+        },
+        "vecino":{
+            "type":"Schema.ObjectId",
+            "ref":"vecino",
             "required":true
         }
     },
