@@ -19,12 +19,32 @@ const createVecino = (req, res)=>{
     })
 }
 
+const loginVecino = (req, res) => {
+    const {codigo} =req.body;
+    Vecino.findOne({codigo}, (error, vecino) => {
+        if(error){
+            return res.status(400).send({message: 'Error al inciar sesion'})
+        }
+        if(!vecino){
+            return res.status(400).send({message: 'No se encontro usuario'})
+        }
+        if(vecino.permiso === 'inhabilitado'){
+            return res.status(400).send({message:'Vecino Inhabilitado por favor comunicarse con su Adminstrador'})
+        }
+
+        return res.status(200).send(vecino);
+    })
+}
+
 const getVecinos = (req, res) => {
-    Vecino.find({}, (err, vecino) => {
-        if (err) {
+    Vecino.find({}, (error, vecinos) => {
+        if (error) {
             return res.status(400).send({ message: 'Error al obtener los vecinos' });
         }
-        return res.status(200).send(vecino);
+        if(vecinos.length === 0){
+            return res.status(404).send({ message: "No se encontraron vecinos"})
+        }
+        return res.status(200).send(vecinos);
     })
 }
 
@@ -68,8 +88,11 @@ const deleteVecino= (req, res) =>{
     })
 }
 
+
+
 module.exports={
     createVecino,
+    loginVecino,
     getVecinos,
     getVecino,
     updateVecino,

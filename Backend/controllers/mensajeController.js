@@ -2,7 +2,7 @@ const Mensaje = require('../models/mensaje');
 
 const createMensaje = (req, res) => {
     const { destinatario, remitente, fecha, hora, contenido } = req.body
-    const newMensaje = new mensaje({
+    const newMensaje = new Mensaje({
         destinatario,
         remitente,
         fecha,
@@ -16,19 +16,6 @@ const createMensaje = (req, res) => {
         return res.status(201).send(mensaje)
     })
 }
-
-// const getMensaje = (req, res) => {
-//     const { id } = req.params
-//     Mensaje.findById(id, (error, mensaje) => {
-//         if(error){
-//             return res.status(400).send({ message: "No se ha podido encontrar el mensaje"})
-//         }
-//         if(!mensaje){
-//             return res.status(404).send({ message: "No se ha encontrado el mensaje"})
-//         }
-//         return res.status(200).send(message)
-//     })
-// }
 
 const getMensajes = (req, res) => {
     Mensaje.find({}, (error, mensajes) => {

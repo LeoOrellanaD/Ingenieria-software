@@ -18,6 +18,11 @@ const administradorSchema = new Schema({
     telefono:{
         type: 'String',
         required: true
+    },
+    codigo:{
+        type:'Number',
+        required: true,
+        
     }
 })
 

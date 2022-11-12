@@ -10,10 +10,10 @@ const multaSchema = new Schema({
         type:'String',
         required: true,
         enum:[
-            'sancion leve',
-            'sancion media',
-            'sancion alta',
-            'por cancelacion'
+            'sancion leve',  //
+            'sancion media', //
+            'sancion alta',  //
+            'por cancelacion'// gratis hasta 4 horas antes del uso y coste de 800*hora
         ]
     },
     fecha:{

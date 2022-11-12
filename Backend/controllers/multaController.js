@@ -13,11 +13,14 @@ newMulta.save((error, multa) =>{
 }
 
 const getMultas =  (req, res) => {
-    Multa.find({}, (error, multa) => {
+    Multa.find({}, (error, multas) => {
         if (error) {
             return res.status(400).send({ message: 'Error al obtener las multas' });
         }
-        return res.status(200).send(multa);
+        if(multas.length === 0){
+            return res.status(404).send({ message: "No se encontraron multas"})
+        }
+        return res.status(200).send(multas);
     })
 }
 

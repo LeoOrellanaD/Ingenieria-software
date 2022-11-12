@@ -25,7 +25,8 @@ const reservaSchema = new Schema({
     },
     costo_extra:{
         type:'Number',
-        required:false
+        required:false,
+        default: 0
     }
 
 })

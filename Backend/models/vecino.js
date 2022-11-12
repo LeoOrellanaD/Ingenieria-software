@@ -30,6 +30,11 @@ const vecinoSchema = new Schema({
         horas:{
             type: 'Number',
             required: true
+        },
+        codigo:{
+            type: 'Number',
+            required: true,
+            unique: true
         }
     })
 

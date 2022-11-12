@@ -16,6 +16,9 @@ const getServicios = (req , res) => {
         if(error){
             return res.status(400).send({message:'Error al obtener los servicios'});
         }
+        if(servicios.length === 0){
+            return res.status(404).send({ message: "No se encontraron servicios"})
+        }
         return res.status(200).send(servicios);
     })
 }

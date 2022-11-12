@@ -52,9 +52,16 @@ const deleteReserva = (req, res) => {
         if(!reserva){
             return res.status(404).send({ message: "No se ha podido encontrar la reserva"})
         }
+        //Multa por tiempo
+        //if(<reserva.fecha)
+        
+        
+        
         return res.status(200).send({ message: "Se ha elimnado la reserva correctamente"})
     })
 }
+
+
 
 module.exports = {
     createReserva,
