@@ -12,12 +12,34 @@ const createCobro = (req, res) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido crear el cobro"})
         }
+        /*
+        cobro.aggregate([
+            {
+                $match:{
+                    vecino.rut: $vecino.rut
+                }
+            },
+            {
+                $group: {
+                _id: $vecino.rut,
+                multa: {
+                    $sum: $multa_total
+                },
+                reserva:{
+                    $sum: $reserva_total
+                }
+                }
+            },
+            {
+                costo_total: multa + reserva
+            }
+        ])*/
         return res.status(201).send(cobro)
     })
 }
 
 const getCobros = (req, res) => {
-    Cobro.find({}, (error, cobros) => {
+    Cobro.find({}).populate({ path: 'vecino' }).exec((error, cobros) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
         }
@@ -40,4 +62,10 @@ const updateCobro = (req, res) => {
         return res.status(200).send({ message: "Cobro modificado correctamente"})
 
     })
+}
+
+module.exports ={
+    createCobro,
+    getCobros,
+    updateCobro
 }

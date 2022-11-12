@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const reservaSchema = new Schema({
     fecha: {
-        type: 'Date',
+        type: 'String',
         required: true
     },
     hora: {
@@ -28,8 +28,5 @@ const reservaSchema = new Schema({
         required:false,
         default: 0
     }
-
 })
 module.exports = mongoose.model('reserva', reservaSchema)
-
-

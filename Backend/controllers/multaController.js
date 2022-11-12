@@ -13,7 +13,7 @@ newMulta.save((error, multa) =>{
 }
 
 const getMultas =  (req, res) => {
-    Multa.find({}, (error, multas) => {
+    Multa.find({}).populate({ path: 'vecino' }).exec((error, multas) => {
         if (error) {
             return res.status(400).send({ message: 'Error al obtener las multas' });
         }
@@ -26,7 +26,7 @@ const getMultas =  (req, res) => {
 
 const getMulta = (req, res) => {
     const { id } = req.params;
-    Multa.findById(id, (error, multa) => {
+    Multa.findById.populate({ path: 'vecino'}).exec(id, (error, multa) => {
         if (error) {
             return res.status(400).send({ message: 'Error al obtener multa' });
         }

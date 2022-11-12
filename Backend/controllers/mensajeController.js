@@ -18,7 +18,7 @@ const createMensaje = (req, res) => {
 }
 
 const getMensajes = (req, res) => {
-    Mensaje.find({}, (error, mensajes) => {
+    Mensaje.find({}).populate({ path: 'vecino administrador' }).exec((error, mensajes) => {
         if(error){
             return res.status(400).send({ message: "No se pudo realizar la busqueda"})
         }
@@ -31,7 +31,7 @@ const getMensajes = (req, res) => {
 
 const deleteMensaje = (req, res) => {
     const { id } = req.params
-    Mensaje.findByIdAndDelete(id, (error, mensaje) => {
+    Mensaje.findByIdAndDelete.populate({ path: 'vecino administrador'}).exec(id, (error, mensaje) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido eliminar el mensaje"})
         }

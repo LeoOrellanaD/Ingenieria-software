@@ -4,15 +4,18 @@ const Schema = mongoose.Schema;
 const cobroSchema = new Schema({
     costo_total:{
         type: 'Number',
-        required: true
+        required: true,
+        default: 0
     },
     multa_total:{
-        type: 'Number',
+        type: Number,
+        //ref: 'multa',
         required: false
     },
     reserva_total:{
-        type: 'Number',
-        required: true
+        type: Number,
+        //ref: 'reserva',
+        required: false
     },
     vecino:{
         type: Schema.ObjectId,

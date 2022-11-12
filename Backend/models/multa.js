@@ -17,7 +17,7 @@ const multaSchema = new Schema({
         ]
     },
     fecha:{
-        type:'Date',
+        type:'String',
         required:true
     },
     hora:{

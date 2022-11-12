@@ -11,6 +11,7 @@ const createReserva = (req, res) => {
         costo_extra
     })
     newReserva.save((error, reserva) => {
+        console.log(error);
         if(error){
             return res.status(400).send({ message: "No se ha podido crear la reserva"})
         }
@@ -20,7 +21,7 @@ const createReserva = (req, res) => {
 
 const getReserva = (req, res) => {
     const { id } = req.params
-    Reserva.findById(id, (error, reserva) => {
+    Reserva.findById.populate({ path: 'vecino servicio'}).exec(id, (error, reserva) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
         }
@@ -32,7 +33,7 @@ const getReserva = (req, res) => {
 }
 
 const getReservas = (req, res) => {
-    Reserva.find({}, (error, reservas) => {
+    Reserva.find({}).populate({ path: 'vecino servicio' }).exec((error, reservas) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
         }
@@ -54,9 +55,6 @@ const deleteReserva = (req, res) => {
         }
         //Multa por tiempo
         //if(<reserva.fecha)
-        
-        
-        
         return res.status(200).send({ message: "Se ha elimnado la reserva correctamente"})
     })
 }
