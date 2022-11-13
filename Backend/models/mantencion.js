@@ -14,7 +14,7 @@ const mantencionSchema = new Schema({
         type: 'String',
         required: true
     },
-    description:{
+    descripcion:{
         type: 'String',
         required: true
     },
@@ -23,7 +23,7 @@ const mantencionSchema = new Schema({
         required: true
     },
     fecha:{
-        type: 'Date',
+        type: 'String',
         required: true
     },
     hora:{

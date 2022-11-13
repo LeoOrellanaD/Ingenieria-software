@@ -27,10 +27,10 @@ const loginVecino = (req, res) => {
             return res.status(400).send({message: 'Error al inciar sesion'})
         }
         if(!vecino){
-            return res.status(400).send({message: 'No se encontro usuario'})
+            return res.status(404).send({message: 'No se encontro usuario'})
         }
         if(vecino.permiso === 'inhabilitado'){
-            return res.status(400).send({message:'Vecino Inhabilitado por favor comunicarse con su Adminstrador'})
+            return res.status(401).send({message:'Vecino Inhabilitado por favor comunicarse con su Adminstrador'})
         }
 
         return res.status(200).send(vecino);
@@ -78,7 +78,7 @@ const updateVecino = (req, res) =>{
 
 const deleteVecino= (req, res) =>{
     const {id}= req.params;
-    Vecino.findByIdAndRemove(id,(error, vecino) =>{
+    Vecino.findByIdAndDelete(id,(error, vecino) =>{
         if(error){
             return res.status(400).send({message:'Error al eliminar vecino'});
         }

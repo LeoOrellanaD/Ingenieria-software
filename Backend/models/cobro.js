@@ -9,12 +9,10 @@ const cobroSchema = new Schema({
     },
     multa_total:{
         type: Number,
-        //ref: 'multa',
         required: false
     },
     reserva_total:{
         type: Number,
-        //ref: 'reserva',
         required: false
     },
     vecino:{

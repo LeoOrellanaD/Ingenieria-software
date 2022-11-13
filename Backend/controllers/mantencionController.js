@@ -26,7 +26,7 @@ const getMantencion = (req, res) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
         }
-        if(!Mantencion){
+        if(!mantencion){
             return res.status(404).send({ message: "No se ha encontrado la mantencion"})
         }
         return res.status(200).send(mantencion)
@@ -38,7 +38,7 @@ const getMantenciones = (req, res) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
         }
-        if(mantencion.length === 0){
+        if(mantenciones.length === 0){
             return res.status(404).send({ message: "No se ha encontrado mantenciones"})
         }
         return res.status(200).send(mantenciones)
@@ -47,7 +47,7 @@ const getMantenciones = (req, res) => {
 
 const deleteMantencion = (req, res) => {
     const { id } = req.params
-    Mantencion.findByIdAndRemove(id, (error, mantencion) => {
+    Mantencion.findByIdAndDelete(id, (error, mantencion) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido eliminar la mantencion"})
         }

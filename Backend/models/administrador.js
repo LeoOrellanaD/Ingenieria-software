@@ -22,7 +22,7 @@ const administradorSchema = new Schema({
     codigo:{
         type:'Number',
         required: true,
-        
+        unique: true,
     }
 })
 

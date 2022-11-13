@@ -1,16 +1,17 @@
 const Mensaje = require('../models/mensaje');
 
 const createMensaje = (req, res) => {
-    const { destinatario, remitente, fecha, hora, contenido } = req.body
+    const { vecino, administrador, fecha, hora, contenido } = req.body
     const newMensaje = new Mensaje({
-        destinatario,
-        remitente,
+        vecino,
+        administrador,
         fecha,
         hora,
         contenido
     })
-    newMensaje.save((error, product) => {
+    newMensaje.save((error, mensaje) => {
         if(error){
+            console.log(error);
             return res.status(400).send({ message: "No se ha podido crear el mensaje"})
         }
         return res.status(201).send(mensaje)
