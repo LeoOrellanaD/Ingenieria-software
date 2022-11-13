@@ -26,7 +26,7 @@ const getMultas =  (req, res) => {
 
 const getMulta = (req, res) => {
     const { id } = req.params;
-    Multa.findById.populate({ path: 'vecino'}).exec(id, (error, multa) => {
+    Multa.findById(id).populate({ path: 'vecino'}).exec((error, multa) => {
         if (error) {
             return res.status(400).send({ message: 'Error al obtener multa' });
         }

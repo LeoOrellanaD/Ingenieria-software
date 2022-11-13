@@ -21,7 +21,7 @@ const createReserva = (req, res) => {
 
 const getReserva = (req, res) => {
     const { id } = req.params
-    Reserva.findById.populate({ path: 'vecino servicio'}).exec(id, (error, reserva) => {
+    Reserva.findById(id).populate({ path: 'vecino servicio'}).exec((error, reserva) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
         }
@@ -65,3 +65,6 @@ module.exports = {
     getReservas,
     deleteReserva
 }
+
+
+// Reserva.findById.populate({ path: 'vecino servicio'}).exec(id, (error, reserva) => {
