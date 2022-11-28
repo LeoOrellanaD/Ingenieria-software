@@ -1,10 +1,14 @@
 const express = require('express');
 const reservaController = require('../controllers/reservaController');
 const api = express.Router();
+const { validateReserva } = require('../validators/reservaValidacion')
 
-api.post('/reserva', reservaController.createReserva);
+api.post('/reserva',validateReserva, reservaController.createReserva);
 api.get('/reservas', reservaController.getReservas);
-api.get('/reserva/search/:id', reservaController.getReserva);
-api.delete('/reserva/delete/:id', reservaController.deleteReserva);
+api.get('/reserva/search/:num_reserva', reservaController.getReserva);
+api.get('/reserva/search/:mes/:year', reservaController.getReservaF);
+api.get('/reserva/search/:dia/:mes/:year', reservaController.getReservaD);
+api.get('/reserva/search/:hora/:dia/:mes/:year', reservaController.getReservaH);
+api.delete('/reserva/delete/:num_reserva', reservaController.deleteReserva);
 
 module.exports = api;

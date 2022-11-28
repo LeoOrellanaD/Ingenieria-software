@@ -1,7 +1,15 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const reservaSchema = new Schema({
-    fecha: {
+    dia: {
+        type: 'String',
+        required: true
+    },
+    mes: {
+        type: 'String',
+        required: true
+    },
+    year: {
         type: 'String',
         required: true
     },
@@ -10,12 +18,12 @@ const reservaSchema = new Schema({
         required: true
     },
     servicio:{
-        type: Schema.ObjectId,
+        type: Schema.Types.ObjectId,
         ref:'servicio',
         required: true
     },
     vecino:{
-        type: Schema.ObjectId,
+        type: Schema.Types.ObjectId,
         ref:'vecino',
         required: true
     },
@@ -27,6 +35,12 @@ const reservaSchema = new Schema({
         type:'Number',
         required:false,
         default: 0
+    },
+    num_reserva:{
+        type:'String',
+        required: true,
+        unique: true,
     }
 })
+
 module.exports = mongoose.model('reserva', reservaSchema)

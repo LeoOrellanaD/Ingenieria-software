@@ -23,23 +23,10 @@ const getServicios = (req , res) => {
     })
 }
 
-const getServicio =(req, res) => {
-    const {id} =req.params;
-    Servicio.findById(id, (error, servicio) => {
-        if(error){
-            return res.status(400).send({message:'Error al obtener servicio'});
-        }
-        if(!servicio){
-            return res.status(400).send({message:'No se encontro el servicio'});
-        }
-        return res.status(200).send(servicio);
-    })
-}
-
 const updateServicio = (req, res) => {
-    const { nombre, costo} = req.body;
-    const { id } = req.params;
-    Servicio.findOneAndUpdate(id, { nombre, costo }, (error, servicio) => {
+    const {costo} = req.body;
+    const {nombre} = req.params;
+    Servicio.findOneAndUpdate({nombre}, { nombre, costo }, (error, servicio) => {
         if (error) {
             return res.status(400).send({ message: 'Error al actualizar el servicio' });
         }
@@ -51,8 +38,8 @@ const updateServicio = (req, res) => {
 }
 
 const deleteServicio = (req, res) => {
-    const { id } = req.params;
-    Servicio.findOneAndDelete(id, (error, servicio) => {
+    const { nombre } = req.params;
+    Servicio.findOneAndDelete({nombre}, (error, servicio) => {
         if (error) {
             return res.status(400).send({ message: 'Error al eliminar el servicio' });
         }
@@ -66,7 +53,6 @@ const deleteServicio = (req, res) => {
 module.exports={
     createServicio,
     getServicios,
-    getServicio,
     updateServicio,
     deleteServicio
 }

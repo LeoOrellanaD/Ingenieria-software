@@ -1,11 +1,11 @@
 const express = require('express');
 const servicioController = require('../controllers/servicioController');
 const api = express.Router();
+const { validateServicio, validateServicioUpdate } = require('../validators/servicioValidacion')
 
-api.post('/servicio', servicioController.createServicio);
+api.post('/servicio',validateServicio, servicioController.createServicio);
 api.get('/servicios', servicioController.getServicios);
-api.get('/servicio/search/:id', servicioController.getServicio);
-api.put('/servicio/update/:id', servicioController.updateServicio);
-api.delete('/servicio/delete/:id', servicioController.deleteServicio);
+api.put('/servicio/update/:nombre',validateServicioUpdate, servicioController.updateServicio);
+api.delete('/servicio/delete/:nombre', servicioController.deleteServicio);
 
 module.exports = api;

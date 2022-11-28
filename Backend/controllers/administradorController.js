@@ -18,10 +18,11 @@ const createAdministrador = (req, res)=>{
     })
 }
 
+
 const updateAdministrador = (req, res) => {
-    const {nombre, apellido, rut, telefono, codigo} = req.body;
-    const {id} = req.params;
-    Administrador.findByIdAndUpdate(id, {nombre, apellido, rut, telefono, codigo}, (error, administrador) =>
+    const {nombre, apellido, rut, telefono} = req.body;
+    const {codigo} = req.params;
+    Administrador.findOneAndUpdate({codigo}, {nombre, apellido, rut, telefono}, (error, administrador) =>
     {
         if(error){
             return res.status(400).send({message: 'Error al actualizar administrador'});
@@ -34,9 +35,10 @@ const updateAdministrador = (req, res) => {
     })
 }
 
+
 const loginAdministrador = (req, res) => {
     const {codigo} =req.body;
-    Administrador.findOne({codigo}, (error, administrador) => {
+    Administrador.find({codigo}, (error, administrador) => {
         if(error){
             return res.status(400).send({message: 'Error al inciar sesion'})
         }
@@ -48,8 +50,8 @@ const loginAdministrador = (req, res) => {
 }
 
 const deleteAdministrador = (req, res) =>{
-    const {id}= req.params;
-    Administrador.findByIdAndDelete(id,(error, administrador) => {
+    const {codigo}= req.params;
+    Administrador.findOneAndDelete({codigo},(error, administrador) => {
         if(error){
             return res.status(400).send({message: 'Error al eliminar administrador'})
         }

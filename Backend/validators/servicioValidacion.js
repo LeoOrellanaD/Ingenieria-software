@@ -9,5 +9,13 @@ const validateServicio = [
         validateResult(req,res,next)
     }
 ]
+const validateServicioUpdate = [
+    check('nombre').optional().not().isEmpty().matches(/^[a-z ,.'-]+$/),
+    check('costo').optional().isInt({min:6000, max:8000}),
 
-module.exports = { validateServicio }
+    (req, res ,next) => {
+        validateResult(req,res,next)
+    }
+]
+
+module.exports = { validateServicio, validateServicioUpdate }

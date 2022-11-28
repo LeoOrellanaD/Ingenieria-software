@@ -12,11 +12,15 @@ const mensajeSchema = new Schema({
         ref: 'administrador',
         required: true
     },
-    fecha:{
+    dia: {
         type: 'String',
         required: true
     },
-    hora:{
+    mes: {
+        type: 'String',
+        required: true
+    },
+    year: {
         type: 'String',
         required: true
     },

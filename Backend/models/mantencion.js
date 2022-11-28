@@ -22,7 +22,15 @@ const mantencionSchema = new Schema({
         type: 'Number',
         required: true
     },
-    fecha:{
+    dia: {
+        type: 'String',
+        required: true
+    },
+    mes: {
+        type: 'String',
+        required: true
+    },
+    year: {
         type: 'String',
         required: true
     },
@@ -33,6 +41,11 @@ const mantencionSchema = new Schema({
     observaciones:{
         type: 'String',
         required: false
+    },
+    num_mantencion:{
+        type:'Number',
+        required: true,
+        unique: true
     }
 })
 

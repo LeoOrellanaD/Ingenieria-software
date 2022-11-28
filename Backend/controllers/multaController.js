@@ -1,8 +1,16 @@
 const Multa= require('../models/multa');
 
 const createMulta = (req, res) => {
-    const{valor, tipo, fecha, hora, vecino} = req.body;
-    const newMulta = new Multa({valor, tipo, fecha, hora, vecino});
+    const{valor, tipo, dia, mes, year, vecino,cod_multa} = req.body;
+    const newMulta = new Multa({
+        valor,
+        tipo,
+        dia,
+        mes,
+        year,
+        vecino,
+        cod_multa
+    });
 
 newMulta.save((error, multa) =>{
     if(error){
@@ -25,8 +33,8 @@ const getMultas =  (req, res) => {
 }
 
 const getMulta = (req, res) => {
-    const { id } = req.params;
-    Multa.findById(id).populate({ path: 'vecino'}).exec((error, multa) => {
+    const { cod_multa } = req.params;
+    Multa.find({cod_multa}).populate({ path: 'vecino'}).exec((error, multa) => {
         if (error) {
             return res.status(400).send({ message: 'Error al obtener multa' });
         }
@@ -37,9 +45,23 @@ const getMulta = (req, res) => {
     })
 }
 
+const getMultaF = (req, res) => {
+    const {dia, mes, year} = req.params
+    Multa.find({dia ,mes, year}).populate({ path: 'vecino'}).exec((error, multa) => {
+        if(error){
+            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
+        }
+        if(!multa){
+            return res.status(404).send({ message: "No se ha encontrado la multa"})
+        }
+        return res.status(200).send(multa)
+    })
+}
+
+
 const deleteMulta =  (req, res) => {
-    const { id } = req.params;
-    Multa.findOneAndDelete(id, (error, multa) => {
+    const { cod_multa } = req.params;
+    Multa.findOneAndDelete({cod_multa}, (error, multa) => {
         if (error) {
             return res.status(400).send({ message: 'Error al eliminar multa' });
         }
@@ -50,12 +72,10 @@ const deleteMulta =  (req, res) => {
     })
 }
 
-
-
 module.exports={
     createMulta,
     getMultas,
     getMulta,
-   // updateMulta,
+    getMultaF,
     deleteMulta
 }

@@ -1,12 +1,13 @@
 const Mensaje = require('../models/mensaje');
 
 const createMensaje = (req, res) => {
-    const { vecino, administrador, fecha, hora, contenido } = req.body
+    const { vecino, administrador, dia, mes, year, contenido } = req.body
     const newMensaje = new Mensaje({
         vecino,
         administrador,
-        fecha,
-        hora,
+        dia,
+        mes,
+        year,
         contenido
     })
     newMensaje.save((error, mensaje) => {
@@ -30,6 +31,32 @@ const getMensajes = (req, res) => {
     })
 }
 
+const getMensajeF = (req, res) => {
+    const {mes, year} = req.params
+    Mensaje.find({mes, year}).populate({ path: 'vecino'}).exec((error, mensaje) => {
+        if(error){
+            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
+        }
+        if(!mensaje){
+            return res.status(404).send({ message: "No se ha encontrado el mensaje"})
+        }
+        return res.status(200).send(mensaje)
+    })
+}
+
+const getMensajeD = (req, res) => {
+    const {dia, mes, year} = req.params
+    Mensaje.find({dia, mes, year}).populate({ path: 'vecino'}).exec((error, mensaje) => {
+        if(error){
+            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
+        }
+        if(!mensaje){
+            return res.status(404).send({ message: "No se ha encontrado el mensaje"})
+        }
+        return res.status(200).send(mensaje)
+    })
+}
+
 const deleteMensaje = (req, res) => {
     const { id } = req.params
     Mensaje.findByIdAndDelete(id).populate({ path: 'vecino administrador'}).exec((error, mensaje) => {
@@ -46,5 +73,7 @@ const deleteMensaje = (req, res) => {
 module.exports = {
     createMensaje,
     getMensajes,
+    getMensajeF,
+    getMensajeD,
     deleteMensaje
 }

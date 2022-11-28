@@ -14,6 +14,7 @@ const multaRoutes = require('./routes/multaRoutes')
 const reservaRoutes = require('./routes/reservaRoutes')
 const servicioRoutes = require('./routes/servicioRoutes')
 const vecinoRoutes = require('./routes/vecinoRoutes')
+const { AutoEncryptionLoggerLevel } = require('mongodb')
 
 app.use(cors())
 app.use(express.json())
@@ -28,13 +29,15 @@ app.use('/api',reservaRoutes)
 app.use('/api',servicioRoutes)
 app.use('/api',vecinoRoutes)
 
- mongoose.connect(process.env.DB, (error) => {
-     if (error) {
-       console.log(error)
-     } else {
-       console.log('conexion exitosa')
-     }
-   })
+mongoose.connect(process.env.DB, (error) => {
+    if (error) {
+      console.log(error)
+    } else {
+      console.log('conexion exitosa')
+    }
+  })
+
+
 
 app.listen(process.env.PORT, () => {
     console.log(`servidor inicializado en el puerto ${process.env.PORT}`)

@@ -8,16 +8,28 @@ const cobroSchema = new Schema({
         default: 0
     },
     multa_total:{
-        type: Number,
+        type: 'Number',
         required: false
     },
     reserva_total:{
-        type: Number,
+        type: 'Number',
         required: false
     },
     vecino:{
         type: Schema.ObjectId,
         ref: 'vecino',
+        required: true
+    },
+    mes: {
+        type: 'String',
+        required: true
+    },
+    year: {
+        type: 'String',
+        required: true
+    },
+    num_cobro: {
+        type: 'Number',
         required: true
     }
 })

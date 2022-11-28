@@ -3,7 +3,9 @@ const { validateResult } = require('../helpers/validateHelper')
 
 const validateMulta = [
     check('valor').exists().isInt({min:0}),
-    check('fecha').exists().not().isEmpty().matches(/^([0-2][0-9]|3[0-1])(-)(0[1-9]|1[0-2])\2(\d{4})$/),
+    check('dia').exists().not().isEmpty().isInt({min:1, max:31}),
+    check('mes').exists().not().isEmpty().isInt({min:1,max:12}),
+    check('year').exists().not().isEmpty().isInt({min:2022,max:2050}),
     check('hora').exists().not().isEmpty().matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
 
     (req, res ,next) => {

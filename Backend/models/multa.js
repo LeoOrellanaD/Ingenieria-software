@@ -16,18 +16,27 @@ const multaSchema = new Schema({
             'por cancelacion'
         ]
     },
-    fecha:{
-        type:'String',
-        required:true
+    dia: {
+        type: 'String',
+        required: true
     },
-    hora:{
-        type:'String',
-        required:true
+    mes: {
+        type: 'String',
+        required: true
+    },
+    year: {
+        type: 'String',
+        required: true
     },
     vecino: {
         type: Schema.ObjectId,
         ref: 'vecino',
         required: true
+    },
+    cod_multa:{
+        type: 'Number',
+        required: true,
+        unique: true
     }
 })
 module.exports = mongoose.model('multa', multaSchema)

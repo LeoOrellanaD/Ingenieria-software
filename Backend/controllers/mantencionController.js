@@ -1,16 +1,28 @@
 const Mantencion = require('../models/mantencion');
+//let Contador = 0;
+//let codigo;
 
 const createMantencion = (req, res) => {
-    const { nombre_empresa, rut_empresa, giro, descripcion, valor, fecha, hora, observaciones} = req.body
+    //Contador = Contador + 1;
+    //const cont = Contador.toString();
+    //let cantidad = cont.length;
+
+    //cont.padStart(5 - cantidad, "0");
+    //codigo = cont;
+
+    const { nombre_empresa, rut_empresa, giro, descripcion, valor, dia, mes, year, hora, observaciones, num_mantencion} = req.body
     const newMantencion = new Mantencion({
         nombre_empresa,
         rut_empresa,
         giro,
         descripcion,
         valor,
-        fecha,
+        dia,
+        mes,
+        year,
         hora,
-        observaciones
+        observaciones,
+        num_mantencion
     })
     newMantencion.save((error, mantencion) => {
         if(error){
@@ -21,8 +33,8 @@ const createMantencion = (req, res) => {
 }
 
 const getMantencion = (req, res) => {
-    const { id } = req.params
-    Mantencion.findById(id, (error, mantencion) => {
+    const { num_mantencion } = req.params
+    Mantencion.find({num_mantencion}, (error, mantencion) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
         }
@@ -45,9 +57,36 @@ const getMantenciones = (req, res) => {
     })
 }
 
+const getMantencionH = (req, res) => {
+    const {hora, dia, mes, year} = req.params
+    Mantencion.find({hora, dia, mes, year}, (error, mantencion) => {
+        if(error){
+            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
+        }
+        if(!mantencion){
+            return res.status(404).send({ message: "No se ha encontrado la mantencion"})
+        }
+        return res.status(200).send(mantencion)
+    })
+}
+
+const getMantencionN = (req, res) => {
+    const { nombre_empresa } = req.params
+    Mantencion.find({nombre_empresa}, (error, mantencion) => {
+        if(error){
+            console.log(error);
+            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
+        }
+        if(!mantencion){
+            return res.status(404).send({ message: "No se ha encontrado la mantencion"})
+        }
+        return res.status(200).send(mantencion)
+    })
+}
+
 const deleteMantencion = (req, res) => {
-    const { id } = req.params
-    Mantencion.findByIdAndDelete(id, (error, mantencion) => {
+    const { num_mantencion } = req.params
+    Mantencion.findOneAndDelete({num_mantencion}, (error, mantencion) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido eliminar la mantencion"})
         }
@@ -59,8 +98,9 @@ const deleteMantencion = (req, res) => {
 }
 
 const updateMantencion = (req, res) => {
-    const { id } = req.params
-    Mantencion.findByIdAndUpdate(id, req.body, (error, mantencion) => {
+    const { nombre_empresa, rut_empresa, giro, descripcion, valor, fecha, hora, observaciones } = req.body
+    const { num_mantencion } = req.params
+    Mantencion.findOneAndUpdate({num_mantencion}, { nombre_empresa, rut_empresa, giro, descripcion, valor, fecha, hora, observaciones }, (error, mantencion) => {
         if(error){
             return res.status(400).send({ message: "No se pudo actualizar la mantencion"})
         }
@@ -75,6 +115,8 @@ module.exports = {
     createMantencion,
     getMantencion,
     getMantenciones,
+    getMantencionH,
+    getMantencionN,
     deleteMantencion,
     updateMantencion
 }

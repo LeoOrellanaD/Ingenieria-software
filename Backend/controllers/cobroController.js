@@ -1,12 +1,15 @@
 const Cobro = require('../models/cobro');
 
 const createCobro = (req, res) => {
-    const { multa_total, reserva_total, vecino} = req.body
+    const { multa_total, reserva_total, vecino, mes, year,num_cobro} = req.body
     const newCobro = new Cobro({
         multa_total,
         reserva_total,
         vecino,
-        costo_total : (multa_total + reserva_total)
+        costo_total : (multa_total + reserva_total),
+        mes,
+        year,
+        num_cobro
     })
     newCobro.save((error, cobro) => {
         if(error){
@@ -28,9 +31,22 @@ const getCobros = (req, res) => {
     })
 }
 
+const getCobroF = (req, res) => {
+    const {mes, year} = req.params
+    Cobro.find({mes, year}).populate({ path: 'vecino'}).exec((error, cobro) => {
+        if(error){
+            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
+        }
+        if(!cobro){
+            return res.status(404).send({ message: "No se ha encontrado el cobro"})
+        }
+        return res.status(200).send(cobro)
+    })
+}
+
 const updateCobro = (req, res) => {
-    const { id } = req.params
-    Cobro.findByIdAndUpdate(id, req.body, (error, cobro) => {
+    const { num_cobro } = req.params
+    Cobro.findOneAndUpdate({num_cobro}, req.body, (error, cobro) => {
         if(error){
             return res.status(400).send({ message: "No se pudo actualizar el cobro"})
         }
@@ -52,8 +68,8 @@ const updateCobro = (req, res) => {
 }
 
 const deleteCobro = (req, res) => {
-    const { id } = req.params
-    Cobro.findByIdAndDelete(id, (error, cobro) => {
+    const { num_cobro } = req.params
+    Cobro.findOneAndDelete({num_cobro}, (error, cobro) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido eliminar el cobro"})
         }
@@ -67,6 +83,7 @@ const deleteCobro = (req, res) => {
 module.exports ={
     createCobro,
     getCobros,
+    getCobroF,
     updateCobro,
     deleteCobro
 }

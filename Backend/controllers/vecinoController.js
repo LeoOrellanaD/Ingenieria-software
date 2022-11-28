@@ -1,5 +1,6 @@
 const Vecino = require('../models/vecino');
 
+
 const createVecino = (req, res)=>{
     const{nombre, apellido, rut, vivienda, permiso, horas ,codigo} = req.body;
     const newVecino= new Vecino(
@@ -22,7 +23,7 @@ const createVecino = (req, res)=>{
 
 const loginVecino = (req, res) => {
     const {codigo} =req.body;
-    Vecino.findOne({codigo}, (error, vecino) => {
+    Vecino.find({codigo}, (error, vecino) => {
         if(error){
             return res.status(400).send({message: 'Error al inciar sesion'})
         }
@@ -50,8 +51,8 @@ const getVecinos = (req, res) => {
 }
 
 const getVecino = (req, res) =>{
-    const{id}=req.params;
-    Vecino.findById(id, (error, vecino) =>{
+    const{ codigo } = req.params;
+    Vecino.find({codigo}, (error, vecino) =>{
         if(error) {
             return res.status(400).send({message:'Error al obtener vecino'});
         }
@@ -64,8 +65,8 @@ const getVecino = (req, res) =>{
 
 const updateVecino = (req, res) =>{
     const {nombre, apellido, rut, vivienda, permiso, horas} = req.body;
-    const {id} = req.params;
-    Vecino.findByIdAndUpdate(id, {nombre, apellido, rut, vivienda, permiso, horas}, (error, vecino) =>{
+    const {codigo} = req.params;
+    Vecino.findOneAndUpdate({codigo}, {nombre, apellido, rut, vivienda, permiso, horas}, (error, vecino) =>{
         if(error){
             return res.status(400).send({message: 'Error al actualizar vecino'});
         }
@@ -77,8 +78,8 @@ const updateVecino = (req, res) =>{
 }
 
 const deleteVecino= (req, res) =>{
-    const {id}= req.params;
-    Vecino.findByIdAndDelete(id,(error, vecino) =>{
+    const {codigo}= req.params;
+    Vecino.findOneAndDelete({codigo},(error, vecino) =>{
         if(error){
             return res.status(400).send({message:'Error al eliminar vecino'});
         }
