@@ -1,65 +1,40 @@
 const Reserva = require('../models/reserva');
-//var cont = 0;
-//let cod = "";
-
-
-function codigo() {
-    // Reserva.countDocuments( function(error, count){
-    //     if(error){
-    //         console.log(error)
-    // }
-    //     console.log("numero de documentos", count);
-    //     cont=count;
-
-    // })
-}
 
 const createReserva = (req, res) => {
-    // codigo();
-    // console.log(cont);
-    // const contador = cont.toString();
-    // let cantidad = cont.length;
-    // contador.padStart(5 - cantidad, "0");
-
-    // cod = contador;
-
     const { dia, mes, year, hora, servicio, vecino, costo_base, costo_extra, num_reserva} = req.body
-    const newReserva = new Reserva({
-        dia,
-        mes,
-        year,
-        hora,
-        servicio,
-        vecino,
-        costo_base,
-        costo_extra,
-        num_reserva
-    })
-
-
-    // Reserva.find({dia, mes ,year, hora}).count( function(error, count){
-    //         if(error){
-    //             //console.log(error)
-    //         }
-    //     console.log(dia)
-    //     console.log(mes)
-    //     console.log(year)
-    //     console.log(hora)
-    //     console.log("Number of docs: ", count);
-
-    //     if(count>3){
-    //         return res.status(401).send({ message: "Horario no valido"})
-    //         }
-    // });
-
-        newReserva.save((error, reserva) => {
+    Reserva.countDocuments({dia,mes,year,hora},(error,count)=>{
+        console.log(count);
         if(error){
-            console.log(error)
-            return res.status(400).send({ message: "No se ha podido crear la reserva"})
+            return res.status(400).send({message:"no se pudo calcular la cantidad de reservas"})
         }
-        return res.status(201).send(reserva)
+        if(count>=3){
+            return res.status(400).send({message:"No se puede agregar otra reserva en este horario"})
+        }
+
+        if(count<3){
+            const newReserva = new Reserva({
+                dia,
+                mes,
+                year,
+                hora,
+                servicio,
+                vecino,
+                costo_base,
+                costo_extra,
+                num_reserva
+            })
+
+                newReserva.save((error, reserva) => {
+                if(error){
+                    console.log(error)
+                    return res.status(400).send({ message: "No se ha podido crear la reserva"})
+                }
+                return res.status(201).send(reserva)
+            })
+        }
     })
 }
+
 
 const getReserva = (req, res) => {
     const { num_reserva} = req.params

@@ -1,3 +1,4 @@
+const administrador = require('../models/administrador');
 const Administrador = require('../models/administrador');
 
 const createAdministrador = (req, res)=>{
@@ -18,6 +19,18 @@ const createAdministrador = (req, res)=>{
     })
 }
 
+const getAdministrador = (req, res) =>{
+    const{ codigo } = req.params;
+    Administrador.findOne({codigo}, (error, administrador) =>{
+        if(error) {
+            return res.status(400).send({message:'Error al obtener administrador'});
+        }
+        if(!administrador){
+            return res.status(404).send({message:'No se encontro al adminitrador'});
+        }
+        return res.status(200).send(administrador);
+    })
+}
 
 const updateAdministrador = (req, res) => {
     const {nombre, apellido, rut, telefono} = req.body;
@@ -38,7 +51,7 @@ const updateAdministrador = (req, res) => {
 
 const loginAdministrador = (req, res) => {
     const {codigo} =req.body;
-    Administrador.find({codigo}, (error, administrador) => {
+    Administrador.findOne({codigo}, (error, administrador) => {
         if(error){
             return res.status(400).send({message: 'Error al inciar sesion'})
         }
@@ -76,6 +89,7 @@ const getAdministradores = (req, res) => {
 
 module.exports ={
     createAdministrador,
+    getAdministrador,
     updateAdministrador,
     loginAdministrador,
     deleteAdministrador,

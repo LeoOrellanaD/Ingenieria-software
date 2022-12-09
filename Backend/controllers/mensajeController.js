@@ -57,23 +57,9 @@ const getMensajeD = (req, res) => {
     })
 }
 
-const deleteMensaje = (req, res) => {
-    const { id } = req.params
-    Mensaje.findByIdAndDelete(id).populate({ path: 'vecino administrador'}).exec((error, mensaje) => {
-        if(error){
-            return res.status(400).send({ message: "No se ha podido eliminar el mensaje"})
-        }
-        if(!mensaje){
-            return res.status(404).send({ message: "No se ha encontrado el mensaje"})
-        }
-        return res.status(200).send({ message: "Se ha eliminado el mensaje correctamente"})
-    })
-}
-
 module.exports = {
     createMensaje,
     getMensajes,
     getMensajeF,
-    getMensajeD,
-    deleteMensaje
+    getMensajeD
 }

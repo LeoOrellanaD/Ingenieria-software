@@ -7,6 +7,5 @@ api.post('/mensaje',validateMensaje, mensajeController.createMensaje);
 api.get('/mensajes', mensajeController.getMensajes);
 api.get('/mensajes/search/:mes/:year', mensajeController.getMensajeF);
 api.get('/mensajes/search/:dia/:mes/:year', mensajeController.getMensajeD);
-api.delete('/mensaje/delete/:id', mensajeController.deleteMensaje);
 
 module.exports = api;

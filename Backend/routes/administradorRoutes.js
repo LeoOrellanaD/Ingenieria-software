@@ -5,6 +5,7 @@ const { validateAdmin, validateAdminUpdate } = require('../validators/administra
 
 api.post('/administrador', validateAdmin, administradorController.createAdministrador);
 api.post('/administrador/login', administradorController.loginAdministrador);
+api.get('/administrador/search/:codigo', administradorController.getAdministrador);
 api.get('/administradores', administradorController.getAdministradores);
 api.put('/administrador/update/:codigo',validateAdminUpdate, administradorController.updateAdministrador);
 api.delete('/administrador/delete/:codigo', administradorController.deleteAdministrador);

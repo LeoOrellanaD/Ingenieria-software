@@ -23,7 +23,7 @@ const createVecino = (req, res)=>{
 
 const loginVecino = (req, res) => {
     const {codigo} =req.body;
-    Vecino.find({codigo}, (error, vecino) => {
+    Vecino.findOne({codigo}, (error, vecino) => {
         if(error){
             return res.status(400).send({message: 'Error al inciar sesion'})
         }
