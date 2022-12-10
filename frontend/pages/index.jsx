@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Flex,
   Heading,
@@ -23,8 +23,6 @@ import { useRouter } from 'next/router'
 
 export default function Home() {
 
-
-
 const router = useRouter()
 
 //console.log(process.env.API_URL)
@@ -41,7 +39,6 @@ const onSubmit= async(e) =>{
 
       const response = await axios.post(`${process.env.API_URL}/administrador/login`,values)
       console.log(response)
-
 
     console.log(response)
     if(response.status===200){
