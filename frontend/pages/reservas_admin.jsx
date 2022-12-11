@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack} from "@chakra-ui/react";
+import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input} from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import reservas from "../../backend/models/reserva";
 import axios from 'axios'
 
 
@@ -34,7 +33,7 @@ useEffect(() => {
     getReservas()
 }, [])
 
-  const [isOpen, setIsOpen] = useState(false);
+const [isOpen, setIsOpen] = useState(false);
 
 
 //AGREGAR CONDICION DEL SHOWBUTTON PARA COMPARAR FECHAS
@@ -94,7 +93,7 @@ const validateDate =(y,m,d)=>{
 }
 
 	return reservas.map(reservas => {
-		    return (
+		return (
             <Tr key={reservas._id}>
                 <Td>{reservas.dia}</Td>
                 <Td>{reservas.mes}</Td>
@@ -126,7 +125,7 @@ const validateDate =(y,m,d)=>{
 
     }
 
-    
+
 
 return (
     <Flex
@@ -140,6 +139,48 @@ return (
 
 
     <Text fontSize={50} color="white" mt={30} mb={30}>Reservas de Servicio</Text>
+    <Stack mb={30}>
+    <Box  minW={{ base: "10%", md: "468px"}}>
+        <form>
+            <Stack spacing={4}
+                p="1rem"
+                backgroundColor="whiteAlpha.900"
+                boxShadow="md"
+                rounded="16"
+                flexDir="column"
+
+        mb="2"
+        justifyContent="center"
+        alignItems="center">
+                <Text fontSize={30} color="blue.400" mt={30} mb={30}>Buscar Reserva</Text>
+            <HStack>
+                <VStack>
+                <Text>Dia</Text>
+                <Input placeholder="Ejemplo: 20"></Input>
+                </VStack>
+                <VStack>
+                <Text>Mes</Text>
+                <Input placeholder="Ejemplo: 02"></Input>
+                </VStack>
+                <VStack>
+                <Text>Año</Text>
+                <Input placeholder="Ejemplo: 2022"></Input>
+                </VStack>
+
+            </HStack>
+            <Button
+                        variant = "solid"
+                        colorScheme = "blue"
+                        width = "30%"
+                        rounded = "40"
+                        mt={10}
+                        >Buscar
+                </Button>
+            </Stack>
+
+        </form>
+        </Box>
+    </Stack>
     <HStack>
         {/* <VStack marginLeft={-100} marginRight={100}><Button variant="solid"
                     colorScheme="blue"
@@ -206,7 +247,6 @@ return (
         </form>
     </Box>
     </HStack>
-    
     </Flex>
 );
 };

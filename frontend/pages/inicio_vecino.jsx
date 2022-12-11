@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
+import { Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter} from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { EditIcon } from '@chakra-ui/icons'
 import axios from "axios";
 
-const Inicio_admin = () => {
+const Inicio_vecino = () => {
     const router = useRouter();
     const {
         query: { codigo },
@@ -16,30 +15,29 @@ const Inicio_admin = () => {
 
     const router1 = useRouter();
 
-    const [administrador, setAdmin] = useState([]);
+    const [vecino, setVecino] = useState([]);
 
     const setCookieFunction = (value) => {
         localStorage.setItem('codigo', value)
     }
 
-    const getAdmin = async () => {
+    const getVecino = async () => {
         if(codigo){
             setCookieFunction(codigo)
-            const response = await axios.get(`${process.env.API_URL}/administrador/search/${props.codigo}`)
-            setAdmin(response.data);
+            const response = await axios.get(`${process.env.API_URL}/vecino/search/${props.codigo}`)
+            setVecino(response.data);
         }else{
-            const response = await axios.get(`${process.env.API_URL}/administrador/search/${localStorage.getItem('codigo')}`)
-            setAdmin(response.data);
+            const response = await axios.get(`${process.env.API_URL}/vecino/search/${localStorage.getItem('codigo')}`)
+            setVecino(response.data);
         }
-        console.log(administrador)
     };
 
     useEffect(() => {
-        getAdmin();
+        getVecino();
     }, []);
 
-    const showAdmin = () => {
-        const arreglo = [administrador.nombre, administrador.apellido, administrador.telefono, administrador.codigo]
+    const showVecino = () => {
+        const arreglo = [vecino.nombre, vecino.apellido, vecino.vivienda, vecino.permiso]
         return (
             arreglo
         );
@@ -48,8 +46,8 @@ const Inicio_admin = () => {
     return (
         <Stack
             flexDirection = "column"
-            width = "100wh"
-            height = "130vh"
+            width = "full"
+            height = "140vh"
             backgroundColor = "blue.400"
             alignItems = "center"
         >
@@ -60,7 +58,7 @@ const Inicio_admin = () => {
                 </Text>
             </HStack>
 
-            <Box minW = {{ base: "10%", md: "50" }} width={600}>
+            <Box minW = {{ base: "10%",  md: "50"}} width={600}>
                 <Stack
                     spacing = {4}
                     p = "1rem"
@@ -73,30 +71,32 @@ const Inicio_admin = () => {
                     alignItems = "center"
                 >
 
-                    <HStack >
-                        <Text as='b' fontSize = {20} color = "blue.500" >
+                    <HStack>
+                        <Text as='b' fontSize = {20} color = "blue.500">
                             Datos personales
                         </Text>
                     </HStack>
 
-                    <HStack>
+                    <Stack direction={['column', 'row']}>
                         <Text as='b'>Nombre:</Text>
-                        <Text>{showAdmin()[0]+" "+showAdmin()[1]}</Text>
-                    </HStack>
+                        <Text>{showVecino()[0]+" "+showVecino()[1]}</Text>
+                    </Stack>
 
-                    <HStack>
-                        <Text as='b'>Telefono:</Text>
-                        <Text>{showAdmin()[2]}</Text>
-                    </HStack>
+                    <Stack direction={['column', 'row']}>
+                        <Text as='b'>Vivienda:</Text>
+                        <Text>{showVecino()[2]}</Text>
+                        <Text as='b'>Permiso:</Text>
+                        <Text as='b' color='green' textTransform={'uppercase'}>{showVecino()[3]}</Text>
+                    </Stack>
 
                     <Button
-                            borderRadius = {20}
+                            borderRadius = {0}
                             type = "submit"
                             variant = "solid"
                             colorScheme = "blue"
-                            width = "30%"
+                            width = {150}
+                            height = {50}
                             rounded = "50"
-                            rightIcon={<EditIcon /> }
                         >
                         Editar
                     </Button>
@@ -110,7 +110,6 @@ const Inicio_admin = () => {
                 minW = {{ base: "10%", width: "90"}}
                 width = {800}
             >
-
                 <Stack
                     minW = {{ base: "10%"}}
                     width={800}
@@ -118,14 +117,15 @@ const Inicio_admin = () => {
                     p = "2rem"
                     direction={['column', 'row']}
                 >
+
                     <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textTransform={'uppercase'} as='b'>Reservas</Text>
+                        <CardHeader>
+                            <Text textTransform={'uppercase'} as='b'>Historial Reservas</Text>
                         </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
-                                Despliegue detallado de reservas realizadas por los usuarios.
+                                Despliegue detallado de reservas anteriormente realizadas.
                             </Text>
                         </CardBody>
 
@@ -145,39 +145,13 @@ const Inicio_admin = () => {
                     </Card>
 
                     <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Gastos</Text>
+                        <CardHeader>
+                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Disponibilidad</Text>
                         </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
-                                Despliegue de gastos realizados por los usuarios.
-                            </Text>
-                        </CardBody>
-
-                        <CardFooter justifyContent={'center'}>
-                            <Button
-                                borderRadius = {0}
-                                variant = "solid"
-                                colorScheme = "blue"
-                                width = {160}
-                                height={50}
-                                rounded = "50"
-                                onClick = {() => router1.push("/gastos_admin")}
-                            >
-                                Ingresar
-                            </Button>
-                        </CardFooter>
-                    </Card>
-
-                    <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Mensajes</Text>
-                        </CardHeader>
-
-                        <CardBody>
-                            <Text textAlign={'justify'}>
-                                Despliegue de página para enviar mensajes a usuarios.
+                                Despliegue de calendario de disponibilidad de servicios para reservar.
                             </Text>
                         </CardBody>
 
@@ -202,16 +176,18 @@ const Inicio_admin = () => {
                     width={800}
                     spacing = {50}
                     p = "2rem"
+                    justifyContent = "center"
+                    alignItems = "center"
                     direction={['column', 'row']}
                 >
                     <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Multas</Text>
+                        <CardHeader>
+                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Gastos</Text>
                         </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
-                                Despliegue de multas aplicadas a usuarios.
+                                Despliegue detallado de gastos anteriormente realizados al reservar servicios
                             </Text>
                         </CardBody>
 
@@ -223,7 +199,8 @@ const Inicio_admin = () => {
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/")}
+                                mr = {5}
+                                ml = {5}
                             >
                                 Ingresar
                             </Button>
@@ -231,13 +208,13 @@ const Inicio_admin = () => {
                     </Card>
 
                     <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Mantenciones</Text>
+                        <CardHeader>
+                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Mensajes</Text>
                         </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
-                                Despliegue de mantenciones realizadas con anterioridad.
+                                Despliegue de los mensajes enviados por administrador.
                             </Text>
                         </CardBody>
 
@@ -249,33 +226,8 @@ const Inicio_admin = () => {
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/")}
-                            >
-                                Ingresar
-                            </Button>
-                        </CardFooter>
-                    </Card>
-
-                    <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Vecinos</Text>
-                        </CardHeader>
-
-                        <CardBody>
-                            <Text textAlign={'justify'}>
-                                Despliegue detallada de usuarios del sistema.
-                            </Text>
-                        </CardBody>
-
-                        <CardFooter justifyContent={'center'}>
-                            <Button
-                                borderRadius = {0}
-                                variant = "solid"
-                                colorScheme = "blue"
-                                width = {160}
-                                height={50}
-                                rounded = "50"
-                                onClick = {() => router1.push("/vecinos_admin")}
+                                mr = {5}
+                                ml = {5}
                             >
                                 Ingresar
                             </Button>
@@ -287,4 +239,4 @@ const Inicio_admin = () => {
     );
 };
 
-export default Inicio_admin;
+export default Inicio_vecino;

@@ -52,7 +52,7 @@ const getVecinos = (req, res) => {
 
 const getVecino = (req, res) =>{
     const{ codigo } = req.params;
-    Vecino.find({codigo}, (error, vecino) =>{
+    Vecino.findOne({codigo}, (error, vecino) =>{
         if(error) {
             return res.status(400).send({message:'Error al obtener vecino'});
         }

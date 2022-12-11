@@ -30,7 +30,7 @@ const [values, setValues]= useState({
   codigo:''
 })
 
-const onSubmit= async(e) =>{
+const onSubmit= async(e) => {
   e.preventDefault()
   console.log(values)
 
@@ -42,7 +42,6 @@ const onSubmit= async(e) =>{
 
     console.log(response)
     if(response.status===200){
-      localStorage.setItem('CodigoIngresoActual', e.target.value);
       Swal.fire({
         title:"hola",
         icon:'success',
@@ -54,14 +53,6 @@ const onSubmit= async(e) =>{
         query:{codigo: values.codigo},
       });
 
-      })
-
-    }else{
-      Swal.fire({
-        title:"Codigo no valido",
-        text:'Ingrese un codigo valido',
-        icon:'error',
-        confirmButtonText:'OK'
       })
     }
 
@@ -88,10 +79,12 @@ if(document.getElementById('vecino').checked){
       icon:'success',
       confirmButtonText:'OK'
     }).then((result)=>{
-      //Router.push('/')
-    })
 
-  }else{
+      router.push({pathname:'/inicio_vecino',
+        query:{codigo: values.codigo},
+      });
+    })
+}else{
     Swal.fire({
       title:"Codigo no valido",
       text:'Ingrese un codigo valido',
@@ -102,12 +95,23 @@ if(document.getElementById('vecino').checked){
 
 }
 catch(error){
-  Swal.fire({
-    title:"Codigo no valido",
-    text:'Ingrese un codigo valido',
-    icon:'error',
-    confirmButtonText:'OK'
-  })
+  console.log(error)
+  if(error.response.status===401){
+    Swal.fire({
+      title:"Vecino inhabilitado",
+      text:"Por favor comuniniquese con su Administrador",
+      icon:'error',
+      confirmButtonText:"OK"
+    })
+  }else{
+    Swal.fire({
+      title:"Codigo no valido",
+      text:'Este codigo no existe',
+      icon:'error',
+      confirmButtonText:'OK'
+    })
+  }
+
 }
 }
 }

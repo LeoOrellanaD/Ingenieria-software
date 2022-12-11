@@ -89,7 +89,7 @@ const getReservaD = (req, res) => {
 }
 
 const getReservas = (req, res) => {
-    Reserva.find({}).populate({ path: 'vecino servicio' }).exec((error, reservas) => {
+    Reserva.find({}).sort({num_reserva : 1}).populate({ path: 'vecino servicio' }).exec((error, reservas) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
         }
