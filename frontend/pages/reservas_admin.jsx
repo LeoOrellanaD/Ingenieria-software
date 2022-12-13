@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 
 const ReservasAdmin= () => {
@@ -23,9 +24,10 @@ setReservas(response.data)
 }
 
 const deleteReserva = async (x) => {
-    const response = await axios.delete(`${process.env.API_URL}/reserva/delete/${x}`)
-    setReservas(response.data)
-    window.location.reload();
+
+            const response =axios.delete(`${process.env.API_URL}/reserva/delete/${x}`)
+            setReservas(response.data)
+            window.location.reload();
 }
 
 
@@ -33,41 +35,11 @@ useEffect(() => {
     getReservas()
 }, [])
 
-const [isOpen, setIsOpen] = useState(false);
+
 
 
 //AGREGAR CONDICION DEL SHOWBUTTON PARA COMPARAR FECHAS
 const showreservas = () => {
-
-
-// const validateDate =(y,m,d,identificador)=>{
-//     const fecha = new Date();
-//     const year = fecha.getFullYear();
-//     const mes= fecha.getMonth()+1;
-//     const dia = fecha.getDate();
-//     console.log(fecha)
-//     console.log(year)
-//     console.log(mes)
-//     console.log(dia)
-//     const year1 = (parseInt(y))
-//     const mes1= (parseInt(m))
-//     const dia1= (parseInt(d))
-//     console.log(year1)
-//     if (year1>=year){
-//         if(mes1>=mes-1 || year1>=year){
-//             if(dia1>=dia){
-//                 return <Button
-//                 id={identificador}
-//                 variant="solid"
-//                 colorScheme="blue"
-//                 rounded="50"
-//                 onClick={deleteReserva()}
-//                 >Eliminar</Button>
-//             }
-//         }
-
-//     }
-// }
 
 const validateDate =(y,m,d)=>{
     const fecha = new Date();

@@ -184,7 +184,7 @@ const onChange = (e) => {
                 rounded="50"
                 onClick={onSubmit}
               >
-                Inciar Sesion
+                Iniciar Sesion
               </Button>
             </Stack>
           </form>
@@ -192,6 +192,5 @@ const onChange = (e) => {
       </Stack>
     </Flex>
   );
-
 
 }

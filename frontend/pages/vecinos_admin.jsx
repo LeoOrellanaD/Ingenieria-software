@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack} from "@chakra-ui/react";
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const VecinosAdmin= () => {
 
@@ -9,6 +10,31 @@ const VecinosAdmin= () => {
     const response = await axios.get(`${process.env.API_URL}/vecinos`)
     setVecinos(response.data)
     }
+
+const deleteVecino = async (x)=> {
+
+    Swal.fire({
+        title:'¿Estas seguro de eliminar a este vecino?',
+        text:'No se podra deshacer esta acción',
+        icon:'warning',
+        showCancelButton:true,
+        confirmButtonColor:'#8DDE7C',
+        cancelButtonColor:'#F24343',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText:'Cancelar'
+    }).then((result)=>{
+        if(result.value){
+            const response = axios.delete(`${process.env.API_URL}/vecino/delete/${x}`)
+            setVecinos(response.data)
+            window.location.reload();
+        }
+    })
+
+}
+
+
+
+
     useEffect(() => {
         getVecinos()
     }, [])
@@ -23,6 +49,13 @@ const VecinosAdmin= () => {
                 <Td>{vecinos.vivienda}</Td>
                 <Td>{vecinos.horas}</Td>
                 <Td>{vecinos.permiso}</Td>
+                <Td>{   <Button
+                        id={vecinos.codigo}
+                        variant="solid"
+                        colorScheme="blue"
+                        rounded="50"
+                        onClick={() =>deleteVecino(vecinos.codigo)}
+                        >Eliminar</Button>}</Td>
                 </Tr>
             )
         })

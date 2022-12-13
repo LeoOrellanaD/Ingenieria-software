@@ -33,9 +33,9 @@ const getAdministrador = (req, res) =>{
 }
 
 const updateAdministrador = (req, res) => {
-    const {nombre, apellido, rut, telefono} = req.body;
+    const {telefono} = req.body;
     const {codigo} = req.params;
-    Administrador.findOneAndUpdate({codigo}, {nombre, apellido, rut, telefono}, (error, administrador) =>
+    Administrador.findOneAndUpdate({codigo}, {telefono}, (error, administrador) =>
     {
         if(error){
             return res.status(400).send({message: 'Error al actualizar administrador'});

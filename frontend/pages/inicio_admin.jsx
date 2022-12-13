@@ -3,6 +3,8 @@ import { Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFoote
 import { useRouter } from "next/router";
 import { EditIcon } from '@chakra-ui/icons'
 import axios from "axios";
+import Swal from 'sweetalert2'
+
 
 const Inicio_admin = () => {
     const router = useRouter();
@@ -45,17 +47,50 @@ const Inicio_admin = () => {
         );
     };
 
-    const Editar = (document) =>{
-    if(document.getElementById('editar').style.display=='inline'){
 
-        document.getElementById('editar').style.display="none";
-        document.getElementById('numero').style.display="none";
-        document.getElementById('n').style.display="inline";
-        document.getElementById('nu').style.display="inline";
-        document.getElementById('guardar').style.display="inline";
+const [visible, setVisible] = useState(false);
 
+const onSubmit = async(e) => {
+    e.preventDefault()
+        console.log(input)
+        const inputType = typeof input;
+        console.log(inputType);
+    try{
+        const response =await axios.put(`${process.env.API_URL}/administrador/update/${props.codigo}`,{telefono:input})
+
+        if (response.status===200){
+            Swal.fire({
+                title:"Numero de telefono actualizado",
+                icon:'success',
+                confirmButtonText:'OK'
+            }).then(()=>{
+                setVisible(true)
+                window.location.reload();
+            })
+
+
+
+        }
     }
+    catch(error){
+       console.log(error.status)
+       Swal.fire({
+        title:"numero no valido",
+        text:"Ingrese un numero valido por favor",
+        icon:'warning',
+        confirmButtonText:"OK"
+      })
     }
+}
+
+const [input, setInput] = useState("");
+
+const Carga = (e) =>{
+    setInput("+569"+e.target.value);
+};
+
+
+
 
     return (
         <Stack
@@ -98,9 +133,9 @@ const Inicio_admin = () => {
 
                     <HStack>
                         <Text as='b'>Telefono:</Text>
-                        <Text id="numero" display="inline">{showAdmin()[2]}</Text>
-                        <Text id="n" display="none"> +569</Text>
-                        <Input id="nu" display="none "></Input>
+                        <Text id="numero" style={{display: visible ? 'none' : 'inline'}}>{showAdmin()[2]}</Text>
+                        <Text id="n" style={{display: visible ? 'inline' : 'none'}}> +569</Text>
+                        <Input type="number" id="nu" onChange={Carga} style={{display: visible ? 'inline' : 'none'}}></Input>
                     </HStack>
 
                     <Button
@@ -112,8 +147,8 @@ const Inicio_admin = () => {
                             rounded = "50"
                             rightIcon={<EditIcon /> }
                             id="editar"
-                            onClick
-                            display="inline"
+                            onClick={() => setVisible(true)}
+                            style={{display: visible ? 'none' : 'inline'}}
                         >
                         Editar
                     </Button>
@@ -126,8 +161,8 @@ const Inicio_admin = () => {
                             rounded = "50"
                             rightIcon={<EditIcon /> }
                             id="guardar"
-                            onClick
-                            display="none"
+                            onClick={onSubmit}
+                            style={{display: visible ? 'inline' : 'none'}}
                         >
                         Guardar
                     </Button>
