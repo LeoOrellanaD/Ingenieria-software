@@ -24,6 +24,10 @@ const mensajeSchema = new Schema({
         type: 'String',
         required: true
     },
+    asunto:{
+        type: 'String',
+        required: true
+    },
     contenido:{
         type: 'String',
         required: true

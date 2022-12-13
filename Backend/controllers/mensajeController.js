@@ -1,13 +1,14 @@
 const Mensaje = require('../models/mensaje');
 
 const createMensaje = (req, res) => {
-    const { vecino, administrador, dia, mes, year, contenido } = req.body
+    const { vecino, administrador, dia, mes, year,asunto, contenido } = req.body
     const newMensaje = new Mensaje({
         vecino,
         administrador,
         dia,
         mes,
         year,
+        asunto,
         contenido
     })
     newMensaje.save((error, mensaje) => {

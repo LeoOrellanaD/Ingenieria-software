@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter } from "@chakra-ui/react";
+import { Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter, Input } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { EditIcon } from '@chakra-ui/icons'
 import axios from "axios";
@@ -45,6 +45,18 @@ const Inicio_admin = () => {
         );
     };
 
+    const Editar = (document) =>{
+    if(document.getElementById('editar').style.display=='inline'){
+
+        document.getElementById('editar').style.display="none";
+        document.getElementById('numero').style.display="none";
+        document.getElementById('n').style.display="inline";
+        document.getElementById('nu').style.display="inline";
+        document.getElementById('guardar').style.display="inline";
+
+    }
+    }
+
     return (
         <Stack
             flexDirection = "column"
@@ -86,7 +98,9 @@ const Inicio_admin = () => {
 
                     <HStack>
                         <Text as='b'>Telefono:</Text>
-                        <Text>{showAdmin()[2]}</Text>
+                        <Text id="numero" display="inline">{showAdmin()[2]}</Text>
+                        <Text id="n" display="none"> +569</Text>
+                        <Input id="nu" display="none "></Input>
                     </HStack>
 
                     <Button
@@ -97,8 +111,25 @@ const Inicio_admin = () => {
                             width = "30%"
                             rounded = "50"
                             rightIcon={<EditIcon /> }
+                            id="editar"
+                            onClick
+                            display="inline"
                         >
                         Editar
+                    </Button>
+                    <Button
+                            borderRadius = {20}
+                            type = "submit"
+                            variant = "solid"
+                            colorScheme = "blue"
+                            width = "30%"
+                            rounded = "50"
+                            rightIcon={<EditIcon /> }
+                            id="guardar"
+                            onClick
+                            display="none"
+                        >
+                        Guardar
                     </Button>
                 </Stack>
             </Box>
@@ -137,7 +168,7 @@ const Inicio_admin = () => {
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/reservas_vecino")}
+                                onClick = {() => router1.push("/reservas_admin")}
                             >
                                 Ingresar
                             </Button>
@@ -189,7 +220,7 @@ const Inicio_admin = () => {
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/")}
+                                onClick = {() => router1.push("/mensajes_admin")}
                             >
                                 Ingresar
                             </Button>
@@ -223,7 +254,7 @@ const Inicio_admin = () => {
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/")}
+                                onClick = {() => router1.push("/multas_admin")}
                             >
                                 Ingresar
                             </Button>
@@ -249,7 +280,7 @@ const Inicio_admin = () => {
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/")}
+                                onClick = {() => router1.push("/mantenciones_admin")}
                             >
                                 Ingresar
                             </Button>

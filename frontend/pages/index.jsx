@@ -100,7 +100,7 @@ catch(error){
     Swal.fire({
       title:"Vecino inhabilitado",
       text:"Por favor comuniniquese con su Administrador",
-      icon:'error',
+      icon:'warning',
       confirmButtonText:"OK"
     })
   }else{

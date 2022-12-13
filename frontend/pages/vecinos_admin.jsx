@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack} from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import axios from 'axios'
 
 const VecinosAdmin= () => {
@@ -36,43 +35,12 @@ const VecinosAdmin= () => {
             backgroundColor="blue.400"
             alignItems="center"
             >
-    
-    
-    
+
+
+
         <Text fontSize={50} color="white" mt={30} mb={30}>Vecinos</Text>
         <HStack>
-            {/* <VStack marginLeft={-100} marginRight={100}><Button variant="solid"
-                        colorScheme="blue"
-                        rounded="50"
-                        w={40}
-                        h={20}
-                        >Inicio</Button>
-            <Button variant="solid"
-                        colorScheme="blue"
-                        rounded="50"
-                        w={40}
-                        h={20}>Gastos</Button>
-            <Button variant="solid"
-                        colorScheme="blue"
-                        rounded="50"
-                        w={40}
-                        h={20}>Mensajes</Button>
-            <Button variant="solid"
-                        colorScheme="blue"
-                        rounded="50"
-                        w={40}
-                        h={20}>Multas</Button>
-            <Button variant="solid"
-                        colorScheme="blue"
-                        rounded="50"
-                        w={40}
-                        h={20}>Mantenciones</Button>
-            <Button variant="solid"
-                        colorScheme="blue"
-                        rounded="50"
-                        w={40}
-                        h={20}>Usuarios</Button>
-            </VStack> */}
+
             <Box  minW={{ base: "10%", md: "468px"}} >
             <form>
                 <Stack spacing={4}
