@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select } from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import { useRouter } from 'next/router'
+
 
 const AgregarMulta = () => {
 
@@ -63,7 +63,7 @@ const onSubmit= async(e) =>{
 
     if(response.status===201){
       Swal.fire({
-        title:"Multa Agregado",
+        title:"Multa Realizada",
         icon:'success',
         confirmButtonText:'OK'
       }).then(()=>{
@@ -72,7 +72,7 @@ const onSubmit= async(e) =>{
     }
   } catch (error) {
     Swal.fire({
-      title:"No se pudo realizar la multa",
+      title:"No se pudo realizar la Multa",
       text:'Por favor revise los datos ingresado',
       icon:'warning',
       confirmButtonText:'OK'

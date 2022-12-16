@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack} from "@chakra-ui/react";
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import Swal from 'sweetalert2'
+
 
 const MultasAdmin = () => {
 
@@ -28,9 +30,36 @@ const [multas, setMultas] = useState([])
                 <Td>{multas.tipo}</Td>
                 <Td>{multas.valor}</Td>
                 <Td>{multas.cod_multa}</Td>
+                <Td>{   <Button
+                        id={multas.cod_multa}
+                        variant="solid"
+                        colorScheme="blue"
+                        rounded="50"
+                        onClick={()=>deleteMulta(multas.cod_multa)}
+                        >Eliminar</Button>}</Td>
                 </Tr>
             )
         })
+    }
+
+    const deleteMulta = async (x)=> {
+
+        Swal.fire({
+            title:'¿Estas seguro de eliminar esta multa?',
+            text:'No se podra deshacer esta acción',
+            icon:'warning',
+            showCancelButton:true,
+            confirmButtonColor:'#8DDE7C',
+            cancelButtonColor:'#F24343',
+            confirmButtonText: 'Aceptar',
+            cancelButtonText:'Cancelar'
+        }).then((result)=>{
+            if(result.value){
+                const response = axios.delete(`${process.env.API_URL}/multa/delete/${x}`)
+                setMultas(response.data)
+                window.location.reload();
+            }
+    })
     }
 
     return (

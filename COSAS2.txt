@@ -1,0 +1,93 @@
+COSAS POR HACE 2: MAS COSAS Y MAS QUE HACER QUE NUNCA
+
+
+--TAREAS ESTETICAS Y DE CALIDAD DE VIDA
+-Ordenar/organizar los contenedores
+-Reemplazar los titulos de las pestañas
+-Agregar iconos a los botones para calidad de vida del usuario
+-Encontrar una fuente que sea persona
+-Encontrar una paleta de colores que no sea racista
+-(LISTO) Separar en carpeta las rutas para que no nos de una embolia
+-(OPCIONAL) buscar icono no racista para reemplazar el de localhost
+-Redistribuir tamaños de componentes
+-(LISTO) Quitar el hola/Actualizar alertas
+-Mejorar calidad de tablas
+-Redistribuir espacios para evitar desbordamientos
+-Responsive(actualmente somos racistas)
+
+
+--TAREAS FUNCIONALES PARA EVITAR ENBARGOS DE CASA
+-Definir tamaño de los input
+-Implementación de menu de redireccionamiento
+-Cambiar metodo de raspaso de codigo mediante localStorage
+-Implementar eliminacion de reservas junto a la eliminacion de vecinos
+-(LISTO) Revisar implementación del backend
+-Implementar paginas para vecinos
+                                        -Generación de codigos para reservas, gastos, multas, etc.
+-Cuando se elimine una reserva que se genere un mensaje de disponibilidad
+-CALENDARIO para crear
+-Revision de modelos y validaciones
+
+-----------LISTA DE CONTROLADORES
+
+---AdministradorController [EN COMPLETA UTILIDAD]
+-(INACTIVO) [NO APLICABLE] createAdministrador
+-(ACTIVO) getAdministrador
+-(ACTIVO) updateAdministrador
+-(ACTIVO) loginAdministrador
+-(INACTIVO) [NO APLICABLE] deleteAdministrador
+-(INACTIVO) [NO APLICABLE] getAdministradores
+
+---CobroController [FALTA IMPLEMENTAR CREATECOBRO]
+-(INACTIVO) createCobro
+-(ACTIVO) getCobros
+-(INACTIVO) [POSTERGADO] getCobroF
+-(INACTIVO) [EN ESTUDIO] updateCobro
+-(INACTIVO) [EN ESTUDIO] deleteCobro
+
+---MantencionController [CREATE, UPDATE Y DELETE FALTANTES]
+-(INACTIVO) createMantencion
+-(INACTIVO) [EN ESTUDIO] getMantencion
+-(ACTIVO) getMantenciones
+-(INACTIVO) [POSTERGADO] getMantencionH
+-(INACTIVO) [POSTERGADO] getMantencionN
+-(INACTIVO) deleteMantencion
+-(INACTIVO) updateMantencion
+
+---MensajeController [CREATE POSIBLE PRIORIDAD]
+-(INACTIVO) [POSIBLEMENTE EL MÁS DIFICIL DE LA LISTA] createMensaje
+-(ACTIVO) getMensajes
+-(INACTIVO) [POSTERGADO] getMensajeF
+-(INACTIVO) [POSTERGADO] getMensajeD
+
+
+---MultaController [GET FALTANTES]
+-(ACTIVO) createMulta
+-(ACTIVO) getMultas
+-(INACTIVO) [EN ESTUDIO] getMulta
+-(INACTIVO) [POSTERGADO] getMultaF
+-(ACTIVO)  deleteMulta
+
+---ReservaController [FALTA IMPLEMENTAR CREATE RESERVAS QUE ES NUESTRO BOTON MÁS IMPORTANTE]
+-(INACTIVO) [PRIORITARIO] createReserva
+-(INACTIVO) [EN ESTUDIO] getReserva
+-(INACTIVO) [POSTERGADO] getReservaF
+-(INACTIVO) [POSTERGADO] getReservaH
+-(INACTIVO) [POSTERGADO] getReservaD
+-(ACTIVO) getReservas
+-(ACTIVO) deleteReserva
+
+---ServicioController [GET Y UPDATE]
+-(INACTIVO) [PURGAR] createServicio
+-(INACTIVO) getServicios
+-(INACTIVO) updateServicio
+-(INACTIVO) [PURGAR] deleteServicio
+
+---VecinosController [UPDATE]
+-(ACTIVO) createVecino
+-(ACTIVO) loginVecino
+-(ACTIVO) getVecinos
+-(ACTIVO) getVecino
+-(INACTIVO) updateVecino
+-(ACTIVO) deleteVecino
+

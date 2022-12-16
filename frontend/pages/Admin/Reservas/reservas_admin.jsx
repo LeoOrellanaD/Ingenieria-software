@@ -1,21 +1,36 @@
 import { useState, useEffect } from "react";
 import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input, TableContainer} from "@chakra-ui/react";
 import axios from 'axios'
+import Swal from 'sweetalert2'
+
 
 
 const ReservasAdmin= () => {
 
-const [reservas, setReservas] = useState([])
-const getReservas = async () => {
-const response = await axios.get(`${process.env.API_URL}/reservas`)
-setReservas(response.data)
-}
+    const [reservas, setReservas] = useState([])
+    const getReservas = async () => {
+        const response = await axios.get(`${process.env.API_URL}/reservas`)
+        setReservas(response.data)
+    }
 
-const deleteReserva = async (x) => {
+    const deleteReserva = async (x) => {
+        Swal.fire({
+            title:'¿Estas seguro de eliminar esta reserva?',
+            text:'No se podra deshacer esta acción',
+            icon:'warning',
+            showCancelButton:true,
+            confirmButtonColor:'#8DDE7C',
+            cancelButtonColor:'#F24343',
+            confirmButtonText: 'Aceptar',
+            cancelButtonText:'Cancelar'
+        }).then((result)=>{
+            if(result.value){
+                const response =axios.delete(`${process.env.API_URL}/reserva/delete/${x}`)
+                setReservas(response.data)
+                window.location.reload();
+            }
+        })
 
-            const response =axios.delete(`${process.env.API_URL}/reserva/delete/${x}`)
-            setReservas(response.data)
-            window.location.reload();
 }
 
 useEffect(() => {
@@ -24,26 +39,26 @@ useEffect(() => {
 
 const showreservas = () => {
 
-const validateDate =(y,m,d)=>{
-    const fecha = new Date();
-    const year = fecha.getFullYear();
-    const mes= fecha.getMonth()+1;
-    const dia = fecha.getDate();
-    console.log(fecha)
-    console.log(year)
-    console.log(mes)
-    console.log(dia)
-    const year1 = (parseInt(y))
-    const mes1= (parseInt(m))
-    const dia1= (parseInt(d))
-    console.log(year1)
-    if (year1>=year){
-        if(mes1>=mes-1 || year1>=year){
-            if(dia1>=dia){
-                return true;
+    const validateDate =(y,m,d)=>{
+        const fecha = new Date();
+        const year = fecha.getFullYear();
+        const mes= fecha.getMonth()+1;
+        const dia = fecha.getDate();
+        console.log(fecha)
+        console.log(year)
+        console.log(mes)
+        console.log(dia)
+        const year1 = (parseInt(y))
+        const mes1= (parseInt(m))
+        const dia1= (parseInt(d))
+        console.log(year1)
+        if (year1>=year){
+            if(mes1>=mes-1 || year1>=year){
+                if(dia1>=dia){
+                    return true;
+                }
             }
         }
-    }
     return false;
 }
 

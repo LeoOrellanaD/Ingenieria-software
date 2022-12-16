@@ -60,7 +60,7 @@ const onSubmit = async(e) => {
 
         if (response.status===200){
             Swal.fire({
-                title:"Numero de telefono actualizado",
+                title:"Número de teléfono actualizado",
                 icon:'success',
                 confirmButtonText:'OK'
             }).then(()=>{
@@ -75,8 +75,8 @@ const onSubmit = async(e) => {
     catch(error){
        console.log(error.status)
        Swal.fire({
-        title:"numero no valido",
-        text:"Ingrese un numero valido por favor",
+        title:"Numero de teléfono no valido",
+        text:"Ingrese un Número de teléfono valido por favor",
         icon:'warning',
         confirmButtonText:"OK"
       })

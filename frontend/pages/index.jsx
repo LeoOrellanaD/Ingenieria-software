@@ -43,7 +43,7 @@ const onSubmit= async(e) => {
     console.log(response)
     if(response.status===200){
       Swal.fire({
-        title:"hola",
+        title:"Bienvenido",
         icon:'success',
         confirmButtonText:'OK'
       }).then((result)=>{
@@ -75,7 +75,7 @@ if(document.getElementById('vecino').checked){
   console.log(response)
   if(response.status===200){
     Swal.fire({
-      title:"hola",
+      title:"Bienvenido",
       icon:'success',
       confirmButtonText:'OK'
     }).then((result)=>{
@@ -98,8 +98,8 @@ catch(error){
   console.log(error)
   if(error.response.status===401){
     Swal.fire({
-      title:"Vecino inhabilitado",
-      text:"Por favor comuniniquese con su Administrador",
+      title:"Vecino Inhabilitado",
+      text:"Por favor comunicarse con su Administrador",
       icon:'warning',
       confirmButtonText:"OK"
     })

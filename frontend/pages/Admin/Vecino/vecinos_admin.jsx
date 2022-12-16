@@ -14,23 +14,23 @@ const VecinosAdmin= () => {
     setVecinos(response.data)
     }
 
-const deleteVecino = async (x)=> {
+    const deleteVecino = async (x)=> {
 
-    Swal.fire({
-        title:'¿Estas seguro de eliminar a este vecino?',
-        text:'No se podra deshacer esta acción',
-        icon:'warning',
-        showCancelButton:true,
-        confirmButtonColor:'#8DDE7C',
-        cancelButtonColor:'#F24343',
-        confirmButtonText: 'Aceptar',
-        cancelButtonText:'Cancelar'
-    }).then((result)=>{
-        if(result.value){
-            const response = axios.delete(`${process.env.API_URL}/vecino/delete/${x}`)
-            setVecinos(response.data)
-            window.location.reload();
-        }
+        Swal.fire({
+            title:'¿Estas seguro de eliminar a este vecino?',
+            text:'No se podra deshacer esta acción',
+            icon:'warning',
+            showCancelButton:true,
+            confirmButtonColor:'#8DDE7C',
+            cancelButtonColor:'#F24343',
+            confirmButtonText: 'Aceptar',
+            cancelButtonText:'Cancelar'
+        }).then((result)=>{
+            if(result.value){
+                const response = axios.delete(`${process.env.API_URL}/vecino/delete/${x}`)
+                setVecinos(response.data)
+                window.location.reload();
+            }
     })
 
 }

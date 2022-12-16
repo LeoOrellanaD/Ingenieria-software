@@ -64,24 +64,6 @@ return (
         mb="2"
         justifyContent="center"
         alignItems="center">
-                {/* <Table variant={"simple"}>
-                    <Thead>
-                    <Tr>
-                        <Td color={"blue.400"}>Dia</Td>
-                        <Td color={"blue.400"}>Mes</Td>
-                        <Td color={"blue.400"}>Año</Td>
-                        <Td color={"blue.400"}>Administrador</Td>
-                        <Td>   </Td>
-                        <Td color={"blue.400"}>Vecinos</Td>
-                        <Td>   </Td>
-                        <Td color={"blue.400"}>Contenido</Td>
-
-                    </Tr>
-                    </Thead>
-                    <Tbody>
-                    {showMensajes()}
-                </Tbody>
-                </Table> */}
                 <Accordion allowToggle width={700}>
                 {showMantenciones()}
                 </Accordion>
