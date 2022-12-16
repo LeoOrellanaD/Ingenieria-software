@@ -1,4 +1,5 @@
 const Reserva = require('../models/reserva');
+const Vecino = require('../models/vecino');
 
 const createReserva = (req, res) => {
     const { dia, mes, year, hora, servicio, vecino, costo_base, costo_extra, num_reserva} = req.body
@@ -89,14 +90,15 @@ const getReservaD = (req, res) => {
 }
 
 const getReservas = (req, res) => {
-    Reserva.find({}).sort({num_reserva : 1}).populate({ path: 'vecino servicio' }).exec((error, reservas) => {
+    Reserva.find({}).populate({ path: 'vecino servicio' }).exec((error, reservas) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
         }
         if(reservas.length === 0){
             return res.status(404).send({ message: "No se encontraron reservas"})
         }
-        return res.status(200).send(reservas)
+        let reservasordenadas= reservas.sort((a, b) => a.num_reserva - b.num_reserva);
+        return res.status(200).send(reservasordenadas)
     })
 }
 
@@ -105,6 +107,20 @@ const deleteReserva = (req, res) => {
     Reserva.findOneAndDelete({num_reserva}, (error, reserva) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido eliminar la reserva"})
+        }
+        if(!reserva){
+            return res.status(404).send({ message: "No se ha podido encontrar la reserva"})
+        }
+        return res.status(200).send({ message: "Se ha elimnado la reserva correctamente"})
+    })
+}
+const deleteReservas = (req, res) =>
+{
+    const { vecino } = req.params
+    Reserva.findOneAndDelete({ vecino }, (error, reserva) =>
+    {
+        if(error){
+            return res.status(400).send({ message: "No se han podido eliminar las reservas"})
         }
         if(!reserva){
             return res.status(404).send({ message: "No se ha podido encontrar la reserva"})
@@ -122,7 +138,8 @@ module.exports = {
     getReservaH,
     getReservaD,
     getReservas,
-    deleteReserva
+    deleteReserva,
+    deleteReservas
 }
 
 

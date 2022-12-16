@@ -1,4 +1,3 @@
-const administrador = require('../models/administrador');
 const Administrador = require('../models/administrador');
 
 const createAdministrador = (req, res)=>{

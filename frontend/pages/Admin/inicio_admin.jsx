@@ -152,20 +152,36 @@ const Carga = (e) =>{
                         >
                         Editar
                     </Button>
+                    <HStack>
                     <Button
                             borderRadius = {20}
                             type = "submit"
                             variant = "solid"
                             colorScheme = "blue"
-                            width = "30%"
+                            width = "full"
                             rounded = "50"
                             rightIcon={<EditIcon /> }
                             id="guardar"
                             onClick={onSubmit}
                             style={{display: visible ? 'inline' : 'none'}}
+                            direction="row"
                         >
                         Guardar
                     </Button>
+                    <Button
+                            borderRadius={20}
+                            variant="solid"
+                            colorScheme="blue"
+                            width="full"
+                            rounded="50"
+                            id="cancelar"
+                            onClick={() => setVisible(false)}
+                            style={{display: visible ? 'inline' : 'none'}}
+                            direction="row"
+                        >
+                        Cancelar
+                    </Button>
+                    </HStack>
                 </Stack>
             </Box>
 
@@ -203,7 +219,7 @@ const Carga = (e) =>{
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/reservas_admin")}
+                                onClick = {() => router1.push("/Admin/Reservas/reservas_admin")}
                             >
                                 Ingresar
                             </Button>
@@ -229,7 +245,7 @@ const Carga = (e) =>{
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/gastos_admin")}
+                                onClick = {() => router1.push("/Admin/Gastos/gastos_admin")}
                             >
                                 Ingresar
                             </Button>
@@ -255,7 +271,7 @@ const Carga = (e) =>{
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/mensajes_admin")}
+                                onClick = {() => router1.push("/Admin/Mensajes/mensajes_admin")}
                             >
                                 Ingresar
                             </Button>
@@ -289,7 +305,7 @@ const Carga = (e) =>{
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/multas_admin")}
+                                onClick = {() => router1.push("/Admin/Multas/multas_admin")}
                             >
                                 Ingresar
                             </Button>
@@ -315,7 +331,7 @@ const Carga = (e) =>{
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/mantenciones_admin")}
+                                onClick = {() => router1.push("/Admin/Mantenciones/mantenciones_admin")}
                             >
                                 Ingresar
                             </Button>
@@ -341,7 +357,7 @@ const Carga = (e) =>{
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/vecinos_admin")}
+                                onClick = {() => router1.push("/Admin/Vecino/vecinos_admin")}
                             >
                                 Ingresar
                             </Button>

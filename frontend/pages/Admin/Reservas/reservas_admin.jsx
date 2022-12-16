@@ -1,21 +1,9 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input} from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input, TableContainer} from "@chakra-ui/react";
 import axios from 'axios'
-import Swal from 'sweetalert2'
 
 
 const ReservasAdmin= () => {
-
-//     const router = useRouter();
-//      const { query:{ codigo },
-//  }= router;
-
-// const props= {
-//     codigo,
-// };
-
-// console.log(props.codigo)
 
 const [reservas, setReservas] = useState([])
 const getReservas = async () => {
@@ -30,15 +18,10 @@ const deleteReserva = async (x) => {
             window.location.reload();
 }
 
-
 useEffect(() => {
     getReservas()
 }, [])
 
-
-
-
-//AGREGAR CONDICION DEL SHOWBUTTON PARA COMPARAR FECHAS
 const showreservas = () => {
 
 const validateDate =(y,m,d)=>{
@@ -76,7 +59,7 @@ const validateDate =(y,m,d)=>{
                 <Td>{reservas.vecino.apellido}</Td>
 				<Td>{reservas.num_reserva}</Td>
                     <Td>
-                            {validateDate(reservas.year,reservas.mes,reservas.dia) ? (<Button
+                        {validateDate(reservas.year,reservas.mes,reservas.dia) ? (<Button
                 id={reservas.num_reserva}
                     variant="solid"
                     colorScheme="blue"
@@ -96,19 +79,15 @@ const validateDate =(y,m,d)=>{
 	})
 
     }
-
-
-
 return (
     <Flex
         flexDirection="column"
         width="100wh"
-        height="100vh"
+        height="auto"
+        minH={"100vh"}
         backgroundColor="blue.400"
         alignItems="center"
         >
-
-
 
     <Text fontSize={50} color="white" mt={30} mb={30}>Reservas de Servicio</Text>
     <Stack mb={30}>
@@ -154,38 +133,6 @@ return (
         </Box>
     </Stack>
     <HStack>
-        {/* <VStack marginLeft={-100} marginRight={100}><Button variant="solid"
-                    colorScheme="blue"
-                    rounded="50"
-                    w={40}
-                    h={20}
-                    >Inicio</Button>
-        <Button variant="solid"
-                    colorScheme="blue"
-                    rounded="50"
-                    w={40}
-                    h={20}>Gastos</Button>
-        <Button variant="solid"
-                    colorScheme="blue"
-                    rounded="50"
-                    w={40}
-                    h={20}>Mensajes</Button>
-        <Button variant="solid"
-                    colorScheme="blue"
-                    rounded="50"
-                    w={40}
-                    h={20}>Multas</Button>
-        <Button variant="solid"
-                    colorScheme="blue"
-                    rounded="50"
-                    w={40}
-                    h={20}>Mantenciones</Button>
-        <Button variant="solid"
-                    colorScheme="blue"
-                    rounded="50"
-                    w={40}
-                    h={20}>Usuarios</Button>
-        </VStack> */}
         <Box  minW={{ base: "10%", md: "468px"}} >
         <form>
             <Stack spacing={4}
@@ -197,6 +144,7 @@ return (
         mb="2"
         justifyContent="center"
         alignItems="center">
+                <TableContainer>
                 <Table variant={"simple"}>
                     <Thead>
                     <Tr>
@@ -215,6 +163,7 @@ return (
                     {showreservas()}
 				</Tbody>
                 </Table>
+                </TableContainer>
             </Stack>
         </form>
     </Box>

@@ -10,5 +10,6 @@ api.get('/reserva/search/:mes/:year', reservaController.getReservaF);
 api.get('/reserva/search/:dia/:mes/:year', reservaController.getReservaD);
 api.get('/reserva/search/:hora/:dia/:mes/:year', reservaController.getReservaH);
 api.delete('/reserva/delete/:num_reserva', reservaController.deleteReserva);
+api.delete('/reserva/delete/:vecino', reservaController.deleteReservas );
 
 module.exports = api;

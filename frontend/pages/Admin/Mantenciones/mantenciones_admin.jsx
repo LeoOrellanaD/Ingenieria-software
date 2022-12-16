@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Flex, Text, Box, Stack , HStack, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel} from "@chakra-ui/react";
 import axios from 'axios'
-import mantencion from "../../Backend/models/mantencion";
+
 
 const MantencionesAdmin = () =>{
 
@@ -17,7 +17,7 @@ useEffect(()=> {
 const showMantenciones = () =>{
     return mantenciones.map(mantenciones =>{
     return (
-        <AccordionItem>
+        <AccordionItem key={mantenciones._id}>
                 <h2>
                 <AccordionButton>
                 <Box as="span" flex='1' textAlign='left' width={700}>
@@ -82,7 +82,7 @@ return (
                     {showMensajes()}
                 </Tbody>
                 </Table> */}
-                <Accordion allowToggle key={mantenciones._id}width={700}>
+                <Accordion allowToggle width={700}>
                 {showMantenciones()}
                 </Accordion>
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Flex,
   Heading,
@@ -13,7 +13,7 @@ import {
   Radio,
   RadioGroup,
   FormHelperText,
-  InputRightElement,
+  InputRightElement
 } from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
@@ -23,9 +23,9 @@ import { useRouter } from 'next/router'
 
 export default function Home() {
 
+
 const router = useRouter()
 
-//console.log(process.env.API_URL)
 const [values, setValues]= useState({
   codigo:''
 })
@@ -49,7 +49,7 @@ const onSubmit= async(e) => {
       }).then((result)=>{
         console.log(values.codigo)
 
-        router.push({pathname:'/inicio_admin',
+        router.push({pathname:'/Admin/inicio_admin',
         query:{codigo: values.codigo},
       });
 
@@ -80,7 +80,7 @@ if(document.getElementById('vecino').checked){
       confirmButtonText:'OK'
     }).then((result)=>{
 
-      router.push({pathname:'/inicio_vecino',
+      router.push({pathname:'/Vecino/inicio_vecino',
         query:{codigo: values.codigo},
       });
     })
@@ -125,15 +125,25 @@ const onChange = (e) => {
 
 }
 
+useEffect(() => {
+  document.title="Lavanderia 60 minutos";
+}, []);
+
+
+
   return (
+
+
     <Flex
       flexDirection="column"
       width="100wh"
-      height="100vh"
+      height="auto"
+      minH={"100vh"}
       backgroundColor="blue.200"
       justifyContent="center"
       alignItems="center"
     >
+      
       <Stack
         flexDir="column"
         mb="2"
@@ -154,7 +164,7 @@ const onChange = (e) => {
               <FormControl>
                 <InputGroup>
                   <InputLeftElement pointerEvents="none" />
-                  <Input type="number" maxLength="5" placeholder="Codigo de Ingreso" name={"codigo"} onChange={onChange}/>
+                  <Input type="number" maxLength={4} placeholder="Codigo de Ingreso" name={"codigo"} onChange={onChange}/>
                 </InputGroup>
               </FormControl>
               <FormControl>

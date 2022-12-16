@@ -19,6 +19,10 @@ const vecinoSchema = new Schema({
             type:'Number',
             required:true
         },
+        horas:{
+            type: 'Number',
+            required: true
+        },
         permiso:{
             type:'String',
             required:true,
@@ -26,10 +30,6 @@ const vecinoSchema = new Schema({
                 'habilitado',
                 'inhabilitado'
             ]
-        },
-        horas:{
-            type: 'Number',
-            required: true
         },
         codigo:{
             type: 'Number',

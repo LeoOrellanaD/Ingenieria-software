@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack} from "@chakra-ui/react";
+import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,HStack} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useRouter } from 'next/router'
 
 const VecinosAdmin= () => {
+
+    const router = useRouter()
 
     const [vecinos, setVecinos] = useState([])
     const getVecinos = async () => {
@@ -31,10 +34,6 @@ const deleteVecino = async (x)=> {
     })
 
 }
-
-
-
-
     useEffect(() => {
         getVecinos()
     }, [])
@@ -54,13 +53,14 @@ const deleteVecino = async (x)=> {
                         variant="solid"
                         colorScheme="blue"
                         rounded="50"
-                        onClick={() =>deleteVecino(vecinos.codigo)}
+                        onClick={()=>deleteVecino(vecinos.codigo)}
                         >Eliminar</Button>}</Td>
                 </Tr>
             )
         })
     }
-    return (
+
+return (
         <Flex
             flexDirection="column"
             width="100wh"
@@ -69,9 +69,13 @@ const deleteVecino = async (x)=> {
             alignItems="center"
             >
 
-
-
         <Text fontSize={50} color="white" mt={30} mb={30}>Vecinos</Text>
+        <Button mb="2"
+                variant="solid"
+                colorScheme="blue"
+                rounded="50"
+                onClick = {() => router.push("agregar_vecino")}>
+                    Agregar Vecino</Button>
         <HStack>
 
             <Box  minW={{ base: "10%", md: "468px"}} >
@@ -94,7 +98,6 @@ const deleteVecino = async (x)=> {
                             <Td color={"blue.400"}>Vivienda</Td>
                             <Td color={"blue.400"}>Horas</Td>
                             <Td color={"blue.400"}>Permiso</Td>
-
                         </Tr>
                         </Thead>
                         <Tbody>

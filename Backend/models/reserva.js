@@ -37,7 +37,7 @@ const reservaSchema = new Schema({
         default: 0
     },
     num_reserva:{
-        type:'String',
+        type:'Number',
         required: true,
         unique: true,
     }

@@ -16,18 +16,8 @@ useEffect(() => {
 const showMensajes = () =>{
     return mensajes.map(mensajes =>{
         return (
-            // <Tr key={mensajes._id}>
-            // <Td>{mensajes.dia}</Td>
-            // <Td>{mensajes.mes}</Td>
-            // <Td>{mensajes.year}</Td>
-            // <Td>{mensajes.administrador.nombre}</Td>
-            // <Td>{mensajes.administrador.apellido}</Td>
-            // <Td>{mensajes.vecino.nombre}</Td>
-            // <Td>{mensajes.vecino.apellido}</Td>
-            // <Td>{mensajes.contenido}</Td>
-            // </Tr>
-            
-                <AccordionItem>
+
+                <AccordionItem key={mensajes._id}>
                 <h2>
                 <AccordionButton>
                 <Box as="span" flex='1' textAlign='left' width={700}>

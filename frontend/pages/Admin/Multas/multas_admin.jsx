@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack} from "@chakra-ui/react";
 import axios from 'axios'
+import { useRouter } from 'next/router'
 
 const MultasAdmin = () => {
+
+    const router = useRouter()
 
 const [multas, setMultas] = useState([])
     const getMultas = async () => {
@@ -38,10 +41,13 @@ const [multas, setMultas] = useState([])
             backgroundColor="blue.400"
             alignItems="center"
             >
-
-
-
         <Text fontSize={50} color="white" mt={30} mb={30}>Multas</Text>
+        <Button mb="2"
+                variant="solid"
+                colorScheme="blue"
+                rounded="50"
+                onClick = {() => router.push("/Admin/Multas/agregar_multa")}>
+                    Agregar Multa</Button>
         <HStack>
 
             <Box  minW={{ base: "10%", md: "468px"}} >
