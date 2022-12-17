@@ -64,9 +64,9 @@ const getVecino = (req, res) =>{
 }
 
 const updateVecino = (req, res) =>{
-    const {nombre, apellido, rut, vivienda, permiso, horas} = req.body;
+    const {permiso, horas} = req.body;
     const {codigo} = req.params;
-    Vecino.findOneAndUpdate({codigo}, {nombre, apellido, rut, vivienda, permiso, horas}, (error, vecino) =>{
+    Vecino.findOneAndUpdate({codigo}, {permiso, horas}, (error, vecino) =>{
         if(error){
             return res.status(400).send({message: 'Error al actualizar vecino'});
         }

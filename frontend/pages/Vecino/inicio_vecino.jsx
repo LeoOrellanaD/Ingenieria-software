@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter} from "@chakra-ui/react";
+import { Text, Box, Stack, Button, HStack, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon,} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
@@ -26,10 +26,13 @@ const Inicio_vecino = () => {
             setCookieFunction(codigo)
             const response = await axios.get(`${process.env.API_URL}/vecino/search/${props.codigo}`)
             setVecino(response.data);
+            query:{codigo: codigo}
         }else{
             const response = await axios.get(`${process.env.API_URL}/vecino/search/${localStorage.getItem('codigo')}`)
             setVecino(response.data);
+            query:{codigo: codigo}
         }
+        
     };
 
     useEffect(() => {
@@ -108,28 +111,35 @@ const Inicio_vecino = () => {
                 boxShadow = "md"
                 rounded = "16"
                 minW = {{ base: "10%", width: "90"}}
-                width = {800}
+                width = {900}
             >
-                <Stack
+                <HStack
                     minW = {{ base: "10%"}}
-                    width={800}
-                    spacing = {50}
+                    width={900}
+                    spacing = {30}
                     p = "2rem"
                     direction={['column', 'row']}
                 >
-
-                    <Card textAlign={'center'} width={600} height={300}>
-                        <CardHeader>
-                            <Text textTransform={'uppercase'} as='b'>Historial Reservas</Text>
-                        </CardHeader>
-
-                        <CardBody>
-                            <Text textAlign={'justify'}>
-                                Despliegue detallado de reservas anteriormente realizadas.
-                            </Text>
-                        </CardBody>
-
-                        <CardFooter justifyContent={'center'}>
+                    <Stack width = {700} height = {230} alignItems = 'center' boxShadow = "md" rounded = "16">
+                    <Accordion allowToggle >
+                            <AccordionItem>
+                                <h2 >
+                                    <AccordionButton width={260}>
+                                        <Box as="span" flex='1' >
+                                            <Text as='b' textTransform={'uppercase'} textAlign={'center'}>
+                                                Historial Reservas
+                                            </Text>
+                                        </Box>
+                                        <AccordionIcon />
+                                    </AccordionButton>
+                                </h2>
+                                <Box>
+                                <AccordionPanel textAlign={'justify'}>
+                                    <Text height={90}>Despliegue detallado de reservas anteriormente realizadas.</Text>
+                                </AccordionPanel>
+                                </Box>
+                            </AccordionItem>
+                            </Accordion>
                             <Button
                                 borderRadius = {0}
                                 variant = "solid"
@@ -137,25 +147,33 @@ const Inicio_vecino = () => {
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/reservas_vecino")}
+                                mt={60}
+                                onClick = {() => router1.push("/Vecino/reservas_vecino", )}
                             >
                                 Ingresar
                             </Button>
-                        </CardFooter>
-                    </Card>
+                    </Stack>
 
-                    <Card textAlign={'center'} width={600} height={300}>
-                        <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Disponibilidad</Text>
-                        </CardHeader>
-
-                        <CardBody>
-                            <Text textAlign={'justify'}>
-                                Despliegue de calendario de disponibilidad de servicios para reservar.
-                            </Text>
-                        </CardBody>
-
-                        <CardFooter justifyContent={'center'}>
+                    <Stack width={700} height={230} alignItems='center' boxShadow = "md" rounded = "16">
+                        <Accordion allowToggle >
+                            <AccordionItem>
+                                <h2 >
+                                    <AccordionButton width={260}>
+                                        <Box as="span" flex='1' >
+                                            <Text as='b' textTransform={'uppercase'} textAlign={'center'}>
+                                                Multas
+                                            </Text>
+                                        </Box>
+                                        <AccordionIcon />
+                                    </AccordionButton>
+                                </h2>
+                                <Box>
+                                <AccordionPanel textAlign={'justify'}>
+                                    <Text height={90}>Despliegue detallado de multas obtenidas a travÃ©s del tiempo.</Text>
+                                </AccordionPanel>
+                                </Box>
+                            </AccordionItem>
+                            </Accordion>
                             <Button
                                 borderRadius = {0}
                                 variant = "solid"
@@ -163,77 +181,120 @@ const Inicio_vecino = () => {
                                 width = {160}
                                 height={50}
                                 rounded = "50"
-                                onClick = {() => router1.push("/")}
+                                mt={60}
+                                onClick = {() => router1.push("/Vecino/multas_vecino")}
                             >
                                 Ingresar
                             </Button>
-                        </CardFooter>
-                    </Card>
-                </Stack>
+                    </Stack>
 
-                <Stack
+                        <Stack width={700} height={230} alignItems='center' boxShadow = "md" rounded = "16">
+                            <Accordion allowToggle>
+                            <AccordionItem>
+                                <h2 >
+                                    <AccordionButton width={260}>
+                                        <Box as="span" flex='1'>
+                                            <Text as='b' textTransform={'uppercase'} textAlign={'center'}>
+                                                Disponibilidad
+                                            </Text>
+                                        </Box>
+                                    <AccordionIcon />
+                                    </AccordionButton>
+                                </h2>
+                                <Box>
+                                <AccordionPanel  textAlign={'justify'}>
+                                    <Text height={90}>Despliegue de calendario de disponibilidad de servicios para reservar.</Text>
+                                </AccordionPanel>
+                                </Box>
+                            </AccordionItem>
+                            </Accordion>
+                            <Button
+                                borderRadius = {0}
+                                variant = "solid"
+                                colorScheme = "blue"
+                                width = {160}
+                                height={50}
+                                rounded = "50"
+                                mt={60}
+                                onClick = {() => router1.push("/Vecino/disponibilidad_vecino")}
+                            >
+                                Ingresar
+                            </Button>
+                        </Stack>
+                </HStack>
+
+                <HStack
                     minW = {{ base: "10%"}}
-                    width={800}
-                    spacing = {50}
+                    width={900}
+                    spacing = {30}
                     p = "2rem"
-                    justifyContent = "center"
-                    alignItems = "center"
                     direction={['column', 'row']}
+                    alignItems={'center'}
                 >
-                    <Card textAlign={'center'} width={600} height={300}>
-                        <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Gastos</Text>
-                        </CardHeader>
+                    <Stack width={900} height={230} alignItems='center' boxShadow = "md" rounded = "16">
+                        <Accordion allowToggle>
+                            <AccordionItem>
+                                <h2 >
+                                    <AccordionButton width={405}>
+                                        <Box as="span" flex='1'>
+                                            <Text as='b' textTransform={'uppercase'} textAlign={'center'}>
+                                                Gastos
+                                            </Text>
+                                        </Box>
+                                        <AccordionIcon />
+                                    </AccordionButton>
+                                </h2>
+                                <Box>
+                                <AccordionPanel textAlign={'justify'}>
+                                    <Text height={90}>Despliegue detallado de gastos anteriormente realizados al reservar servicios</Text>
+                                </AccordionPanel>
+                                </Box>
+                            </AccordionItem>
+                        </Accordion>
+                        <Button
+                                    borderRadius = {0}
+                                    variant = "solid"
+                                    colorScheme = "blue"
+                                    width = {160}
+                                    height={50}
+                                    rounded = "50"
+                                    onClick = {() => router1.push("/Vecino/gastos_vecino")}
+                                >
+                                    Ingresar
+                                </Button>
+                    </Stack>
 
-                        <CardBody>
-                            <Text textAlign={'justify'}>
-                                Despliegue detallado de gastos anteriormente realizados al reservar servicios
-                            </Text>
-                        </CardBody>
-
-                        <CardFooter justifyContent={'center'}>
-                            <Button
-                                borderRadius = {0}
-                                variant = "solid"
-                                colorScheme = "blue"
-                                width = {160}
-                                height={50}
-                                rounded = "50"
-                                mr = {5}
-                                ml = {5}
-                            >
-                                Ingresar
-                            </Button>
-                        </CardFooter>
-                    </Card>
-
-                    <Card textAlign={'center'} width={600} height={300}>
-                        <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Mensajes</Text>
-                        </CardHeader>
-
-                        <CardBody>
-                            <Text textAlign={'justify'}>
-                                Despliegue de los mensajes enviados por administrador.
-                            </Text>
-                        </CardBody>
-
-                        <CardFooter justifyContent={'center'}>
-                            <Button
-                                borderRadius = {0}
-                                variant = "solid"
-                                colorScheme = "blue"
-                                width = {160}
-                                height={50}
-                                rounded = "50"
-                                mr = {5}
-                                ml = {5}
-                            >
-                                Ingresar
-                            </Button>
-                        </CardFooter>
-                    </Card>
-                </Stack>
+                    <Stack width={900} height={230} alignItems='center' boxShadow = "md" rounded = "16">
+                        <Accordion allowToggle>
+                            <AccordionItem>
+                                <h2 >
+                                    <AccordionButton width={405}>
+                                        <Box as="span" flex='1'>
+                                            <Text as='b' textTransform={'uppercase'} textAlign={'center'}>
+                                                Mensajes
+                                            </Text>
+                                        </Box>
+                                        <AccordionIcon />
+                                    </AccordionButton>
+                                </h2>
+                                <AccordionPanel textAlign={'justify'}>
+                                    <Text height={90}>Despliegue de los mensajes enviados por administrador.</Text>
+                                </AccordionPanel>
+                            </AccordionItem>
+                        </Accordion>
+                        <Button
+                                    borderRadius = {0}
+                                    variant = "solid"
+                                    colorScheme = "blue"
+                                    width = {160}
+                                    height={50}
+                                    rounded = "50"
+                                    onClick = {() => router1.push("/Vecino/mensajes_vecino")}
+                                >
+                                    Ingresar
+                        </Button>
+                    </Stack>
+                </HStack>
             </Box>
         </Stack>
     );

@@ -86,6 +86,9 @@ const onSubmit = async(e) => {
 const [input, setInput] = useState("");
 
 const Carga = (e) =>{
+    if(e.target.value.length>8){
+        e.target.value=e.target.value.substring(0,8);
+    }
     setInput("+569"+e.target.value);
 };
 

@@ -39,7 +39,7 @@ COSAS POR HACE 2: MAS COSAS Y MAS QUE HACER QUE NUNCA
 -(INACTIVO) [NO APLICABLE] getAdministradores
 
 ---CobroController [FALTA IMPLEMENTAR CREATECOBRO]
--(INACTIVO) createCobro
+-(ACTIVO) createCobro
 -(ACTIVO) getCobros
 -(INACTIVO) [POSTERGADO] getCobroF
 -(INACTIVO) [EN ESTUDIO] updateCobro
@@ -51,7 +51,7 @@ COSAS POR HACE 2: MAS COSAS Y MAS QUE HACER QUE NUNCA
 -(ACTIVO) getMantenciones
 -(INACTIVO) [POSTERGADO] getMantencionH
 -(INACTIVO) [POSTERGADO] getMantencionN
--(INACTIVO) deleteMantencion
+-(ACTIVO) deleteMantencion
 -(INACTIVO) updateMantencion
 
 ---MensajeController [CREATE POSIBLE PRIORIDAD]
@@ -83,11 +83,11 @@ COSAS POR HACE 2: MAS COSAS Y MAS QUE HACER QUE NUNCA
 -(INACTIVO) updateServicio
 -(INACTIVO) [PURGAR] deleteServicio
 
----VecinosController [UPDATE]
+---VecinosController [COMPLETO]
 -(ACTIVO) createVecino
 -(ACTIVO) loginVecino
 -(ACTIVO) getVecinos
 -(ACTIVO) getVecino
--(INACTIVO) updateVecino
+-(ACTIVO) updateVecino
 -(ACTIVO) deleteVecino
 

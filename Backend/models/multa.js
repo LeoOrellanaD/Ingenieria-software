@@ -34,7 +34,7 @@ const multaSchema = new Schema({
         required: true
     },
     cod_multa:{
-        type: 'Number',
+        type: 'String',
         required: true,
         unique: true
     }

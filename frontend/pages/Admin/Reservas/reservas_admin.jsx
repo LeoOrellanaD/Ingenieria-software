@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input, TableContainer} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useRouter } from 'next/router'
 
 
 
 const ReservasAdmin= () => {
 
+    const router = useRouter()
     const [reservas, setReservas] = useState([])
     const getReservas = async () => {
         const response = await axios.get(`${process.env.API_URL}/reservas`)
@@ -118,7 +120,6 @@ return (
         mb="2"
         justifyContent="center"
         alignItems="center">
-                <Text fontSize={30} color="blue.400" mt={30} mb={30}>Buscar Reserva</Text>
             <HStack>
                 <VStack>
                 <Text>Dia</Text>
@@ -159,6 +160,14 @@ return (
         mb="2"
         justifyContent="center"
         alignItems="center">
+                <Text fontSize={30} color="blue.400" mt={30} mb={30}>Reservas</Text>
+                <Button mb="2"
+                variant="solid"
+                colorScheme="blue"
+                rounded="50"
+                onClick = {() => router.push("/Admin/Reservas/agregar_reserva")}>
+                Agregar Reserva</Button>
+
                 <TableContainer>
                 <Table variant={"simple"}>
                     <Thead>
@@ -179,6 +188,7 @@ return (
 				</Tbody>
                 </Table>
                 </TableContainer>
+
             </Stack>
         </form>
     </Box>

@@ -8,7 +8,6 @@ const validateReserva = [
     check('hora').exists().not().isEmpty().matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
     check('costo_base').exists().not().isEmpty().isInt({min:0}),
     check('costo_extra').exists().not().isEmpty().isInt({min:0}),
-    check('num_reserva').exists().not().isEmpty().isInt({min:0}),
 
 
     (req, res ,next) => {

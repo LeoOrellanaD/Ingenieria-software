@@ -1,23 +1,31 @@
 const Multa= require('../models/multa');
 
 const createMulta = (req, res) => {
-    const{valor, tipo, dia, mes, year, vecino,cod_multa} = req.body;
-    const newMulta = new Multa({
-        valor,
-        tipo,
-        dia,
-        mes,
-        year,
-        vecino,
-        cod_multa
-    });
+    const{valor, tipo, dia, mes, year, vecino} = req.body;
 
-newMulta.save((error, multa) =>{
-    if(error){
-        return res.status(400).send({message: 'Error al crear multa'});
-    }
-    return res.status(201).send(multa);
-})
+    Multa.countDocuments({},(error,count) =>{
+        console.log(count);
+        const num = String(count+1).padStart(5,'0');
+        console.log(num)
+
+        const newMulta = new Multa({
+            valor,
+            tipo,
+            dia,
+            mes,
+            year,
+            vecino,
+            cod_multa: num
+        });
+
+    newMulta.save((error, multa) =>{
+        if(error){
+            return res.status(400).send({message: 'Error al crear multa'});
+        }
+        return res.status(201).send(multa);
+        })
+    })
+
 }
 
 const getMultas =  (req, res) => {

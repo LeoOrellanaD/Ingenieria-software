@@ -13,7 +13,8 @@ import {
   Radio,
   RadioGroup,
   FormHelperText,
-  InputRightElement
+  InputRightElement,
+
 } from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
@@ -117,6 +118,10 @@ catch(error){
 }
 
 const onChange = (e) => {
+
+    if(e.target.value.length>4){
+      e.target.value=e.target.value.substring(0,4);
+    }
     setValues({
       ...values,
       [e.target.name]:e.target.value
@@ -132,8 +137,6 @@ useEffect(() => {
 
 
   return (
-
-
     <Flex
       flexDirection="column"
       width="100wh"
@@ -143,8 +146,8 @@ useEffect(() => {
       justifyContent="center"
       alignItems="center"
     >
-      
-      <Stack
+      <Box minW={{ base: "90%", md: "468px" }}  width={600} height={400} color="blue.500">
+        <Stack
         flexDir="column"
         mb="2"
         justifyContent="center"
@@ -200,6 +203,8 @@ useEffect(() => {
           </form>
         </Box>
       </Stack>
+      </Box>
+      
     </Flex>
   );
 

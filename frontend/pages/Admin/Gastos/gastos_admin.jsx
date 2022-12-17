@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody,HStack} from "@chakra-ui/react";
+import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody,HStack,Button} from "@chakra-ui/react";
 import axios from 'axios'
+import { useRouter } from 'next/router'
 
 
 const GastosAdmin= () => {
 
+const router = useRouter()
 const [cobros, setCobros] = useState([])
 const getCobros = async () => {
 const response = await axios.get(`${process.env.API_URL}/cobros`)
@@ -47,6 +49,12 @@ return (
 
 
     <Text fontSize={50} color="white" mt={30} mb={30}>Cobros de Vecinos</Text>
+    <Button mb="2"
+                variant="solid"
+                colorScheme="blue"
+                rounded="50"
+                onClick = {() => router.push("/Admin/Gastos/agregar_cobro")}>
+                    Generar Cobro</Button>
     <HStack>
         <Box  minW={{ base: "10%", md: "468px"}} >
         <form>

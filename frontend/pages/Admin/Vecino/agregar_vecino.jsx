@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input} from "@chakra-ui/react";
+import { Flex, Text, Box, Stack, Button,VStack,HStack, Input, Select} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
@@ -17,6 +17,18 @@ const AgregarVecino = () => {
   })
 
   const onChange = (e) => {
+
+    if(e.target.name=="vivienda" || e.target.name=="horas"){
+      if(e.target.value.length>2){
+        e.target.value=e.target.value.substring(0,2);
+      }
+    }
+    if(e.target.name=="codigo"){
+      if(e.target.value.length>4){
+        e.target.value=e.target.value.substring(0,4);
+      }
+    }
+
     setValues({
       ...values,
       [e.target.name]:e.target.value
@@ -84,13 +96,16 @@ const onSubmit= async(e) =>{
                       <Text color={"blue.400"} as="b" >Codigo</Text>
                     </VStack>
                     <VStack>
-                    <Input width={60} type={"text"} name={"nombre"} onChange={onChange} ></Input>
-                    <Input width={60}  type={"text"} name={"apellido"} onChange={onChange}></Input>
-                    <Input width={60} type={"text"} name={"rut"} onChange={onChange}></Input>
-                    <Input width={60} type={"text"} name={"vivienda"} onChange={onChange}></Input>
-                    <Input width={60} type={"text"} name={"horas"} onChange={onChange}></Input>
-                    <Input width={60} type={"text"} name={"permiso"} onChange={onChange}></Input>
-                    <Input width={60} type={"number"} name={"codigo"} onChange={onChange}></Input>
+                    <Input width={60} type={"text"} maxLength={20} name={"nombre"} onChange={onChange} ></Input>
+                    <Input width={60}  type={"text"} maxLength={20} name={"apellido"} onChange={onChange}></Input>
+                    <Input width={60} type={"text"} maxLength={12} name={"rut"} onChange={onChange}></Input>
+                    <Input width={60} type={"number"} maxLength={2} name={"vivienda"} onChange={onChange}></Input>
+                    <Input width={60} type={"number"} maxLength={2} name={"horas"} onChange={onChange}></Input>
+                    <Select placeholder='Permiso'  name="permiso" onChange={onChange}>
+                        <option color={"blue.400"} as="b" >habilitado</option>
+                        <option color={"blue.400"} as="b" >inhabilitado</option>
+                      </Select>
+                    <Input width={60} type={"number"} maxLength={4} name={"codigo"} onChange={onChange}></Input>
                     </VStack>
                     </HStack>
                           <Button mb="2"

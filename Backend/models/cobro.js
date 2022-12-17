@@ -29,7 +29,7 @@ const cobroSchema = new Schema({
         required: true
     },
     num_cobro: {
-        type: 'Number',
+        type: 'String',
         required: true
     }
 })

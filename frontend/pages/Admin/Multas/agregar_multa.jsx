@@ -19,8 +19,7 @@ const AgregarMulta = () => {
         dia:day.toString(),
         mes:month.toString(),
         year:year.toString(),
-        vecino:'',
-        cod_multa:''
+        vecino:''
       })
 
   const onChange = (e) => {
@@ -106,7 +105,6 @@ return (
                       <Text color={"blue.400"} as="b" >Vecino</Text>
                       <Text color={"blue.400"} as="b" >Tipo</Text>
                       <Text color={"blue.400"} as="b" >Valor</Text>
-                      <Text color={"blue.400"} as="b" >N° Multa</Text>
                     </VStack>
                     <VStack>
                     <Text width={60}>{day}/{month}/{year}</Text>
@@ -120,7 +118,6 @@ return (
                         <option color={"blue.400"} as="b" >por cancelacion</option>
                       </Select>
                     <Input width={60} type={"text"} name={"valor"}onChange={onChange} ></Input>
-                    <Input width={60} type={"text"} name={"cod_multa"} onChange={onChange} ></Input>
                     </VStack>
                     </HStack>
                           <Button mb="2"

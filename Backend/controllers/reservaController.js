@@ -1,10 +1,9 @@
 const Reserva = require('../models/reserva');
-const Vecino = require('../models/vecino');
 
 const createReserva = (req, res) => {
-    const { dia, mes, year, hora, servicio, vecino, costo_base, costo_extra, num_reserva} = req.body
+    const { dia, mes, year, hora, servicio, vecino, costo_base, costo_extra} = req.body
     Reserva.countDocuments({dia,mes,year,hora},(error,count)=>{
-        console.log(count);
+        //console.log(count);
         if(error){
             return res.status(400).send({message:"no se pudo calcular la cantidad de reservas"})
         }
@@ -13,6 +12,11 @@ const createReserva = (req, res) => {
         }
 
         if(count<3){
+
+            Reserva.countDocuments({},(error,cantidad) =>{
+            console.log(cantidad);
+            const num = String(cantidad+1).padStart(5,'0');
+            console.log(num)
             const newReserva = new Reserva({
                 dia,
                 mes,
@@ -22,7 +26,7 @@ const createReserva = (req, res) => {
                 vecino,
                 costo_base,
                 costo_extra,
-                num_reserva
+                num_reserva : num
             })
 
                 newReserva.save((error, reserva) => {
@@ -31,6 +35,7 @@ const createReserva = (req, res) => {
                     return res.status(400).send({ message: "No se ha podido crear la reserva"})
                 }
                 return res.status(201).send(reserva)
+            })
             })
         }
     })
@@ -97,7 +102,8 @@ const getReservas = (req, res) => {
         if(reservas.length === 0){
             return res.status(404).send({ message: "No se encontraron reservas"})
         }
-        let reservasordenadas= reservas.sort((a, b) => a.num_reserva - b.num_reserva);
+        let reservasordenadas= reservas.sort((a, b) => (a.dia && a.mes && a.year - b.dia && b.mes && b.year));
+
         return res.status(200).send(reservasordenadas)
     })
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,HStack} from "@chakra-ui/react";
+import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,HStack, Input} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 const VecinosAdmin= () => {
 
     const router = useRouter()
-
     const [vecinos, setVecinos] = useState([])
     const getVecinos = async () => {
     const response = await axios.get(`${process.env.API_URL}/vecinos`)
@@ -53,6 +52,16 @@ const VecinosAdmin= () => {
                         variant="solid"
                         colorScheme="blue"
                         rounded="50"
+                        width={"full"}
+                        onClick={()=> router.push({pathname:'/Admin/Vecino/editar_vecino',
+                    query:{codigo:vecinos.codigo}})}
+                        >Editar</Button>}</Td>
+                <Td>{   <Button
+                        id={vecinos.codigo}
+                        variant="solid"
+                        colorScheme="blue"
+                        rounded="50"
+                        width={"80%"}
                         onClick={()=>deleteVecino(vecinos.codigo)}
                         >Eliminar</Button>}</Td>
                 </Tr>
@@ -78,7 +87,7 @@ return (
                     Agregar Vecino</Button>
         <HStack>
 
-            <Box  minW={{ base: "10%", md: "468px"}} >
+            <Box  minW={{ base: "10%", md: "468px"}} width="100wh" >
             <form>
                 <Stack spacing={4}
                     p="1rem"
@@ -98,6 +107,7 @@ return (
                             <Td color={"blue.400"}>Vivienda</Td>
                             <Td color={"blue.400"}>Horas</Td>
                             <Td color={"blue.400"}>Permiso</Td>
+                            <Td color={"blue.400"}>Opciones</Td>
                         </Tr>
                         </Thead>
                         <Tbody>

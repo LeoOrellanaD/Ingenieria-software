@@ -1,22 +1,30 @@
 const Cobro = require('../models/cobro');
 
 const createCobro = (req, res) => {
-    const { multa_total, reserva_total, vecino, mes, year,num_cobro} = req.body
-    const newCobro = new Cobro({
-        multa_total,
-        reserva_total,
-        vecino,
-        costo_total : (multa_total + reserva_total),
-        mes,
-        year,
-        num_cobro
+    const { multa_total, reserva_total, vecino, mes, year} = req.body
+
+    Cobro.countDocuments({},(error,count) =>{
+       // console.log(count);
+        const num = String(count+1).padStart(5,'0');
+       // console.log(num)
+
+        const newCobro = new Cobro({
+            multa_total,
+            reserva_total,
+            vecino,
+            costo_total : (multa_total + reserva_total),
+            mes,
+            year,
+            num_cobro: num
+        })
+        newCobro.save((error, cobro) => {
+            if(error){
+                return res.status(400).send({ message: "No se ha podido crear el cobro"})
+            }
+            return res.status(201).send(cobro)
+        })
     })
-    newCobro.save((error, cobro) => {
-        if(error){
-            return res.status(400).send({ message: "No se ha podido crear el cobro"})
-        }
-        return res.status(201).send(cobro)
-    })
+    
 }
 
 const getCobros = (req, res) => {
