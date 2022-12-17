@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select } from "@chakra-ui/react";
+import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select,Label } from "@chakra-ui/react";
 import { Calendar } from 'react-date-range';
 import format from 'date-fns/format'
 import Swal from 'sweetalert2'
@@ -9,6 +9,13 @@ import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 
 const AgregarReserva=()=> {
+
+
+    const [selectedOption, setSelectedOption] = useState('')
+    const [valor, setValor] = useState('0')
+    const [open, setOpen] = useState(false)
+    const [calendar, setCalendar] = useState('')
+    const refOne = useRef(null)
 
     const [values, setValues]= useState({
         dia:'',
@@ -20,11 +27,10 @@ const AgregarReserva=()=> {
         costo_base:'',
         costo_extra:''
     })
-    const [open, setOpen] = useState(false)
-    const [calendar, setCalendar] = useState('')
-    const refOne = useRef(null)
 
     useEffect(() => {
+        getVecinos()
+        getServicios()
         setCalendar(format(new Date(), 'dd/MM/yyyy'))
         document.addEventListener("keydown", hideOnEscape, true)
         document.addEventListener("click", hideOnClickOutside, true)
@@ -50,20 +56,59 @@ const AgregarReserva=()=> {
         const dia=  a.toString();
         const mes=  b.toString();
         const year= c.toString();
-        setFecha({a ,b , c});
         setValues({...values,dia,mes,year});
     }
+
+
     const onChange = (e) => {
-        setValues({
-        ...values,
-        [e.target.name]:e.target.value
-        })
-        console.log(e.target.name,e.target.value);
+
+        if(e.target.name=="servicio"){
+
+            if(e.target.value=='6383fdffc30aa7d98e884a0b'){
+                setValor(8000)
+                setValues({...values,
+                    servicio:e.target.value, costo_base: "8000"});
+            }
+        if(e.target.value=='6383fdeac30aa7d98e884a09'){
+            setValor(6000)
+            setValues({...values,
+                servicio:e.target.value,costo_base: "6000"});
+        }
+        }else{
+            setValues({
+                ...values,
+                [e.target.name]:e.target.value
+                })
+                console.log(e.target.name,e.target.value);
+
+
+        }
+
+
     }
 
-    const onSubmit= async(e) =>{
+
+    const Actualizar = () =>{
+
+        if(values.servicio=='6383fdffc30aa7d98e884a0b'){
+            setValues({...values,
+                costo_base: "8000"});
+        }
+        if(values.servicio=='6383fdeac30aa7d98e884a09'){
+            setValues({...values,
+                costo_base: "6000"});
+        }
+    }
+
+
+    const onSubmit= async (e) =>{
+
         e.preventDefault()
+        Actualizar();
         console.log(values)
+
+
+
         try {
         const response = await axios.post(`${process.env.API_URL}/reserva`,values)
         console.log(response)
@@ -88,6 +133,35 @@ const AgregarReserva=()=> {
         }
     }
 
+    const [vecinos, setVecinos] = useState([])
+    const getVecinos = async () => {
+    const response = await axios.get(`${process.env.API_URL}/vecinos`)
+    setVecinos(response.data)
+    }
+
+    const [servicios, setServicios] = useState([])
+    const getServicios = async () => {
+    const response = await axios.get(`${process.env.API_URL}/servicios`)
+    setServicios(response.data)
+    }
+
+    const showVecinos= () =>{
+        return vecinos.map(vecinos =>{
+            return (
+            <option name="vecino" key={vecinos._id} value={vecinos._id}>{vecinos.nombre} {vecinos.apellido}</option>
+
+        )
+    })
+    }
+
+    const showServicios= () =>{
+        return servicios.map(servicios =>{
+        return (
+            <option name="servicio" key={servicios.nombre} value={servicios._id}>{servicios.nombre}</option>
+          )
+      })
+      }  
+
 return (
     <Flex
             flexDirection="column"
@@ -96,7 +170,7 @@ return (
             backgroundColor="blue.400"
             alignItems="center"
             >
-              <Text fontSize={50} color="white" mt={30} mb={30}>Crear Mantencion</Text>
+              <Text fontSize={50} color="white" mt={30} mb={30}>Crear Reserva</Text>
               <Box  minW={{ base: "10%", md: "468px"}} >
             <form>
                 <Stack spacing={4}
@@ -111,7 +185,7 @@ return (
                 <HStack>
                     <VStack spacing={6}>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >Fecha</Text>
+                                    <Text color={"blue.400"} as="b" >Fecha:</Text>
                                     <Input
                                         value={ calendar }
                                         readOnly
@@ -120,6 +194,7 @@ return (
                                     <Box ref={refOne} flexDirection="column">
                                     {open &&
                                     <Calendar
+                                    direction='horizontal'
                                     date={ new Date()}
                                     onChange = {handleSelect}
                                     className="calendarElement"
@@ -128,33 +203,33 @@ return (
                                 </Box>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >Nombre de empresa</Text>
-                                    <Input width={60} type={"text"} name={"nombre_empresa"}onChange={onChange} ></Input>
+                                    <Text color={"blue.400"} as="b" >Hora:</Text>
+                                    <Input width={60} type="datetime-local" name={"hora"} onChange={onChange} step={3600}></Input>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >rut de empresa</Text>
-                                    <Input width={60} type={"text"} name={"rut_empresa"}onChange={onChange} ></Input>
+                                    <Text  value={selectedOption} color={"blue.400"} name="servicio" as="b" >Servicio:</Text>
+                                    <Select placeholder='seleccione servicio' name="servicio" onChange={onChange}>
+                                        {showServicios()}
+                                    </Select>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >giro de empresa</Text>
-                                    <Input width={60} type={"text"} name={"giro"}onChange={onChange} ></Input>
+                                    <Text color={"blue.400"} as="b" >Vecino</Text>
+                                    <Select placeholder='Vecinos' name="vecino" onChange={onChange}>
+                                    {showVecinos()}
+                                    </Select>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >descripcion de mantencion</Text>
-                                    <Input width={60} type={"text"} name={"descripcion"}onChange={onChange} ></Input>
+                                    <Text color={"blue.400"} as="b" >Costo del Servicio</Text>(
+                                    <Text name='costo_base'>{valor}</Text>)
+
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >valor </Text>
-                                    <Input width={60} type={"number"} name={"valor"}onChange={onChange} ></Input>
-                            </HStack>
-                            
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Observaciones </Text>
-                                    <Input width={60} type={"text"} minLength={10} maxLength={200} name={"observaciones"}onChange={onChange} ></Input>
+                                    <Text color={"blue.400"} as="b" >Costo Extra </Text>
+                                    <Input width={60} type={"number"} name={"costo_extra"}onChange={onChange} ></Input>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >NÂ° mantencion</Text>
-                                    <Input width={60} type={"number"} name={"num_mantencion"} onChange={onChange} ></Input>
+                                    <Text color={"blue.400"} as="b" >Costo total </Text>
+                                    <Text></Text>
                             </HStack>
                     </VStack>
 
