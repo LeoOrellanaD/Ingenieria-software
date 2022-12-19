@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Box, Stack , HStack, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel} from "@chakra-ui/react";
+import { Flex, Text, Box, Stack , HStack, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel, Button} from "@chakra-ui/react";
 import axios from 'axios'
+import { useRouter } from 'next/router'
 
 const MensajesAdmin = () => {
 
+const router = useRouter()
 const [mensajes, setMensajes] = useState([])
     const getMensajes = async () => {
     const response = await axios.get(`${process.env.API_URL}/mensajes`)
@@ -55,6 +57,12 @@ const showMensajes = () =>{
 
 
         <Text fontSize={50} color="white" mt={30} mb={30}>Mensajes</Text>
+        <Button mb="2"
+                variant="solid"
+                colorScheme="blue"
+                rounded="50"
+                onClick = {() => router.push("/Admin/Mensajes/agregar_mensaje")}>
+                    Agregar Mensaje</Button>
         <HStack>
 
             <Box  minW={{ base: "10%", md: "468px"}} width="700">
@@ -67,24 +75,6 @@ const showMensajes = () =>{
             mb="2"
             justifyContent="center"
             alignItems="center">
-                    {/* <Table variant={"simple"}>
-                        <Thead>
-                        <Tr>
-                            <Td color={"blue.400"}>Dia</Td>
-                            <Td color={"blue.400"}>Mes</Td>
-                            <Td color={"blue.400"}>Año</Td>
-                            <Td color={"blue.400"}>Administrador</Td>
-                            <Td>   </Td>
-                            <Td color={"blue.400"}>Vecinos</Td>
-                            <Td>   </Td>
-                            <Td color={"blue.400"}>Contenido</Td>
-
-                        </Tr>
-                        </Thead>
-                        <Tbody>
-                        {showMensajes()}
-                    </Tbody>
-                    </Table> */}
                     <Accordion allowToggle key={mensajes._id}width={700}>
                     {showMensajes()}
                     </Accordion>

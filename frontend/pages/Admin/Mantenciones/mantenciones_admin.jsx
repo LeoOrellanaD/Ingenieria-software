@@ -80,6 +80,7 @@ return (
         >
 
     <Text fontSize={50} color="white" mt={30} mb={30}>Mantenciones</Text>
+    
 
     <Button mb="2"
                 variant="solid"

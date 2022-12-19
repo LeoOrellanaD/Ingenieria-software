@@ -5,6 +5,8 @@ import format from 'date-fns/format'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 
+
+
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 
@@ -12,10 +14,12 @@ const AgregarReserva=()=> {
 
 
     const [selectedOption, setSelectedOption] = useState('')
-    const [valor, setValor] = useState('0')
     const [open, setOpen] = useState(false)
     const [calendar, setCalendar] = useState('')
     const refOne = useRef(null)
+    
+
+    //const [date, setDate] = useState('')
 
     const [values, setValues]= useState({
         dia:'',
@@ -29,11 +33,19 @@ const AgregarReserva=()=> {
     })
 
     useEffect(() => {
+
         getVecinos()
         getServicios()
         setCalendar(format(new Date(), 'dd/MM/yyyy'))
         document.addEventListener("keydown", hideOnEscape, true)
         document.addEventListener("click", hideOnClickOutside, true)
+
+
+        const timeInput = document.getElementById('time');
+        timeInput.addEventListener('input', (e) => {
+        let hour = e.target.value.split(':')[0]
+        e.target.value = `${hour}:00`
+        })
     }, [])
 
     const hideOnEscape = (e) => {
@@ -47,9 +59,12 @@ const AgregarReserva=()=> {
             setOpen(false)
         }
     }
+
+    //posiblemente hay que eliminar
     const handleSelect = (date) => {
+        console.log("FECHA AAA")
+        console.log(date)
         setCalendar(format(date, 'dd/MM/yyyy'))
-        //console.log(date)
         const a=date.getDate();
         const b=date.getMonth()+1;
         const c=date.getFullYear();
@@ -61,18 +76,17 @@ const AgregarReserva=()=> {
 
 
     const onChange = (e) => {
-
         if(e.target.name=="servicio"){
 
             if(e.target.value=='6383fdffc30aa7d98e884a0b'){
-                setValor(8000)
                 setValues({...values,
                     servicio:e.target.value, costo_base: "8000"});
+                    console.log(e.target.name,e.target.value);
             }
         if(e.target.value=='6383fdeac30aa7d98e884a09'){
-            setValor(6000)
             setValues({...values,
                 servicio:e.target.value,costo_base: "6000"});
+                console.log(e.target.name,e.target.value);
         }
         }else{
             setValues({
@@ -80,21 +94,75 @@ const AgregarReserva=()=> {
                 [e.target.name]:e.target.value
                 })
                 console.log(e.target.name,e.target.value);
-
-
         }
-
-
     }
+
+    /**Funcion que permite agregar los valores de: Día, Mes y Año
+     */
+    const DateSetter = (e) =>
+    {
+        const string = e.target.value
+        const timestamp = Date.parse(string)
+        const date2 = new Date(timestamp)
+
+        const a=date2.getDate()+1;
+        const b=date2.getMonth()+1;
+        const c=date2.getFullYear();
+        const dia=  a.toString();
+        const mes=  b.toString();
+        const year= c.toString();
+
+        setValues({...values,dia,mes,year});
+    }
+
+
+    /**
+     *Funciones que permiten establecer las fechas limites para un input Date
+     *
+     */
+    function castMin()
+    {
+        const currentDate = new Date();
+        const dateString1 = currentDate.toLocaleDateString('es-ES', { day: '2-digit' });
+        const dateString2 = currentDate.toLocaleDateString('es-ES', { month: '2-digit' });
+        const dateString3 = currentDate.toLocaleDateString('es-ES', { year: 'numeric' });
+
+        const fechaMinima = (dateString3 + '-' + dateString2 + '-' + dateString1)
+        return fechaMinima;
+    }
+
+
+    function castMax()
+    {
+        const currentDate = new Date();
+        const dateString1 = currentDate.toLocaleDateString('es-ES', { day: '2-digit' });
+        const dateString2 = currentDate.toLocaleDateString('es-ES', { month: '2-digit' });
+        const dateString3 = currentDate.toLocaleDateString('es-ES', { year: 'numeric' });
+        const dia2='01'
+        const mes2='01'
+        const mes= (parseInt(dateString2, 10)+1);
+        const year2 = (parseInt(dateString3, 10)+1);
+
+        if(dateString2==12)
+        {
+                const fechaMaxima = (year2 + '-' + mes2 + '-' + dia2)
+            return fechaMaxima;
+        }else
+        {
+                const fechaMaxima = (dateString3 + '-' + mes + '-' + dateString1)
+            return fechaMaxima;
+        }
+    }
+
 
 
     const Actualizar = () =>{
 
-        if(values.servicio=='6383fdffc30aa7d98e884a0b'){
+        if(values.servicio.nombre=='lavadora'){
             setValues({...values,
                 costo_base: "8000"});
         }
-        if(values.servicio=='6383fdeac30aa7d98e884a09'){
+        if(values.servicio.nombre=='secadora'){
             setValues({...values,
                 costo_base: "6000"});
         }
@@ -115,7 +183,7 @@ const AgregarReserva=()=> {
 
         if(response.status===201){
             Swal.fire({
-            title:"Mantención Registrada",
+            title:"Reserva Registrada",
             icon:'success',
             confirmButtonText:'OK'
             }).then(()=>{
@@ -125,7 +193,7 @@ const AgregarReserva=()=> {
         } catch (error) {
             console.log(error.status)
         Swal.fire({
-            title:"No se pudo agendar la Mantención",
+            title:"No se pudo agendar la Reserva",
             text:'Por favor revise los datos ingresado',
             icon:'warning',
             confirmButtonText:'OK'
@@ -155,12 +223,14 @@ const AgregarReserva=()=> {
     }
 
     const showServicios= () =>{
+
         return servicios.map(servicios =>{
         return (
+
             <option name="servicio" key={servicios.nombre} value={servicios._id}>{servicios.nombre}</option>
-          )
-      })
-      }  
+        )
+        })
+    }
 
 return (
     <Flex
@@ -185,26 +255,21 @@ return (
                 <HStack>
                     <VStack spacing={6}>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >Fecha:</Text>
-                                    <Input
-                                        value={ calendar }
-                                        readOnly
-                                        onClick={ () => setOpen(open => !open) }
-                                    />
-                                    <Box ref={refOne} flexDirection="column">
-                                    {open &&
-                                    <Calendar
-                                    direction='horizontal'
-                                    date={ new Date()}
-                                    onChange = {handleSelect}
-                                    className="calendarElement"
-                                />
-                                }
-                                </Box>
+
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Hora:</Text>
-                                    <Input width={60} type="datetime-local" name={"hora"} onChange={onChange} step={3600}></Input>
+                                    <Input type="date" id="start"
+                                        date={new Date()}
+                                        onChange={DateSetter}
+                                        min={castMin()} max={castMax()}></Input>
+                            </HStack>
+
+                            <HStack>
+                                    <Text color={"blue.400"} as="b" >Hora:</Text>
+                                    <Input width={60}
+                                    type="time"
+                                    pattern="[0-9]{2}:[0-9]{2}" name={"hora"} onChange={onChange}  id="time"></Input>
                             </HStack>
                             <HStack>
                                     <Text  value={selectedOption} color={"blue.400"} name="servicio" as="b" >Servicio:</Text>
@@ -220,7 +285,7 @@ return (
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Costo del Servicio</Text>(
-                                    <Text name='costo_base'>{valor}</Text>)
+                                    <Text name='costo_base'>{values.costo_base}</Text>)
 
                             </HStack>
                             <HStack>
@@ -229,7 +294,7 @@ return (
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Costo total </Text>
-                                    <Text></Text>
+                                    <Text>{}</Text>
                             </HStack>
                     </VStack>
 
