@@ -1,8 +1,9 @@
 const Multa= require('../models/multa');
+const Vecino = require('../models/vecino');
 
 const createMulta = (req, res) => {
     const{valor, tipo, dia, mes, year, vecino} = req.body;
-
+    const {codigo} =req.params
     Multa.countDocuments({},(error,count) =>{
         console.log(count);
         const num = String(count+1).padStart(5,'0');
@@ -22,6 +23,12 @@ const createMulta = (req, res) => {
         if(error){
             return res.status(400).send({message: 'Error al crear multa'});
         }
+        Vecino.updateOne({ codigo: codigo }, { $push: { multas: multa._id } }, (error) => {
+            if (error) {
+                console.log(error)
+                return res.status(400).send({ message: "Error al actualizar el vecino" })
+            }
+        })
         return res.status(201).send(multa);
         })
     })

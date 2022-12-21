@@ -33,11 +33,11 @@ const Inicio_admin = () => {
             const response = await axios.get(`${process.env.API_URL}/administrador/search/${localStorage.getItem('codigo')}`)
             setAdmin(response.data);
         }
-        console.log(administrador)
     };
 
     useEffect(() => {
         getAdmin();
+        localStorage.setItem('reserva', 0)
     }, []);
 
     const showAdmin = () => {

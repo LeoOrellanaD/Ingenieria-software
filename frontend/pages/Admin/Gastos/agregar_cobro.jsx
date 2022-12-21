@@ -8,6 +8,7 @@ const AgregarCobro = () => {
     const today = new Date();
     const month= today.getMonth()+1;
     const year= today.getFullYear();
+    
 
     const [values, setValues]= useState({
         multa_total:'',
@@ -17,8 +18,16 @@ const AgregarCobro = () => {
         year:year.toString()
     })
 
-    const onChange = (e) => {
-        
+    const onChange = async (e) => {
+
+        if(e.target.name == "vecino"){
+            const response = await axios.get(`${process.env.API_URL}/vecino/search/${e.target.value}`)
+            setValues({
+                ...values,
+                [e.target.name]:response.data._id
+                })
+                console.log(e.target.name,response.data._id);
+        }else
         if(e.target.name=="multa_total" || e.target.name=="reserva_total"){
             setValues({
                 ...values,
@@ -33,12 +42,17 @@ const AgregarCobro = () => {
                 })
                 console.log(e.target.name,e.target.value);
         }
-        
+
     }
     const [vecinos, setVecinos] = useState([])
     const getVecinos = async () => {
-    const response = await axios.get(`${process.env.API_URL}/vecinos`)
-    setVecinos(response.data)
+        try {
+            const response = await axios.get(`${process.env.API_URL}/vecinos`)
+            setVecinos(response.data)
+        } catch (error) {
+
+        }
+
     }
 
     useEffect(() => {
@@ -48,7 +62,7 @@ const AgregarCobro = () => {
     const showVecinos= () =>{
         return vecinos.map(vecinos =>{
         return (
-            <option name="vecino" key={vecinos._id} value={vecinos._id}>{vecinos.nombre} {vecinos.apellido}</option>
+            <option name="vecino" value={vecinos.codigo}>{vecinos.nombre} {vecinos.apellido}</option>
         )
     })
     }
@@ -57,7 +71,7 @@ const AgregarCobro = () => {
         e.preventDefault()
         console.log(values)
         try {
-        const response = await axios.post(`${process.env.API_URL}/cobro`,values)
+        const response = await axios.post(`${process.env.API_URL}/cobro/${vecino_select.value}`,values)
         console.log(response)
 
         if(response.status===201){
@@ -111,7 +125,7 @@ return (
                     <Text width={60}>{month}/{year}</Text>
                     <Input width={60} type={"number"} name={"multa_total"}onChange={onChange}></Input>
                     <Input width={60} type={"number"} name={"reserva_total"}onChange={onChange} ></Input>
-                    <Select placeholder='Vecinos' name="vecino" onChange={onChange}>
+                    <Select  id="vecino_select" placeholder='Vecinos' name="vecino" onChange={onChange}>
                     {showVecinos()}
                     </Select>
                     </VStack>

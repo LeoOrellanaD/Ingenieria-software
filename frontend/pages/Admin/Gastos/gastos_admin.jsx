@@ -9,8 +9,13 @@ const GastosAdmin= () => {
 const router = useRouter()
 const [cobros, setCobros] = useState([])
 const getCobros = async () => {
-const response = await axios.get(`${process.env.API_URL}/cobros`)
-setCobros(response.data)
+    try {
+        const response = await axios.get(`${process.env.API_URL}/cobros`)
+        setCobros(response.data)
+    } catch (error) {
+
+    }
+
 }
 
 useEffect(() => {

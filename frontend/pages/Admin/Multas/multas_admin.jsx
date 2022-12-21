@@ -11,8 +11,13 @@ const MultasAdmin = () => {
 
 const [multas, setMultas] = useState([])
     const getMultas = async () => {
-    const response = await axios.get(`${process.env.API_URL}/multas`)
-    setMultas(response.data)
+        try {
+            const response = await axios.get(`${process.env.API_URL}/multas`)
+            setMultas(response.data)
+        } catch (error) {
+        }
+    
+    
     }
     useEffect(() => {
         getMultas()

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select,Label } from "@chakra-ui/react";
+import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select} from "@chakra-ui/react";
 import format from 'date-fns/format'
 import Swal from 'sweetalert2'
 import axios from 'axios'
-
+import { useRouter } from "next/router";
 
 
 import 'react-date-range/dist/styles.css'
@@ -11,6 +11,37 @@ import 'react-date-range/dist/theme/default.css'
 
 const AgregarReserva=()=> {
 
+    const router = useRouter();
+    const {
+        query: { codigo },
+    } = router;
+
+    const props = {
+        codigo,
+    };
+    const setCookieFunction = (codigo) => {
+        localStorage.setItem('codigo', codigo)
+    }
+
+    const [vecino1, setVecino] = useState([])
+    const getVecino = async () => {
+    if(codigo){
+        setCookieFunction(codigo)
+        const response = await axios.get(`${process.env.API_URL}/vecino/search/${props.codigo}`)
+        setVecino(response.data);
+        setValues({
+            ...values,
+            vecino:vecino1._id,
+        })
+    }else{
+            const response = await axios.get(`${process.env.API_URL}/vecino/search/${localStorage.getItem('codigo')}`)
+            setVecino(response.data);
+            setValues({
+                ...values,
+                vecino:vecino1._id,
+            })
+    }
+    }
 
     const [selectedOption, setSelectedOption] = useState('')
     const [open, setOpen] = useState(false)
@@ -23,20 +54,16 @@ const AgregarReserva=()=> {
         year:'',
         hora:'',
         servicio:'',
-        vecino:'',
+        vecino: getVecino(),
         costo_base:'',
         costo_extra: 0
     })
 
     useEffect(() => {
-
-        localStorage.setItem('reserva', 0)
-        getVecinos()
         getServicios()
         setCalendar(format(new Date(), 'dd/MM/yyyy'))
         document.addEventListener("keydown", hideOnEscape, true)
         document.addEventListener("click", hideOnClickOutside, true)
-
     }, [])
 
     const hideOnEscape = (e) => {
@@ -67,7 +94,7 @@ const AgregarReserva=()=> {
 
 
     const onChange = async (e) => {
-        
+
         if(e.target.name=="servicio"){
 
             const response1 = await axios.get(`${process.env.API_URL}/servicio/search/${e.target.value}`)
@@ -78,16 +105,7 @@ const AgregarReserva=()=> {
                 })
                 console.log(e.target.name, response1.data.costo);
         }else
-        if(e.target.name == "vecino"){
-            const response = await axios.get(`${process.env.API_URL}/vecino/search/${e.target.value}`)
-            setValues({
-                ...values,
-                [e.target.name]:response.data._id
-                })
-                console.log(e.target.name,response.data._id);
-        }else
-        if(e.target.name != "vecino" || e.target.name != "servicio"){
-            console.log(e.target.name,e.target.value);
+        if( e.target.name != "servicio"){
             setValues({
                 ...values,
                 [e.target.name]:e.target.value
@@ -155,31 +173,14 @@ const AgregarReserva=()=> {
 
 
 
-    const Actualizar = () =>{
-
-        if(values.servicio.nombre=='lavadora'){
-            setValues({...values,
-                costo_base: "8000"});
-        }
-        if(values.servicio.nombre=='secadora'){
-            setValues({...values,
-                costo_base: "6000"});
-        }
-    }
-
-
     const onSubmit= async (e) =>{
 
         e.preventDefault()
-        Actualizar();
         console.log(values)
 
-
-
         try {
-            console.log(vecino_select.value)
-        const response = await axios.post(`${process.env.API_URL}/reserva/${vecino_select.value}`,values)
-        
+        const response = await axios.post(`${process.env.API_URL}/reserva/${codigo}`,values)
+        console.log(response)
 
         if(response.status===201){
             Swal.fire({
@@ -201,25 +202,12 @@ const AgregarReserva=()=> {
         }
     }
 
-    const [vecinos, setVecinos] = useState([])
-    const getVecinos = async () => {
-    const response = await axios.get(`${process.env.API_URL}/vecinos`)
-    setVecinos(response.data)
-    }
+    
 
     const [servicios, setServicios] = useState([])
     const getServicios = async () => {
     const response = await axios.get(`${process.env.API_URL}/servicios`)
     setServicios(response.data)
-    }
-
-    const showVecinos= () =>{
-        return vecinos.map(vecinos =>{
-            return (
-            <option name="vecino" key={vecinos._id} value={vecinos.codigo}>{vecinos.nombre} {vecinos.apellido}</option>
-
-        )
-    })
     }
 
     const showServicios= () =>{
@@ -258,7 +246,7 @@ return (
 
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >Fecha:</Text>
+                                    <Text color={"blue.400"} as="b" >Hora:</Text>
                                     <Input type="date" id="start"
                                         date={new Date()}
                                         onChange={DateSetter}
@@ -269,7 +257,7 @@ return (
                                     <Text color={"blue.400"} as="b" >Hora:</Text>
                                     <Input width={60}
                                     type="time"
-                                    pattern="\d{2}:00" name={"hora"} onChange={onChange} id="time" step={3600}></Input>
+                                    pattern="[0-9]{2}:[0-9]{2}" name={"hora"} onChange={onChange} step={3600}></Input>
                             </HStack>
                             <HStack>
                                     <Text  value={selectedOption} color={"blue.400"} name="servicio" as="b" >Servicio:</Text>
@@ -278,14 +266,8 @@ return (
                                     </Select>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >Vecino</Text>
-                                    <Select id="vecino_select" placeholder='Vecinos' name="vecino" onChange={onChange}>
-                                    {showVecinos()}
-                                    </Select>
-                            </HStack>
-                            <HStack>
                                     <Text color={"blue.400"} as="b" >Costo del Servicio</Text>(
-                                    <Text name='costo_base'>{"$"+values.costo_base}</Text>)
+                                    <Text name='costo_base'>{values.costo_base}</Text>)
 
                             </HStack>
                             <HStack>
@@ -294,7 +276,7 @@ return (
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Costo total </Text>
-                                    <Text>${Number(values.costo_base)+Number(values.costo_extra)}</Text>
+                                    <Text></Text>
                             </HStack>
                     </VStack>
 

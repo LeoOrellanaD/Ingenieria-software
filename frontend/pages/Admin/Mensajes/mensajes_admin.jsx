@@ -8,8 +8,13 @@ const MensajesAdmin = () => {
 const router = useRouter()
 const [mensajes, setMensajes] = useState([])
     const getMensajes = async () => {
-    const response = await axios.get(`${process.env.API_URL}/mensajes`)
+    try {
+        const response = await axios.get(`${process.env.API_URL}/mensajes`)
     setMensajes(response.data)
+    } catch (error) {
+
+    }
+
     }
 useEffect(() => {
     getMensajes()

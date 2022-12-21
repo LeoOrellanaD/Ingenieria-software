@@ -1,13 +1,11 @@
 const Cobro = require('../models/cobro');
+const Vecino = require('../models/vecino');
 
 const createCobro = (req, res) => {
     const { multa_total, reserva_total, vecino, mes, year} = req.body
-
+    const {codigo}= req.params
     Cobro.countDocuments({},(error,count) =>{
-       // console.log(count);
         const num = String(count+1).padStart(5,'0');
-       // console.log(num)
-
         const newCobro = new Cobro({
             multa_total,
             reserva_total,
@@ -21,10 +19,15 @@ const createCobro = (req, res) => {
             if(error){
                 return res.status(400).send({ message: "No se ha podido crear el cobro"})
             }
+            Vecino.updateOne({ codigo: codigo }, { $push: { cobros: cobro._id } }, (error) => {
+                if (error) {
+                    console.log(error)
+                    return res.status(400).send({ message: "Error al actualizar el vecino" })
+                }
+            })
             return res.status(201).send(cobro)
         })
     })
-    
 }
 
 const getCobros = (req, res) => {

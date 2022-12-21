@@ -3,7 +3,7 @@ const multaController = require('../controllers/multaController');
 const api = express.Router();
 const { validateMulta } = require('../validators/multaValidacion')
 
-api.post('/multa',validateMulta, multaController.createMulta);
+api.post('/multa/:codigo',validateMulta, multaController.createMulta);
 api.get('/multas', multaController.getMultas);
 api.get('/multa/search/:cod_multa', multaController.getMulta);
 api.get('/multa/search/:dia/:mes/:year', multaController.getMultaF);

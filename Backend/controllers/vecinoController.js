@@ -90,6 +90,58 @@ const deleteVecino= (req, res) =>{
     })
 }
 
+const getReservasVecino = (req, res) => {
+    const { codigo } = req.params;
+    Vecino.findOne({codigo}).populate({ path: 'reservas', populate: {path: 'servicio'} }).exec((error, vecino) => {
+        if (error) {
+            return res.status(400).send({ message: 'Error al obtener las reservas' });
+        }
+        if(vecino.reservas.length === 0){
+            return res.status(404).send({ message: "No se encontraron reservas"})
+        }
+        return res.status(200).send(vecino.reservas);
+    })
+}
+
+const getMultasVecino = (req, res) => {
+    const { codigo } = req.params;
+    Vecino.findOne({codigo}).populate({ path: 'multas' }).exec((error, vecino) => {
+        if (error) {
+            return res.status(400).send({ message: 'Error al obtener las multas' });
+        }
+        if(vecino.multas.length === 0){
+            return res.status(404).send({ message: "No se encontraron multas"})
+        }
+        return res.status(200).send(vecino.multas);
+    })
+}
+
+const getMensajesVecino = (req, res) => {
+    const { codigo } = req.params;
+    Vecino.findOne({codigo}).populate({ path: 'mensajes' , populate: {path: 'administrador vecino'}}).exec((error, vecino) => {
+        if (error) {
+            return res.status(400).send({ message: 'Error al obtener los mensajes' });
+        }
+        if(vecino.mensajes.length === 0){
+            return res.status(404).send({ message: "No se encontraron mensajes"})
+        }
+        return res.status(200).send(vecino.mensajes);
+    })
+}
+
+const getCobrosVecino = (req, res) => {
+    const { codigo } = req.params;
+    Vecino.findOne({codigo}).populate({ path: 'cobros' }).exec((error, vecino) => {
+        if (error) {
+            return res.status(400).send({ message: 'Error al obtener los cobros' });
+        }
+        if(vecino.cobros.length === 0){
+            return res.status(404).send({ message: "No se encontraron cobros"})
+        }
+        return res.status(200).send(vecino.cobros);
+    })
+}
+
 
 
 module.exports={
@@ -98,5 +150,9 @@ module.exports={
     getVecinos,
     getVecino,
     updateVecino,
-    deleteVecino
+    deleteVecino,
+    getReservasVecino,
+    getMultasVecino,
+    getMensajesVecino,
+    getCobrosVecino
 }

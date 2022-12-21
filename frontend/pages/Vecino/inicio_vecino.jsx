@@ -17,8 +17,8 @@ const Inicio_vecino = () => {
 
     const [vecino, setVecino] = useState([]);
 
-    const setCookieFunction = (value) => {
-        localStorage.setItem('codigo', value)
+    const setCookieFunction = (codigo) => {
+        localStorage.setItem('codigo', codigo)
     }
 
     const getVecino = async () => {
@@ -26,13 +26,10 @@ const Inicio_vecino = () => {
             setCookieFunction(codigo)
             const response = await axios.get(`${process.env.API_URL}/vecino/search/${props.codigo}`)
             setVecino(response.data);
-            query:{codigo: codigo}
         }else{
             const response = await axios.get(`${process.env.API_URL}/vecino/search/${localStorage.getItem('codigo')}`)
             setVecino(response.data);
-            query:{codigo: codigo}
         }
-        
     };
 
     useEffect(() => {
@@ -56,12 +53,12 @@ const Inicio_vecino = () => {
         >
 
             <HStack>
-                <Text fontSize = {50} color = "white" mt = {30} mb = {30}>
-                    Inicio
+                <Text fontSize = {50} color = "white" mt = {30} mb = {30} as='b'>
+                    INICIO
                 </Text>
             </HStack>
 
-            <Box minW = {{ base: "10%",  md: "50"}} width={600}>
+            <Box minW = {{ base: "10%",  md: "50"}} width = {600}>
                 <Stack
                     spacing = {4}
                     p = "1rem"
@@ -76,7 +73,7 @@ const Inicio_vecino = () => {
 
                     <HStack>
                         <Text as='b' fontSize = {20} color = "blue.500">
-                            Datos personales
+                            DATOS PERSONALES
                         </Text>
                     </HStack>
 
@@ -148,7 +145,7 @@ const Inicio_vecino = () => {
                                 height={50}
                                 rounded = "50"
                                 mt={60}
-                                onClick = {() => router1.push("/Vecino/reservas_vecino", )}
+                                onClick = {() => router1.push({pathname:'/Vecino/reservas_vecino', query:{codigo: vecino.codigo},})}
                             >
                                 Ingresar
                             </Button>
@@ -169,7 +166,7 @@ const Inicio_vecino = () => {
                                 </h2>
                                 <Box>
                                 <AccordionPanel textAlign={'justify'}>
-                                    <Text height={90}>Despliegue detallado de multas obtenidas a travÃ©s del tiempo.</Text>
+                                    <Text height={90}>Despliegue detallado de multas obtenidas a través del tiempo.</Text>
                                 </AccordionPanel>
                                 </Box>
                             </AccordionItem>
@@ -182,7 +179,7 @@ const Inicio_vecino = () => {
                                 height={50}
                                 rounded = "50"
                                 mt={60}
-                                onClick = {() => router1.push("/Vecino/multas_vecino")}
+                                onClick = {() => router1.push({pathname: '/Vecino/multas_vecino', query:{codigo: vecino.codigo},})}
                             >
                                 Ingresar
                             </Button>

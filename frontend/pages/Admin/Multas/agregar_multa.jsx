@@ -22,12 +22,24 @@ const AgregarMulta = () => {
         vecino:''
       })
 
-  const onChange = (e) => {
+  const onChange =  async(e) => {
+
+    if(e.target.name == "vecino"){
+      const response = await axios.get(`${process.env.API_URL}/vecino/search/${e.target.value}`)
+      setValues({
+          ...values,
+          [e.target.name]:response.data._id
+          })
+          console.log(e.target.name,response.data._id);
+  }else{
+
     setValues({
       ...values,
       [e.target.name]:e.target.value
     })
     console.log(e.target.name,e.target.value);
+  }
+    
 }
 
 
@@ -45,7 +57,7 @@ useEffect(() => {
 const showVecinos= () =>{
   return vecinos.map(vecinos =>{
     return (
-      <option name="vecino" key={vecinos._id} value={vecinos._id}>{vecinos.nombre} {vecinos.apellido}</option>
+      <option name="vecino" key={vecinos._id} value={vecinos.codigo}>{vecinos.nombre} {vecinos.apellido}</option>
 
     )
 })
@@ -57,7 +69,7 @@ const onSubmit= async(e) =>{
 
   try {
 
-    const response = await axios.post(`${process.env.API_URL}/multa`,values)
+    const response = await axios.post(`${process.env.API_URL}/multa/${vecino_select.value}`,values)
     console.log(response)
 
     if(response.status===201){
@@ -108,7 +120,7 @@ return (
                     </VStack>
                     <VStack>
                     <Text width={60}>{day}/{month}/{year}</Text>
-                    <Select placeholder='Vecinos' name="vecino" onChange={onChange}>
+                    <Select  id="vecino_select" placeholder='Vecinos' name="vecino" onChange={onChange}>
                     {showVecinos()}
                       </Select>
                     <Select placeholder='Tipo de Multa'  name="tipo" onChange={onChange}>

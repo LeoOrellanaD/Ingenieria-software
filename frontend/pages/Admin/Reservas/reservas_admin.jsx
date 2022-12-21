@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input, TableContainer} from "@chakra-ui/react";
+import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input, TableContainer, Menu, MenuButton, MenuList,MenuItem,Link} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
@@ -11,9 +11,40 @@ const ReservasAdmin= () => {
     const router = useRouter()
     const [reservas, setReservas] = useState([])
     const getReservas = async () => {
-        const response = await axios.get(`${process.env.API_URL}/reservas`)
-        setReservas(response.data)
+        if(localStorage.getItem('reserva')==0){
+            try {
+                const response = await axios.get(`${process.env.API_URL}/reservas`)
+            setReservas(response.data)
+            } catch (error) {
+            }
+        }else
+        if(localStorage.getItem('reserva')==1){
+            console.log(1)
+            try {
+                const response = await axios.get(`${process.env.API_URL}/reserva/search/${values.mes}/${values.year}`)
+            setReservas(response.data)
+            } catch (error) {
+            }
+        }else
+        if(localStorage.getItem('reserva')==2){
+            console.log(2)
+            try {
+                const response = await axios.get(`${process.env.API_URL}/reserva/search/${values.dia}/${values.mes}/${values.year}`)
+            setReservas(response.data)
+            } catch (error) {
+            }
+        }
     }
+
+    const [values, setValues]= useState({
+        dia:'',
+        mes:'',
+        year:''
+    })
+
+
+
+
 
     const deleteReserva = async (x) => {
         Swal.fire({
@@ -37,7 +68,45 @@ const ReservasAdmin= () => {
 
 useEffect(() => {
     getReservas()
+    console.log(localStorage.getItem('reserva'))
 }, [])
+
+const onChange = async (e) => {
+
+    setValues({
+        ...values,
+        [e.target.name]:e.target.value
+        })
+        console.log(e.target.name,e.target.value);
+
+}
+
+const onSubmit = async(e) => {
+    e.preventDefault()
+    if(values.dia=='' && values.mes=="" && values.year==""){
+        localStorage.setItem('reserva',0)
+        getReservas()
+    }else
+    if(values.mes=="" || values.year==""){
+        Swal.fire({
+            title:'Los campos mes y año son obligatarios',
+            text:'Por favor relleno los campos',
+            icon:'warning',
+            confirmButtonColor:'#8DDE7C',
+            confirmButtonText: 'Aceptar',
+        })
+    }else
+    if(values.dia==''){
+        localStorage.setItem('reserva', 1)
+        console.log(localStorage.getItem('reserva'))
+        getReservas()
+    }else{
+        localStorage.setItem('reserva',2)
+        console.log(localStorage.getItem('reserva'))
+        getReservas()
+    }
+}
+
 
 const showreservas = () => {
 
@@ -46,14 +115,14 @@ const showreservas = () => {
         const year = fecha.getFullYear();
         const mes= fecha.getMonth()+1;
         const dia = fecha.getDate();
-        console.log(fecha)
-        console.log(year)
-        console.log(mes)
-        console.log(dia)
+        // console.log(fecha)
+        // console.log(year)
+        // console.log(mes)
+        // console.log(dia)
         const year1 = (parseInt(y))
         const mes1= (parseInt(m))
         const dia1= (parseInt(d))
-        console.log(year1)
+        // console.log(year1)
         if (year1>=year){
             if(mes1>=mes-1 || year1>=year){
                 if(dia1>=dia){
@@ -63,6 +132,8 @@ const showreservas = () => {
         }
     return false;
 }
+
+
 
 	return reservas.map(reservas => {
 		return (
@@ -96,6 +167,11 @@ const showreservas = () => {
 	})
 
     }
+
+
+
+
+
 return (
     <Flex
         flexDirection="column"
@@ -105,7 +181,18 @@ return (
         backgroundColor="blue.400"
         alignItems="center"
         >
-
+    <Box backgroundColor="blue.500" w={"100%"} h="10">
+    <Menu>
+  <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
+    Menú
+  </MenuButton>
+  <MenuList>
+    <MenuItem as={Link}>Inicio</MenuItem>
+    <MenuItem>Opción 2</MenuItem>
+    <MenuItem>Opción 3</MenuItem>
+  </MenuList>
+</Menu>
+    </Box>
     <Text fontSize={50} color="white" mt={30} mb={30}>Reservas de Servicio</Text>
     <Stack mb={30}>
     <Box  minW={{ base: "10%", md: "468px"}}>
@@ -123,15 +210,15 @@ return (
             <HStack>
                 <VStack>
                 <Text>Dia</Text>
-                <Input placeholder="Ejemplo: 20"></Input>
+                <Input placeholder="Ejemplo: 20" onChange={onChange} name="dia" ></Input>
                 </VStack>
                 <VStack>
                 <Text>Mes</Text>
-                <Input placeholder="Ejemplo: 02"></Input>
+                <Input placeholder="Ejemplo: 02" onChange={onChange} name="mes" ></Input>
                 </VStack>
                 <VStack>
                 <Text>Año</Text>
-                <Input placeholder="Ejemplo: 2022"></Input>
+                <Input placeholder="Ejemplo: 2022" onChange={onChange} name="year" ></Input>
                 </VStack>
 
             </HStack>
@@ -141,6 +228,7 @@ return (
                         width = "30%"
                         rounded = "40"
                         mt={10}
+                        onClick={onSubmit}
                         >Buscar
                 </Button>
             </Stack>

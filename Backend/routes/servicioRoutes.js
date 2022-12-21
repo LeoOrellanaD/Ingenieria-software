@@ -7,5 +7,6 @@ api.post('/servicio',validateServicio, servicioController.createServicio);
 api.get('/servicios', servicioController.getServicios);
 api.put('/servicio/update/:nombre',validateServicioUpdate, servicioController.updateServicio);
 api.delete('/servicio/delete/:nombre', servicioController.deleteServicio);
+api.get('/servicio/search/:id', servicioController.getServicio);
 
 module.exports = api;
