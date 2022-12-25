@@ -1,35 +1,32 @@
 const Mantencion = require('../models/mantencion');
-//let Contador = 0;
-//let codigo;
+
 
 const createMantencion = (req, res) => {
-    //Contador = Contador + 1;
-    //const cont = Contador.toString();
-    //let cantidad = cont.length;
 
-    //cont.padStart(5 - cantidad, "0");
-    //codigo = cont;
-
-    const { nombre_empresa, rut_empresa, giro, descripcion, valor, dia, mes, year, hora, observaciones, num_mantencion} = req.body
-    const newMantencion = new Mantencion({
-        nombre_empresa,
-        rut_empresa,
-        giro,
-        descripcion,
-        valor,
-        dia,
-        mes,
-        year,
-        hora,
-        observaciones,
-        num_mantencion
+    const { nombre_empresa, rut_empresa, giro, descripcion, valor, dia, mes, year, hora, observaciones} = req.body
+    Mantencion.countDocuments({},(error,count)=>{
+        const num = String(count+1).padStart(5,'0');
+        const newMantencion = new Mantencion({
+            nombre_empresa,
+            rut_empresa,
+            giro,
+            descripcion,
+            valor,
+            dia,
+            mes,
+            year,
+            hora,
+            observaciones,
+            num_mantencion:num
+        })
+        newMantencion.save((error, mantencion) => {
+            if(error){
+                return res.status(400).send({ message: "No se ha podido crear la mantencion"})
+            }
+            return res.status(201).send(mantencion)
+        })
     })
-    newMantencion.save((error, mantencion) => {
-        if(error){
-            return res.status(400).send({ message: "No se ha podido crear la mantencion"})
-        }
-        return res.status(201).send(mantencion)
-    })
+    
 }
 
 const getMantencion = (req, res) => {

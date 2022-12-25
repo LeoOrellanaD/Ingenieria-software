@@ -43,7 +43,7 @@ const mantencionSchema = new Schema({
         required: false
     },
     num_mantencion:{
-        type:'Number',
+        type:'String',
         required: true,
         unique: true
     }

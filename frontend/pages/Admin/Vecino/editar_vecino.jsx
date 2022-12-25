@@ -135,7 +135,7 @@ return (
                     <HStack>
                         <Text as='b'>Permiso:</Text>
                         <Text style={{display: visible ? 'none' : 'inline'}}>{showVecino()[5]}</Text>
-                        <Select placeholder='Tipo de Multa' name="permiso" onChange={onChange} display={visible ? 'inline' : 'none'}>
+                        <Select placeholder='Tipo de permiso' name="permiso" onChange={onChange} display={visible ? 'inline' : 'none'}>
                             <option color={"blue.400"} as="b">habilitado</option>
                             <option color={"blue.400"} as="b">inhabilitado</option>
                         </Select>

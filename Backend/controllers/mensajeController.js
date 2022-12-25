@@ -1,5 +1,4 @@
 const Mensaje = require('../models/mensaje');
-const Vecino = require('../models/vecino');
 
 const createMensaje = (req, res) => {
     const { vecino, administrador, dia, mes, year,asunto, contenido } = req.body
@@ -17,12 +16,6 @@ const createMensaje = (req, res) => {
             console.log(error);
             return res.status(400).send({ message: "No se ha podido crear el mensaje"})
         }
-        Vecino.updateOne({ codigo: codigo }, { $push: { mensajes: mensaje._id } }, (error) => {
-            if (error) {
-                console.log(error)
-                return res.status(400).send({ message: "Error al actualizar el vecino" })
-            }
-        })
         return res.status(201).send(mensaje)
     })
 }

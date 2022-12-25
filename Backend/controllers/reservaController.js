@@ -141,6 +141,17 @@ const deleteReservas = (req, res) =>
     })
 }
 
+// const deleteReservasVecino =(req, res) =>{
+// const {vecino} =req.params;
+// const today = new Date();
+// const day = today.getDate().toString();
+// const month= today.getMonth().toString();
+// const year= today.getFullYear().toString();
+
+// Reserva.deleteMany({vecino:vecino},{dia:{$sgt:day},mes:{$sgt:month},year:{$sgt:year}}
+
+// }
+
 
 
 module.exports = {

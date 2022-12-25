@@ -1,21 +1,23 @@
 import { useEffect, useRef, useState } from 'react'
-import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select,Label } from "@chakra-ui/react";
-import format from 'date-fns/format'
+import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select,Label, Menu, MenuButton, MenuList,MenuItem } from "@chakra-ui/react";
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import { useRouter } from "next/router";
 
 
 
-import 'react-date-range/dist/styles.css'
-import 'react-date-range/dist/theme/default.css'
+
 
 const AgregarReserva=()=> {
 
 
     const [selectedOption, setSelectedOption] = useState('')
+    const [valor, setValor] = useState('0')
+    const [valor2, setValor2] = useState('0')
     const [open, setOpen] = useState(false)
-    const [calendar, setCalendar] = useState('')
     const refOne = useRef(null)
+    const router = useRouter();
+
 
     const [values, setValues]= useState({
         dia:'',
@@ -30,13 +32,10 @@ const AgregarReserva=()=> {
 
     useEffect(() => {
 
-        localStorage.setItem('reserva', 0)
         getVecinos()
         getServicios()
-        setCalendar(format(new Date(), 'dd/MM/yyyy'))
         document.addEventListener("keydown", hideOnEscape, true)
         document.addEventListener("click", hideOnClickOutside, true)
-
     }, [])
 
     const hideOnEscape = (e) => {
@@ -52,18 +51,7 @@ const AgregarReserva=()=> {
     }
 
     //posiblemente hay que eliminar
-    const handleSelect = (date) => {
-        console.log("FECHA AAA")
-        console.log(date)
-        setCalendar(format(date, 'dd/MM/yyyy'))
-        const a=date.getDate();
-        const b=date.getMonth()+1;
-        const c=date.getFullYear();
-        const dia=  a.toString();
-        const mes=  b.toString();
-        const year= c.toString();
-        setValues({...values,dia,mes,year});
-    }
+
 
 
     const onChange = async (e) => {
@@ -71,6 +59,7 @@ const AgregarReserva=()=> {
         if(e.target.name=="servicio"){
 
             const response1 = await axios.get(`${process.env.API_URL}/servicio/search/${e.target.value}`)
+            setValor(response1.data.costo)
             setValues({
                 ...values,
                 servicio:response1.data._id,
@@ -80,6 +69,7 @@ const AgregarReserva=()=> {
         }else
         if(e.target.name == "vecino"){
             const response = await axios.get(`${process.env.API_URL}/vecino/search/${e.target.value}`)
+
             setValues({
                 ...values,
                 [e.target.name]:response.data._id
@@ -87,12 +77,26 @@ const AgregarReserva=()=> {
                 console.log(e.target.name,response.data._id);
         }else
         if(e.target.name != "vecino" || e.target.name != "servicio"){
-            console.log(e.target.name,e.target.value);
             setValues({
                 ...values,
                 [e.target.name]:e.target.value
                 })
                 console.log(e.target.name,e.target.value);
+        }
+        if(e.target.name=="costo_extra"){
+            console.log(e.target.value)
+            if(!e.target.value)
+            {
+                setValues({
+                    ...values,
+                    costo_extra:0
+                    })
+                    console.log(e.target.name,e.target.value);
+            }
+            if(e.target.value.length>4){
+              e.target.value=e.target.value.substring(0,4);
+            }
+        setValor2(e.target.value)
         }
     }
 
@@ -101,15 +105,9 @@ const AgregarReserva=()=> {
     const DateSetter = (e) =>
     {
         const string = e.target.value
-        const timestamp = Date.parse(string)
-        const date2 = new Date(timestamp)
-
-        const a=date2.getDate()+1;
-        const b=date2.getMonth()+1;
-        const c=date2.getFullYear();
-        const dia=  a.toString();
-        const mes=  b.toString();
-        const year= c.toString();
+        const year = string.substring(0,4)
+        const mes = string.substring(5,7)
+        const dia = string.substring(8,10)
 
         setValues({...values,dia,mes,year});
     }
@@ -177,7 +175,6 @@ const AgregarReserva=()=> {
 
 
         try {
-            console.log(vecino_select.value)
         const response = await axios.post(`${process.env.API_URL}/reserva/${vecino_select.value}`,values)
         
 
@@ -215,6 +212,7 @@ const AgregarReserva=()=> {
 
     const showVecinos= () =>{
         return vecinos.map(vecinos =>{
+            if(vecinos.estado=='activo')
             return (
             <option name="vecino" key={vecinos._id} value={vecinos.codigo}>{vecinos.nombre} {vecinos.apellido}</option>
 
@@ -232,14 +230,41 @@ const AgregarReserva=()=> {
         })
     }
 
+    const Tot = () => {
+        if(!valor2)
+        {
+            const result = valor
+            return result
+        }
+        const result = parseInt(valor, 10) + parseInt(valor2, 10)
+        return result
+    }
+
+
 return (
     <Flex
             flexDirection="column"
             width="100wh"
             height="100vh"
-            backgroundColor="blue.400"
+            backgroundColor="blue.300"
             alignItems="center"
             >
+                <Box backgroundColor="blue.500" w={"100%"} h="10">
+    <Menu>
+  <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
+    Menú
+  </MenuButton>
+  <MenuList >
+    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
+    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/Reservas/reservas_admin")} >Reservas</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
+  </MenuList>
+</Menu>
+    </Box>
               <Text fontSize={50} color="white" mt={30} mb={30}>Crear Reserva</Text>
               <Box  minW={{ base: "10%", md: "468px"}} >
             <form>
@@ -267,9 +292,9 @@ return (
 
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Hora:</Text>
-                                    <Input width={60}
+                                    <Input width={60} 
                                     type="time"
-                                    pattern="\d{2}:00" name={"hora"} onChange={onChange} id="time" step={3600}></Input>
+                                    pattern="[0-9]{2}:[0-9]{2}" name={"hora"} onChange={onChange} step={3600}></Input>
                             </HStack>
                             <HStack>
                                     <Text  value={selectedOption} color={"blue.400"} name="servicio" as="b" >Servicio:</Text>
@@ -285,16 +310,16 @@ return (
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Costo del Servicio</Text>(
-                                    <Text name='costo_base'>{"$"+values.costo_base}</Text>)
+                                    <Text name='costo_base'>{"$"+valor}</Text>)
 
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Costo Extra </Text>
-                                    <Input width={60} type={"number"} name={"costo_extra"}onChange={onChange} ></Input>
+                                    <Input width={60} placeholder={'0'} type={"number"} maxLength={5} name={"costo_extra"} onChange={onChange} ></Input>
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Costo total </Text>
-                                    <Text>${Number(values.costo_base)+Number(values.costo_extra)}</Text>
+                                    <Text name='costoTotal'> {"$"+Tot()} </Text>
                             </HStack>
                     </VStack>
 

@@ -32,6 +32,14 @@ const vecinoSchema = new Schema({
                 'inhabilitado'
             ]
         },
+
+        estado:{
+            type:'String',
+            required:true,
+            enum:['activo',
+                'inactivo'],
+            default:'activo'
+        },
         horas:{
             type: 'Number',
             required: true

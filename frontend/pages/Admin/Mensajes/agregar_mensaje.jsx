@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Flex, Text, Box, Stack,Button,VStack,HStack,Accordion, Input,Checkbox,AccordionItem,AccordionButton,AccordionPanel,AccordionIcon, Textarea } from "@chakra-ui/react";
+import { Flex, Text, Box, Stack,Button,VStack,HStack,Accordion, Input,Checkbox,AccordionItem,AccordionButton,AccordionPanel,AccordionIcon, Textarea, Menu, MenuButton, MenuList,MenuItem } from "@chakra-ui/react";
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import { useRouter } from "next/router";
 
 
 const AgregarMensaje = () => {
@@ -11,13 +12,13 @@ const day = today.getDate();
 const month= today.getMonth();
 const year= today.getFullYear();
 const [veci,setVeci]=useState([]);
+const router = useRouter();
 
 
 useEffect(() =>{
 
 getVecinos()
 getAdmin()
-
 },[])
 
 const onChange = (e) =>{
@@ -60,6 +61,7 @@ const [values,setValues]=useState({
 
 const showVecinos= () =>{
     return vecinos.map(vecinos =>{
+        if(vecinos.estado=='activo')
          return (
         <Checkbox onChange={onChange} name="vecino" key={vecinos.codigo} value={vecinos._id}>{vecinos.nombre} {vecinos.apellido}</Checkbox>
 
@@ -67,24 +69,61 @@ const showVecinos= () =>{
 })
 }
 
+const search_vecino = async (id) =>{
+    const response = await axios.get(`${process.env.API_URL}/vecino/search2/${id}`)
+    return response.data.codigo
+}
+
+const crear_mensaje = async () =>{
+    const response = await axios.post(`${process.env.API_URL}/mensaje`,values)
+    console.log(response.data._id)
+    return response.data._id
+}
+
+const actualizacion_mensaje = async (codigo_vecino,mensajes) =>{
+    console.log(mensajes)
+    const response = await axios.put(`${process.env.API_URL}/vecino/update/mensaje/${codigo_vecino}`,{mensajes})
+    return response.status
+}
+
+
 const onSubmit= async(e) =>{
     e.preventDefault()
     console.log(values)
   
     try {
-  
-      const response = await axios.post(`${process.env.API_URL}/mensaje`,values)
-      console.log(response)
-  
-      if(response.status===201){
-        Swal.fire({
-          title:"Mensaje Enviado",
-          icon:'success',
-          confirmButtonText:'OK'
-        }).then(()=>{
-          window.location.reload();
-      })
-      }
+        if(values.vecino.length !=0 && values.asunto.length != 0 && values.contenido.length !=0){
+            crear_mensaje().then(re=>{
+            values.vecino.map(id =>{
+                search_vecino(id).then(res =>{
+                    actualizacion_mensaje(res,re)
+                }).catch(error =>{
+                    console.log(error)
+                    Swal.fire({
+                        title:"No se pudo enviar el mensaje",
+                        text:'Por favor revise los datos ingresado',
+                        icon:'warning',
+                        confirmButtonText:'OK'
+                    })
+                })
+            })
+        })
+
+            Swal.fire({
+              title:"Mensaje Enviado",
+              icon:'success',
+              confirmButtonText:'OK'
+            }).then(()=>{
+              window.location.reload();
+          })
+        }else{
+            Swal.fire({
+                title:"No se pudo enviar el mensaje",
+                text:'Por favor revise los datos ingresado',
+                icon:'warning',
+                confirmButtonText:'OK'
+              })
+        }
     } catch (error) {
       Swal.fire({
         title:"No se pudo enviar el mensaje",
@@ -107,6 +146,23 @@ return (
             backgroundColor="blue.400"
             alignItems="center"
             >
+            <Box backgroundColor="blue.500" w={"100%"} h="10">
+                <Menu>
+                <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
+                    Menú
+                </MenuButton>
+                <MenuList >
+                    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
+                    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/Reservas/reservas_admin")} >Reservas</MenuItem>
+                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
+                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
+                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
+                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
+                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
+                </MenuList>
+                </Menu>
+            </Box>
+
               <Text fontSize={50} color="white" mt={30} mb={30}>Crear Mensaje</Text>
               <Box  minW={{ base: "10%", md: "468px"}} >
             <form>

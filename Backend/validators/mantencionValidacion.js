@@ -12,7 +12,6 @@ const validateMantencion = [
     check('year').exists().not().isEmpty().isInt({min:2022,max:2050}),
     check('hora').exists().not().isEmpty().matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
     check('observaciones').exists().isLength({min: 10, max: 200}),
-    check('num_mantencion').exists().not().isEmpty().isInt({min:0}),
 
     (req, res ,next) => {
         validateResult(req,res,next)
@@ -30,7 +29,6 @@ const validateMantencionUpdate = [
     check('year').optional().not().isEmpty().isInt({min:2022,max:2050}),
     check('hora').optional().not().isEmpty().matches(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/),
     check('observaciones').optional().isLength({min: 10, max: 200}),
-    check('num_mantencion').optional().not().isEmpty().isInt({min:0}),
 
     (req, res ,next) => {
         validateResult(req,res,next)

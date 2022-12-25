@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,HStack, Input} from "@chakra-ui/react";
+import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,HStack, Input, Menu, MenuButton, MenuList,MenuItem} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
@@ -26,7 +26,8 @@ const VecinosAdmin= () => {
             cancelButtonText:'Cancelar'
         }).then((result)=>{
             if(result.value){
-                const response = axios.delete(`${process.env.API_URL}/vecino/delete/${x}`)
+                const response = axios.put(`${process.env.API_URL}/vecino/update/estado/${x}`)
+                //const response1 = axios.put
                 setVecinos(response.data)
                 window.location.reload();
             }
@@ -39,6 +40,7 @@ const VecinosAdmin= () => {
 
     const showVecinos = () =>{
         return vecinos.map(vecinos =>{
+            if(vecinos.estado=='activo')
             return (
                 <Tr key={vecinos._id}>
                 <Td>{vecinos.nombre}</Td>
@@ -74,11 +76,26 @@ return (
             flexDirection="column"
             width="100wh"
             height="100vh"
-            backgroundColor="blue.400"
+            backgroundColor="blue.300"
             alignItems="center"
             >
+    <Box backgroundColor="blue.500" w={"100%"} h="10">
+    <Menu>
+  <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
+    Menú
+  </MenuButton>
+  <MenuList >
+    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
+  </MenuList>
+</Menu>
+    </Box>
 
-        <Text fontSize={50} color="white" mt={30} mb={30}>Vecinos</Text>
+        <Text fontSize={50} color="white" as={"b"} mt={30} mb={30}>Vecinos</Text>
         <Button mb="2"
                 variant="solid"
                 colorScheme="blue"

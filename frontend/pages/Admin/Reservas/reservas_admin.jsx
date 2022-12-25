@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input, TableContainer, Menu, MenuButton, MenuList,MenuItem,Link} from "@chakra-ui/react";
+import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input, TableContainer, Menu, MenuButton, MenuList,MenuItem} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
@@ -68,6 +68,7 @@ const ReservasAdmin= () => {
 
 useEffect(() => {
     getReservas()
+    document.title="Lavanderia 60 minutos";
     console.log(localStorage.getItem('reserva'))
 }, [])
 
@@ -178,7 +179,7 @@ return (
         width="100wh"
         height="auto"
         minH={"100vh"}
-        backgroundColor="blue.400"
+        backgroundColor="blue.300"
         alignItems="center"
         >
     <Box backgroundColor="blue.500" w={"100%"} h="10">
@@ -186,10 +187,13 @@ return (
   <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
     Menú
   </MenuButton>
-  <MenuList>
-    <MenuItem as={Link}>Inicio</MenuItem>
-    <MenuItem>Opción 2</MenuItem>
-    <MenuItem>Opción 3</MenuItem>
+  <MenuList >
+    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
   </MenuList>
 </Menu>
     </Box>
@@ -257,18 +261,18 @@ return (
                 Agregar Reserva</Button>
 
                 <TableContainer>
-                <Table variant={"simple"}>
+                <Table variant={"simple"} colorScheme="blue">
                     <Thead>
-                    <Tr>
-						<Td color={"blue.400"}>Dia</Td>
-						<Td color={"blue.400"}>Mes</Td>
-						<Td color={"blue.400"}>Año</Td>
-						<Td color={"blue.400"}>Hora</Td>
-						<Td color={"blue.400"}>Servicio</Td>
-                        <Td color={"blue.400"}>Vecino</Td>
-                        <Td color={"blue.400"}>        </Td>
-						<Td color={"blue.400"}>N° de reserva</Td>
-						<Td color={"blue.400"}>Acciones</Td>
+                    <Tr >
+						<Td bgColor={"blue.500"} color={"white"}>Dia</Td>
+						<Td bgColor={"blue.500"} color={"white"}>Mes</Td>
+						<Td bgColor={"blue.500"} color={"white"}>Año</Td>
+						<Td bgColor={"blue.500"} color={"white"}>Hora</Td>
+						<Td bgColor={"blue.500"} color={"white"}>Servicio</Td>
+                        <Td bgColor={"blue.500"} color={"white"}>Vecino</Td>
+                        <Td bgColor={"blue.500"} color={"white"}>        </Td>
+						<Td bgColor={"blue.500"} color={"white"}>N° de reserva</Td>
+						<Td bgColor={"blue.500"} color={"white"}>Acciones</Td>
 					</Tr>
                     </Thead>
                     <Tbody>

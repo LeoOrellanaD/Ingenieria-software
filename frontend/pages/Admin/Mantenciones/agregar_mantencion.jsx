@@ -1,17 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select } from "@chakra-ui/react";
-import { Calendar } from 'react-date-range';
-import format from 'date-fns/format'
+import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select, Textarea, Menu, MenuButton, MenuList,MenuItem  } from "@chakra-ui/react";
 import Swal from 'sweetalert2'
 import axios from 'axios'
+import { useRouter } from "next/router";
 
-import 'react-date-range/dist/styles.css'
-import 'react-date-range/dist/theme/default.css'
 
 const agregarMantencion = () => {
-
-  // date state
-    const [calendar, setCalendar] = useState('')
 
     const [fecha , setFecha] = useState(
         {
@@ -20,6 +14,7 @@ const agregarMantencion = () => {
             year:''
         }
     )
+    const router = useRouter();
 
     const [values, setValues]= useState({
         nombre_empresa:'',
@@ -30,9 +25,8 @@ const agregarMantencion = () => {
         dia:'',
         mes:'',
         year:'',
-        hora:'14:00',
-        observaciones:'',
-        num_mantencion:''
+        hora:'',
+        observaciones:''
       })
   // open close
     const [open, setOpen] = useState(false)
@@ -41,9 +35,7 @@ const agregarMantencion = () => {
     const refOne = useRef(null)
 
     useEffect(() => {
-        // set current date on component load
-        setCalendar(format(new Date(), 'dd/MM/yyyy'))
-        // event listeners
+        
         document.addEventListener("keydown", hideOnEscape, true)
         document.addEventListener("click", hideOnClickOutside, true)
     }, [])
@@ -63,28 +55,71 @@ const agregarMantencion = () => {
         }
     }
 
-  // on date change, store date in state
-    const handleSelect = (date) => {
-        setCalendar(format(date, 'dd/MM/yyyy'))
-        //console.log(date)
-        const a=date.getDate();
-        const b=date.getMonth()+1;
-        const c=date.getFullYear();
+    function castMin()
+    {
+        const currentDate = new Date();
+        const dateString1 = currentDate.toLocaleDateString('es-ES', { day: '2-digit' });
+        const dateString2 = currentDate.toLocaleDateString('es-ES', { month: '2-digit' });
+        const dateString3 = currentDate.toLocaleDateString('es-ES', { year: 'numeric' });
+
+        const fechaMinima = (dateString3 + '-' + dateString2 + '-' + dateString1)
+        return fechaMinima;
+    }
+
+    function castMax()
+    {
+        const currentDate = new Date();
+        const dateString1 = currentDate.toLocaleDateString('es-ES', { day: '2-digit' });
+        const dateString2 = currentDate.toLocaleDateString('es-ES', { month: '2-digit' });
+        const dateString3 = currentDate.toLocaleDateString('es-ES', { year: 'numeric' });
+        const dia2='01'
+        const mes2='01'
+        const mes= (parseInt(dateString2, 10)+1);
+        const year2 = (parseInt(dateString3, 10)+1);
+
+        if(dateString2==12)
+        {
+                const fechaMaxima = (year2 + '-' + mes2 + '-' + dia2)
+            return fechaMaxima;
+        }else
+        {
+                const fechaMaxima = (dateString3 + '-' + mes + '-' + dateString1)
+            return fechaMaxima;
+        }
+    }
+
+
+    const DateSetter = (e) =>
+    {
+        const string = e.target.value
+        const timestamp = Date.parse(string)
+        const date2 = new Date(timestamp)
+
+        const a=date2.getDate()+1;
+        const b=date2.getMonth()+1;
+        const c=date2.getFullYear();
         const dia=  a.toString();
         const mes=  b.toString();
         const year= c.toString();
-        setFecha({a ,b , c});
+
         setValues({...values,dia,mes,year});
     }
 
 
     const onChange = (e) => {
-        setValues({
-          ...values,
-          [e.target.name]:e.target.value
-        })
-        console.log(e.target.name,e.target.value);
-    }
+      setValues({
+        ...values,
+        [e.target.name]:e.target.value
+      })
+      console.log(e.target.name,e.target.value);
+
+      if(e.target.name=="valor")
+      {
+        if(e.target.value.length>5){
+          e.target.value=e.target.value.substring(0,6);
+        }
+      }
+  }
 
     const onSubmit= async(e) =>{
         e.preventDefault()
@@ -119,9 +154,25 @@ return (
             flexDirection="column"
             width="100wh"
             height="100vh"
-            backgroundColor="blue.400"
+            backgroundColor="blue.300"
             alignItems="center"
             >
+            <Box backgroundColor="blue.500" w={"100%"} h="10">
+                <Menu>
+                <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
+                    Menú
+                </MenuButton>
+                <MenuList >
+                    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
+                    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/Reservas/reservas_admin")} >Reservas</MenuItem>
+                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
+                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
+                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
+                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
+                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
+                </MenuList>
+                </Menu>
+            </Box>
               <Text fontSize={50} color="white" mt={30} mb={30}>Crear Mantencion</Text>
               <Box  minW={{ base: "10%", md: "468px"}} >
             <form>
@@ -150,7 +201,15 @@ return (
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >descripcion de mantencion</Text>
-                                    <Input width={60} type={"text"} name={"descripcion"}onChange={onChange} ></Input>
+                                    <Textarea
+                                        placeholder='Escribe la descripci처n de la mantencion'
+                                        width={60}
+                                        type={"text"}
+                                        name={"descripcion"}
+                                        minLength={10}
+                                        maxLength={200}
+                                        onChange={onChange}>
+                                    </Textarea>
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >valor </Text>
@@ -158,28 +217,21 @@ return (
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Fecha</Text>
-                                    <Input
-                                        value={ calendar }
-                                        readOnly
-                                        onClick={ () => setOpen(open => !open) }
-                                    />
-                                    <Box ref={refOne}>
-                                    {open &&
-                                    <Calendar
-                                    date={ new Date()}
-                                    onChange = {handleSelect}
-                                    className="calendarElement"
-                                />
-                                }
-                                </Box>
+                                    <Input type="date" id="start"
+                                        date={new Date()}
+                                        onChange={DateSetter}
+                                        min={castMin()} max={castMax()}></Input>
+                                
                             </HStack>
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Observaciones </Text>
-                                    <Input width={60} type={"text"} minLength={10} maxLength={200} name={"observaciones"}onChange={onChange} ></Input>
-                            </HStack>
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >NÂ° mantencion</Text>
-                                    <Input width={60} type={"number"} name={"num_mantencion"} onChange={onChange} ></Input>
+                                    <Textarea
+                                            placeholder='Escribe las observaciones de la mantencion'
+                                            width={60} type={"text"}
+                                            minLength={10}
+                                            maxLength={200}
+                                            name={"observaciones"}onChange={onChange} >
+                                    </Textarea>
                             </HStack>
                     </VStack>
 

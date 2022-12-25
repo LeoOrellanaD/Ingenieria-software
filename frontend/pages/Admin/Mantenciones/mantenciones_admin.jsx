@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Flex, Text, Box, Stack , HStack, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel} from "@chakra-ui/react";
+import { Button, Flex, Text, Box, Stack , HStack, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel, Menu, MenuButton, MenuList,MenuItem} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
@@ -75,11 +75,26 @@ return (
         flexDirection="column"
         width="100wh"
         height="100vh"
-        backgroundColor="blue.400"
+        backgroundColor="blue.300"
         alignItems="center"
         >
+    <Box backgroundColor="blue.500" w={"100%"} h="10">
+    <Menu>
+  <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
+    Menú
+  </MenuButton>
+  <MenuList >
+    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
+  </MenuList>
+</Menu>
+    </Box>
 
-    <Text fontSize={50} color="white" mt={30} mb={30}>Mantenciones</Text>
+    <Text fontSize={50} color="white" as={"b"} mt={30} mb={30}>Mantenciones</Text>
     
 
     <Button mb="2"

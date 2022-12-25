@@ -2,16 +2,19 @@ const Vecino = require('../models/vecino');
 
 
 const createVecino = (req, res)=>{
-    const{nombre, apellido, rut, vivienda, horas, permiso ,codigo} = req.body;
-    const newVecino= new Vecino(
-        {
+    const{nombre, apellido, rut, vivienda, permiso, horas ,codigo, reservas, cobros, mensajes, multas} = req.body;
+    const newVecino = new Vecino({
             nombre,
             apellido,
             rut,
             vivienda,
-            horas,
             permiso,
-            codigo
+            horas,
+            codigo,
+            reservas,
+            cobros,
+            mensajes,
+            multas
         });
     newVecino.save((error, vecino) => {
         if(error){
@@ -63,6 +66,19 @@ const getVecino = (req, res) =>{
     })
 }
 
+const getVecinoById = (req, res) =>{
+    const{ id } = req.params;
+    Vecino.findById(id, (error, vecino) =>{
+        if(error) {
+            return res.status(400).send({message:'Error al obtener vecino'});
+        }
+        if(!vecino){
+            return res.status(404).send({message:'No se encontro al vecino'});
+        }
+        return res.status(200).send(vecino);
+    })
+}
+
 const updateVecino = (req, res) =>{
     const {permiso, horas} = req.body;
     const {codigo} = req.params;
@@ -76,6 +92,37 @@ const updateVecino = (req, res) =>{
         return res.status(200).send(vecino);
     })
 }
+
+const updateVecinoMen = (req,res) => {
+    const { mensajes } = req.body;
+    const { codigo } = req.params;
+    console.log(mensajes)
+    Vecino.updateOne({ codigo: codigo }, { $push: { mensajes: mensajes} }, (error,vecino) => {
+    if (error ) {
+        console.log(error)
+        return res.status(400).send({ message: "Error al actualizar el vecino" });
+    }
+    if(!vecino){
+        return res.status(404).send({message:'No se encontro vecino'});
+    }
+    return res.status(200).send(vecino);
+    });
+};
+
+const updateVecinoEstado = (req,res) =>{
+    const {codigo} = req.params;
+    Vecino.updateOne({codigo:codigo}, {estado:'inactivo',permiso:'inhabilitado'}, (error,vecino) =>{
+        if(error){
+            console.log(error)
+            return res.status(400).send({message:"Error al elimiinar vecino"});
+        }
+        if(!vecino){
+            return res.status(404).send({message:'No se encontro vecino'});
+        }
+        return res.status(200).send(vecino);
+    });
+}
+
 
 const deleteVecino= (req, res) =>{
     const {codigo}= req.params;
@@ -149,7 +196,10 @@ module.exports={
     loginVecino,
     getVecinos,
     getVecino,
+    getVecinoById,
     updateVecino,
+    updateVecinoMen,
+    updateVecinoEstado,
     deleteVecino,
     getReservasVecino,
     getMultasVecino,

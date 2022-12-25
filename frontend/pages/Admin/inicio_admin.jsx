@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter, Input } from "@chakra-ui/react";
+import { Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter, Input, Menu, MenuButton, MenuList,MenuItem } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { EditIcon } from '@chakra-ui/icons'
 import axios from "axios";
@@ -36,6 +36,7 @@ const Inicio_admin = () => {
     };
 
     useEffect(() => {
+        document.title="Lavanderia 60 minutos";
         getAdmin();
         localStorage.setItem('reserva', 0)
     }, []);
@@ -100,12 +101,27 @@ const Carga = (e) =>{
             flexDirection = "column"
             width = "100wh"
             height = "130vh"
-            backgroundColor = "blue.400"
+            backgroundColor = "blue.300"
             alignItems = "center"
         >
+            <Box backgroundColor="blue.500" w={"100%"} h="10">
+    <Menu>
+  <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
+    Menú
+  </MenuButton>
+  <MenuList >
+    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/Reservas/reservas_admin")} >Reservas</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
+    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
+  </MenuList>
+</Menu>
+    </Box>
 
             <HStack>
-                <Text fontSize = {50} color = "white" mt = {30} mb = {30}>
+                <Text fontSize = {50} color = "white" as={"b"} mt = {30} mb = {30}>
                     Inicio
                 </Text>
             </HStack>
