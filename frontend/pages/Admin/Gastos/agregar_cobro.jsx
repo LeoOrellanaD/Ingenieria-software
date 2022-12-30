@@ -120,6 +120,16 @@ return (
                 </MenuList>
                 </Menu>
             </Box>
+
+            <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" style={{
+            position: "fixed",
+            top: "20px",
+            left: "200px",
+            zIndex: 1,
+            }}
+            onClick={()=>router.push("/Admin/Gastos/gastos_admin")}>
+            Volver atrás</Button>
+
             <Text fontSize={50} color="white" mt={30} mb={30}>Generar Cobro</Text>
             <Box  minW={{ base: "10%", md: "468px"}} >
             <form>

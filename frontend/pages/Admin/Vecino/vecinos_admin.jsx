@@ -8,32 +8,68 @@ const VecinosAdmin= () => {
 
     const router = useRouter()
     const [vecinos, setVecinos] = useState([])
+    const [reservas, setReservas] = useState([])
+
+    const today = new Date();
+    const meis = today.getMonth()+1
+
+    const [fecha,setFecha] = useState({
+
+        dia:today.getDate().toString(),
+        mes:meis.toString(),
+        anio:today.getFullYear().toString(),
+    })
+
     const getVecinos = async () => {
     const response = await axios.get(`${process.env.API_URL}/vecinos`)
     setVecinos(response.data)
     }
+    
 
-    const deleteVecino = async (x)=> {
+    const deleteVecino = async (x) => {
 
-        Swal.fire({
-            title:'¿Estas seguro de eliminar a este vecino?',
-            text:'No se podra deshacer esta acción',
-            icon:'warning',
-            showCancelButton:true,
-            confirmButtonColor:'#8DDE7C',
-            cancelButtonColor:'#F24343',
-            confirmButtonText: 'Aceptar',
-            cancelButtonText:'Cancelar'
-        }).then((result)=>{
-            if(result.value){
-                const response = axios.put(`${process.env.API_URL}/vecino/update/estado/${x}`)
-                //const response1 = axios.put
-                setVecinos(response.data)
-                window.location.reload();
-            }
+    Swal.fire({
+        title:'¿Estas seguro de eliminar a este vecino?',
+        text:'No se podra deshacer esta acción',
+        icon:'warning',
+        showCancelButton:true,
+        confirmButtonColor:'#8DDE7C',
+        cancelButtonColor:'#F24343',
+        confirmButtonText: 'Aceptar',
+        cancelButtonText:'Cancelar'
+    }).then(async (result)=>{
+        if(result.value){
+            
+        const response = await axios.get(`${process.env.API_URL}/vecino/reservas/${x}`)
+        const reservas = response.data
+        console.log(response.data)
+      
+        // Iterar sobre las reservas y eliminar las que aún no han pasado
+        for (const reserva of reservas) {
+          const { dia, mes, year ,num_reserva } = reserva
+          console.log(dia)
+          console.log(mes)
+          console.log(year)
+          console.log(fecha.dia)
+          console.log(fecha.mes)
+          console.log(fecha.anio)
+          if (year > fecha.anio || (year == fecha.anio && mes > fecha.mes) || (year == fecha.anio && mes == fecha.mes && dia > fecha.dia)) {
+            // Eliminar la reserva
+            await axios.delete(`${process.env.API_URL}/reserva/delete/${num_reserva}`)
+            console.log("se elimino una reserva")
+          }
+        }
+        // Eliminar al vecino
+        const response1 = await axios.put(`${process.env.API_URL}/vecino/update/estado/${x}`)
+        setVecinos(response1.data)
+        //window.location.reload();
+        }
+
+
     })
-
 }
+
+
     useEffect(() => {
         getVecinos()
     }, [])
@@ -94,6 +130,14 @@ return (
   </MenuList>
 </Menu>
     </Box>
+            <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" style={{
+            position: "fixed",
+            top: "20px",
+            left: "200px",
+            zIndex: 1,
+            }}
+            onClick={()=>router.push("/Admin/inicio_admin")}>
+            Volver atrás</Button>
 
         <Text fontSize={50} color="white" as={"b"} mt={30} mb={30}>Vecinos</Text>
         <Button mb="2"

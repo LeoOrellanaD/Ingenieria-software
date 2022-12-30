@@ -1,21 +1,24 @@
 const Reserva = require('../models/reserva');
 const Vecino = require('../models/vecino');
+const Secuencia = require('../models/secuencia');
 
-const createReserva = (req, res) => {
+const createReserva = async (req, res) => {
     const { dia, mes, year, hora, servicio, vecino, costo_base, costo_extra} = req.body
     const {codigo} =req.params
-    Reserva.countDocuments({dia,mes,year,hora},(error,count)=>{
-        if(error){
-            return res.status(400).send({message:"no se pudo calcular la cantidad de reservas"})
-        }
+
+    const count= await Reserva.countDocuments({dia,mes,year,hora});
+
         if(count>=3){
-            return res.status(400).send({message:"No se puede agregar otra reserva en este horario"})
+            return res.status(400).send({message:"No se puede agregar otra reserva en este horario"});
         }
 
-        if(count<3){
+            const secuencia = await Secuencia.findOneAndUpdate(
+                { nombre: "reservas" },
+                { $inc: { valor: 1 } },
+                { new: true, upsert: true }
+            );
+            const num = secuencia.valor.toString().padStart(5, "0");
 
-            Reserva.countDocuments({},(error,cantidad) =>{
-            const num = String(cantidad+1).padStart(5,'0');
             const newReserva = new Reserva({
                 dia,
                 mes,
@@ -28,12 +31,12 @@ const createReserva = (req, res) => {
                 num_reserva : num
             })
 
-            newReserva.save((error, reserva) => {
+             newReserva.save((error, reserva) => {
                 if(error){
                     console.log(error)
                     return res.status(400).send({ message: "No se ha podido crear la reserva"})
                 }
-                Vecino.updateOne({ codigo: codigo }, { $push: { reservas: reserva._id } }, (error) => {
+                 Vecino.updateOne({ codigo: codigo }, { $push: { reservas: reserva._id } }, (error) => {
                     if (error) {
                         console.log(error)
                         return res.status(400).send({ message: "Error al actualizar el vecino" })
@@ -41,11 +44,10 @@ const createReserva = (req, res) => {
                 })
                 return res.status(201).send(reserva)
         })
-            
-            })
-        }
-    })
-}
+
+
+    }
+
 
 
 const getReserva = (req, res) => {

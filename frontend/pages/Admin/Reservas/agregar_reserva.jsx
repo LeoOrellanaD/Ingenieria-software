@@ -265,6 +265,14 @@ return (
   </MenuList>
 </Menu>
     </Box>
+    <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" style={{
+    position: "fixed",
+    top: "20px",
+    left: "200px",
+    zIndex: 1,
+    }}
+    onClick={()=>router.push("/Admin/Reservas/reservas_admin")}>
+    Volver atrás</Button>
               <Text fontSize={50} color="white" mt={30} mb={30}>Crear Reserva</Text>
               <Box  minW={{ base: "10%", md: "468px"}} >
             <form>
@@ -287,7 +295,7 @@ return (
                                     <Input type="date" id="start"
                                         date={new Date()}
                                         onChange={DateSetter}
-                                        min={castMin()} max={castMax()}></Input>
+                                         max={castMax()}></Input>
                             </HStack>
 
                             <HStack>

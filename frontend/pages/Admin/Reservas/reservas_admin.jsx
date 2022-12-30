@@ -69,7 +69,7 @@ const ReservasAdmin= () => {
 useEffect(() => {
     getReservas()
     document.title="Lavanderia 60 minutos";
-    console.log(localStorage.getItem('reserva'))
+    //console.log(localStorage.getItem('reserva'))
 }, [])
 
 const onChange = async (e) => {
@@ -197,6 +197,15 @@ return (
   </MenuList>
 </Menu>
     </Box>
+    <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" style={{
+    position: "fixed",
+    top: "20px",
+    left: "200px",
+    zIndex: 1,
+    }}
+    
+    onClick={()=>router.push("/Admin/inicio_admin")}>
+    Volver atrás</Button>
     <Text fontSize={50} color="white" mt={30} mb={30}>Reservas de Servicio</Text>
     <Stack mb={30}>
     <Box  minW={{ base: "10%", md: "468px"}}>

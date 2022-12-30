@@ -14,7 +14,8 @@ const multaRoutes = require('./routes/multaRoutes')
 const reservaRoutes = require('./routes/reservaRoutes')
 const servicioRoutes = require('./routes/servicioRoutes')
 const vecinoRoutes = require('./routes/vecinoRoutes')
-const { AutoEncryptionLoggerLevel } = require('mongodb')
+const secuenciaRoutes = require('./routes/secuenciaRoutes')
+
 
 app.use(cors())
 app.use(express.json())
@@ -28,6 +29,7 @@ app.use('/api',multaRoutes)
 app.use('/api',reservaRoutes)
 app.use('/api',servicioRoutes)
 app.use('/api',vecinoRoutes)
+app.use('/api',secuenciaRoutes)
 
 mongoose.connect(process.env.DB, (error) => {
     if (error) {

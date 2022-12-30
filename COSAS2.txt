@@ -18,7 +18,7 @@ COSAS POR HACE 2: MAS COSAS Y MAS QUE HACER QUE NUNCA
 -Definir tamaño de los input
 -Implementación ALGO de redireccionamiento
 -(ANULADA) Cambiar metodo de raspaso de codigo mediante localStorage
--(IMPORTANTE) Implementar eliminacion de reservas junto a la eliminacion de vecinos
+-(LISTO INCREIBLE PERO CIERTO) Implementar eliminacion de reservas junto a la eliminacion de vecinos
 -(LISTO) Revisar implementación del backend
 -Implementar paginas para vecinos
 -(CASI) Generación de codigos para reservas, gastos, multas, etc.
@@ -26,6 +26,7 @@ COSAS POR HACE 2: MAS COSAS Y MAS QUE HACER QUE NUNCA
 -Cuando se agenda una mantencion se genera un mensaje
 -(LISTO MAOMENO) CALENDARIO para crear
 -Revision de modelos y validaciones
+-(IMPORTANTE) irnos de chile
 
 -----------LISTA DE CONTROLADORES
 
