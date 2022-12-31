@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import { Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter, Input, Menu, MenuButton, MenuList,MenuItem } from "@chakra-ui/react";
+import { useDisclosure,Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter, Input, Drawer, DrawerFooter, DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { EditIcon } from '@chakra-ui/icons'
 import axios from "axios";
 import Swal from 'sweetalert2'
+import { BsFillHouseFill,BsFillPersonFill,BsPower,BsWrench } from "react-icons/bs";
 
 
 const Inicio_admin = () => {
     const router = useRouter();
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const {
         query: { codigo },
     } = router;
@@ -93,76 +95,102 @@ const Carga = (e) =>{
     setInput("+569"+e.target.value);
 };
 
+const cerrarSesion = async (e) => {
+
+    e.preventDefault()
+    localStorage.clear();
+    router.push("/")
+
+}
+
 
 
 
     return (
         <Stack
-            flexDirection = "column"
-            width = "100wh"
-            height = "130vh"
-            backgroundColor = "blue.300"
-            alignItems = "center"
+        flexDirection = "column"
+        width="150wh"
+        height="auto"
+        minH={"100vh"}
+        backgroundColor = "blue.300"
+        alignItems = "center"
         >
-            <Box backgroundColor="blue.500" w={"100%"} h="10">
-    <Menu>
-  <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
-    Menú
-  </MenuButton>
-  <MenuList >
-    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/Reservas/reservas_admin")} >Reservas</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
-  </MenuList>
-</Menu>
-    </Box>
+            <Box backgroundColor="blue.500" w={"100%"} h="16">
+                <Button colorScheme='blue' onClick={onOpen} h="16">
+                    Menu
+                </Button>
+                <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+                <BsPower size="20"/> &nbsp; Cerrar Sesión
+                </Button>
+            </Box>
 
-            <HStack>
-                <Text fontSize = {50} color = "white" as={"b"} mt = {30} mb = {30}>
-                    Inicio
-                </Text>
-            </HStack>
+            <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
+          <DrawerBody backgroundColor="blue.300">
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Mensajes</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Multas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Manteciones</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Vecinos</Button>
 
-            <Box minW = {{ base: "10%", md: "50" }} width={600}>
+
+          </DrawerBody>
+          <DrawerFooter backgroundColor="blue.300">
+            <Button mr={3} onClick={onClose} colorScheme="blue">
+              Cerrar
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
+      <HStack>
+  <BsFillHouseFill color="white" size="50"/>
+  <Text fontSize={50} color="white" as={"b"} mt={30} mb={30}>
+    Inicio
+  </Text>
+</HStack>
+
+            <Box minW = {{ base: "10%", md: "50" }} width={"100%"}>
                 <Stack
                     spacing = {4}
                     p = "1rem"
                     backgroundColor = "whiteAlpha.900"
                     boxShadow = "md"
-                    rounded = "16"
                     flexDir = "column"
                     mb = "10"
                     justifyContent = "center"
                     alignItems = "center"
                 >
-
                     <HStack >
-                        <Text as='b' fontSize = {20} color = "blue.500" >
+                    <BsFillPersonFill style={{ color: '#3182CE' }} size="30"/>
+                        <Text as='b' fontSize = {30} color = "blue.500" >
                             Datos personales
                         </Text>
                     </HStack>
 
-                    <HStack>
-                        <Text as='b'>Nombre:</Text>
-                        <Text>{showAdmin()[0]+" "+showAdmin()[1]}</Text>
-                    </HStack>
-
-                    <HStack>
-                        <Text as='b'>Telefono:</Text>
-                        <Text id="numero" style={{display: visible ? 'none' : 'inline'}}>{showAdmin()[2]}</Text>
-                        <Text id="n" style={{display: visible ? 'inline' : 'none'}}> +569</Text>
-                        <Input type="number" id="nu" onChange={Carga} style={{display: visible ? 'inline' : 'none'}}></Input>
-                    </HStack>
+                    <Stack fontSize = {25} direction={['column', 'row']} spacing={20}>
+                        <Stack direction={['row']}>
+                            <Text color = "blue.500" as='b'>Nombre:</Text>
+                            <Text>{showAdmin()[0]+" "+showAdmin()[1]}</Text>
+                        </Stack>
+                        <Stack direction={['row']}>
+                            <Text color = "blue.500" as='b'>Telefono:</Text>
+                            <Text id="numero" style={{display: visible ? 'none' : 'inline'}}>{showAdmin()[2]}</Text>
+                            <Text id="n" style={{display: visible ? 'inline' : 'none'}}>+569</Text>
+                            <Input boxShadow={"outline"}  type="number" id="nu" onChange={Carga} style={{display: visible ? 'inline' : 'none'}}></Input>
+                        </Stack>
+                    </Stack>
 
                     <Button
-                            borderRadius = {20}
                             type = "submit"
                             variant = "solid"
                             colorScheme = "blue"
-                            width = "30%"
+                            width = {150}
+                            height = {50}
                             rounded = "50"
                             rightIcon={<EditIcon /> }
                             id="editar"
@@ -171,13 +199,15 @@ const Carga = (e) =>{
                         >
                         Editar
                     </Button>
+
                     <HStack>
                     <Button
                             borderRadius = {20}
                             type = "submit"
                             variant = "solid"
                             colorScheme = "blue"
-                            width = "full"
+                            width = {150}
+                            height = {50}
                             rounded = "50"
                             rightIcon={<EditIcon /> }
                             id="guardar"
@@ -191,7 +221,8 @@ const Carga = (e) =>{
                             borderRadius={20}
                             variant="solid"
                             colorScheme="blue"
-                            width="full"
+                            width = {150}
+                            height = {50}
                             rounded="50"
                             id="cancelar"
                             onClick={() => setVisible(false)}
@@ -204,24 +235,18 @@ const Carga = (e) =>{
                 </Stack>
             </Box>
 
-            <Box
-                backgroundColor = "whiteAlpha.900"
-                boxShadow = "md"
-                rounded = "16"
-                minW = {{ base: "10%", width: "90"}}
-                width = {800}
-            >
 
-                <Stack
-                    minW = {{ base: "10%"}}
-                    width={800}
-                    spacing = {50}
-                    p = "2rem"
-                    direction={['column', 'row']}
-                >
-                    <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textTransform={'uppercase'} as='b'>Reservas</Text>
+            <Stack
+                direction={['column', 'row']}
+                p={5}
+                spacing={5}
+                backgroundColor={"whiteAlpha.900"}
+                width={"100%"}
+            >
+                <Stack width={"100%"}>
+                <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
+                    <CardHeader backgroundColor="blue.400" rounded = "16">
+                            <Text color = "whiteAlpha.900" textTransform={'uppercase'} as='b'>Reservas</Text>
                         </CardHeader>
 
                         <CardBody>
@@ -232,11 +257,9 @@ const Carga = (e) =>{
 
                         <CardFooter justifyContent={'center'}>
                             <Button
-                                borderRadius = {0}
-                                variant = "solid"
+                                variant = {"solid"}
                                 colorScheme = "blue"
-                                width = {160}
-                                height={50}
+                                width = {"80%"}
                                 rounded = "50"
                                 onClick = {() => router1.push("/Admin/Reservas/reservas_admin")}
                             >
@@ -244,10 +267,12 @@ const Carga = (e) =>{
                             </Button>
                         </CardFooter>
                     </Card>
-
-                    <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Gastos</Text>
+                </Stack>
+                    
+                <Stack width={"100%"}>
+                <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
+                    <CardHeader backgroundColor="blue.400" rounded = "16">
+                            <Text color = "whiteAlpha.900" textAlign={'center'} textTransform={'uppercase'} as='b' >Gastos</Text>
                         </CardHeader>
 
                         <CardBody>
@@ -258,11 +283,9 @@ const Carga = (e) =>{
 
                         <CardFooter justifyContent={'center'}>
                             <Button
-                                borderRadius = {0}
-                                variant = "solid"
+                                variant = {"solid"}
                                 colorScheme = "blue"
-                                width = {160}
-                                height={50}
+                                width = {"80%"}
                                 rounded = "50"
                                 onClick = {() => router1.push("/Admin/Gastos/gastos_admin")}
                             >
@@ -270,10 +293,12 @@ const Carga = (e) =>{
                             </Button>
                         </CardFooter>
                     </Card>
-
-                    <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Mensajes</Text>
+                </Stack>
+                    
+                <Stack width={"100%"}>
+                <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
+                    <CardHeader backgroundColor="blue.400" rounded = "16">
+                            <Text color = "whiteAlpha.900" textAlign={'center'} textTransform={'uppercase'} as='b' >Mensajes</Text>
                         </CardHeader>
 
                         <CardBody>
@@ -284,11 +309,9 @@ const Carga = (e) =>{
 
                         <CardFooter justifyContent={'center'}>
                             <Button
-                                borderRadius = {0}
-                                variant = "solid"
+                                variant = {"solid"}
                                 colorScheme = "blue"
-                                width = {160}
-                                height={50}
+                                width = {"80%"}
                                 rounded = "50"
                                 onClick = {() => router1.push("/Admin/Mensajes/mensajes_admin")}
                             >
@@ -297,17 +320,11 @@ const Carga = (e) =>{
                         </CardFooter>
                     </Card>
                 </Stack>
-
-                <Stack
-                    minW = {{ base: "10%"}}
-                    width={800}
-                    spacing = {50}
-                    p = "2rem"
-                    direction={['column', 'row']}
-                >
-                    <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Multas</Text>
+                    
+                    <Stack width={"100%"}>
+                    <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
+                    <CardHeader backgroundColor="blue.400" rounded = "16">
+                            <Text color = "whiteAlpha.900" textAlign={'center'} textTransform={'uppercase'} as='b' >Multas</Text>
                         </CardHeader>
 
                         <CardBody>
@@ -318,11 +335,9 @@ const Carga = (e) =>{
 
                         <CardFooter justifyContent={'center'}>
                             <Button
-                                borderRadius = {0}
-                                variant = "solid"
+                                variant = {"solid"}
                                 colorScheme = "blue"
-                                width = {160}
-                                height={50}
+                                width = {"80%"}
                                 rounded = "50"
                                 onClick = {() => router1.push("/Admin/Multas/multas_admin")}
                             >
@@ -330,10 +345,12 @@ const Carga = (e) =>{
                             </Button>
                         </CardFooter>
                     </Card>
-
-                    <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Mantenciones</Text>
+                    </Stack>
+                    
+                    <Stack width={"100%"}>
+                    <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
+                    <CardHeader backgroundColor="blue.400" rounded = "16">
+                            <Text color = "whiteAlpha.900"  textAlign={'center'} textTransform={'uppercase'} as='b' > < BsWrench size="20"/>Mantenciones</Text>
                         </CardHeader>
 
                         <CardBody>
@@ -344,11 +361,9 @@ const Carga = (e) =>{
 
                         <CardFooter justifyContent={'center'}>
                             <Button
-                                borderRadius = {0}
-                                variant = "solid"
+                                variant = {"solid"}
                                 colorScheme = "blue"
-                                width = {160}
-                                height={50}
+                                width = {"80%"}
                                 rounded = "50"
                                 onClick = {() => router1.push("/Admin/Mantenciones/mantenciones_admin")}
                             >
@@ -356,10 +371,12 @@ const Carga = (e) =>{
                             </Button>
                         </CardFooter>
                     </Card>
-
-                    <Card textAlign={'center'} width={600} height={300}>
-                    <CardHeader>
-                            <Text textAlign={'center'} textTransform={'uppercase'} as='b' >Vecinos</Text>
+                    </Stack>
+                    
+                    <Stack width={"100%"}>
+                    <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
+                    <CardHeader backgroundColor="blue.400" rounded = "16">
+                            <Text color = "whiteAlpha.900" textAlign={'center'} textTransform={'uppercase'} as='b' >Vecinos</Text>
                         </CardHeader>
 
                         <CardBody>
@@ -370,11 +387,9 @@ const Carga = (e) =>{
 
                         <CardFooter justifyContent={'center'}>
                             <Button
-                                borderRadius = {0}
-                                variant = "solid"
+                                variant = {"solid"}
                                 colorScheme = "blue"
-                                width = {160}
-                                height={50}
+                                width = {"80%"}
                                 rounded = "50"
                                 onClick = {() => router1.push("/Admin/Vecino/vecinos_admin")}
                             >
@@ -382,8 +397,9 @@ const Carga = (e) =>{
                             </Button>
                         </CardFooter>
                     </Card>
-                </Stack>
-            </Box>
+                    </Stack>
+            </Stack>
+            
         </Stack>
     );
 };

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select, Textarea, Menu, MenuButton, MenuList,MenuItem  } from "@chakra-ui/react";
+import { useDisclosure, Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select, Textarea,Drawer,DrawerFooter, DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody, InputGroup, InputLeftElement   } from "@chakra-ui/react";
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import { useRouter } from "next/router";
-
+import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon } from "@chakra-ui/icons";
 
 const agregarMantencion = () => {
 
@@ -19,8 +19,9 @@ const agregarMantencion = () => {
     const month= today.getMonth()+1;
     const year= today.getFullYear();
     const router = useRouter();
-    const[semana, setSemana] = useState('none')
-    const[findesemana, setFindesemana] = useState('none')
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const[semana, setSemana] = useState('null')
+    const[findesemana, setFindesemana] = useState('null')
     const [veci,setVeci]=useState([]);
 
 
@@ -54,7 +55,6 @@ const [vecinos, setVecinos] = useState([])
         dia:'',
         mes:'',
         year:'',
-        hora:'',
         observaciones:''
       })
 
@@ -77,6 +77,8 @@ const [vecinos, setVecinos] = useState([])
     const refOne = useRef(null)
 
     useEffect(() => {
+      document.getElementById('semana').hidden=true
+        document.getElementById('findesemana').hidden=true
         getVecinos()
         getAdmin()
     }, [])
@@ -103,12 +105,12 @@ const [vecinos, setVecinos] = useState([])
 
         if(diaS<=5)
         {
-            setSemana('inLine')
-            setFindesemana('none')
+            document.getElementById('semana').hidden= false
+            document.getElementById('findesemana').hidden= true
         }else
         {
-            setFindesemana('inLine')
-            setSemana('none')
+            document.getElementById('semana').hidden= true
+            document.getElementById('findesemana').hidden= false
         }
     }
 
@@ -224,6 +226,14 @@ const [vecinos, setVecinos] = useState([])
         }
       }
 
+      const cerrarSesion = async (e) => {
+
+        e.preventDefault()
+        localStorage.clear();
+        router.push("/")
+    
+    }
+
 return (
 
     <Flex
@@ -233,62 +243,70 @@ return (
             backgroundColor="blue.300"
             alignItems="center"
             >
-            <Box backgroundColor="blue.500" w={"100%"} h="10">
-                <Menu>
-                <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
-                    Menú
-                </MenuButton>
-                <MenuList >
-                    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
-                    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/Reservas/reservas_admin")} >Reservas</MenuItem>
-                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
-                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
-                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
-                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
-                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
-                </MenuList>
-                </Menu>
+            <Box backgroundColor="blue.500" w={"100%"} h="16">
+        <Button colorScheme='blue' onClick={onOpen} h="16">
+        Menu
+       </Button>
+       <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+        Cerrar Sesión
+       </Button>
+       </Box>
 
-            </Box>
-            <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" style={{
-            position: "fixed",
-            top: "20px",
-            left: "200px",
-            zIndex: 1,
-            }}
-            onClick={()=>router.push("/Admin/Mantenciones/mantenciones_admin")}>
-            Volver atrás</Button>
+        <Button mt={10} name="atras" leftIcon={<ArrowBackIcon/>} colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
+        onClick={()=>router.push("/Admin/inicio_admin")}>
+        Volver atrás</Button>
+
+        <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+        <DrawerOverlay />
+        <DrawerContent>
+        <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
+        <DrawerBody backgroundColor="blue.300">
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/inicio_admin")}>Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</Button>
+
+
+        </DrawerBody>
+        <DrawerFooter backgroundColor="blue.300">
+            <Button mr={3} onClick={onClose} colorScheme="blue">
+              Cerrar
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
               <Text fontSize={50} color="white" mt={30} mb={30}>Crear Mantencion</Text>
-              <Box  minW={{ base: "10%", md: "468px"}} >
-            <form>
+              <Box  minW={{ base: "20%", md: "250px"}} >
+           
                 <Stack spacing={4}
-                    p="1rem"
-                    backgroundColor="whiteAlpha.900"
-                    boxShadow="md"
-                    rounded="16"
-                    flexDir="column"
-            mb="2"
-            justifyContent="left"
-            alignItems="left">
-                <HStack>
-                    <VStack spacing={6}>
+                        p="1rem"
+                        backgroundColor="whiteAlpha.900"
+                        boxShadow="md"
+                        rounded="16"
+                        mb="2"
+                        width={"full"}>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >Nombre de empresa</Text>
-                                    <Input width={60} type={"text"} name={"nombre_empresa"}onChange={onChange} ></Input>
+                                    <Text position={"left"}  color={"blue.400"} as="b" >Nombre Empresa:</Text>
+                                    <Input width={"full"} type={"text"} name={"nombre_empresa"}onChange={onChange} ></Input>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >rut de empresa</Text>
-                                    <Input width={60} type={"text"} name={"rut_empresa"}onChange={onChange} ></Input>
+                                    <Text  color={"blue.400"} as="b" >Rut Empresa:</Text>
+                                    <Input width={"full"} type={"text"} name={"rut_empresa"}onChange={onChange} ></Input>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >giro de empresa</Text>
-                                    <Input width={60} type={"text"} name={"giro"}onChange={onChange} ></Input>
+                                    <Text  color={"blue.400"} as="b" >Giro Empresa:</Text>
+                                    <Input width={"full"} type={"text"} name={"giro"}onChange={onChange} ></Input>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >descripcion de mantencion</Text>
+                              <Text color={"blue.400"} as="b" >Descripcion Mantención:</Text>
+                              
+                                    
                                     <Textarea
-                                        placeholder='Escribe la descripci처n de la mantencion'
-                                        width={60}
+                                        placeholder='Escribe la descripción de la mantencion'
+                                        width={"full"}
                                         type={"text"}
                                         name={"descripcion"}
                                         minLength={10}
@@ -297,19 +315,26 @@ return (
                                     </Textarea>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >valor </Text>
-                                    <Input width={60} type={"number"} name={"valor"}onChange={onChange} ></Input>
+                              <Text color={"blue.400"} as="b">Valor</Text>
+                                <InputGroup>
+                                  <InputLeftElement
+                                    pointerEvents='none'
+                                    fontSize='1.2em'
+                                    children='$'
+                                  />
+                                <Input width={"full"} type={"text"} name={"valor"}onChange={onChange} ></Input>
+                                </InputGroup>
                             </HStack>
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >Fecha</Text>
-                                    <Input type="date" id="start"
+                                    <Text  color={"blue.400"} as="b" >Fecha:</Text>
+                                    <Input width={"full"} type="date" id="start"
                                         date={new Date()}
                                         onChange={DateSetter}
                                         min={castMin()} max={castMax()}></Input>
                             </HStack>
-                            <HStack style={{display:semana}}>
-                                    <Text color={"blue.400"}  as="b" >Hora:</Text>
-                                    <Select placeholder='Hora'  name="hora"   onChange={onChange}>
+                            <HStack id='semana'>
+                                    <Text  color={"blue.400"}  as="b" >Hora:</Text>
+                                    <Select width={"full"} placeholder='Hora'  name="hora"   onChange={onChange}>
                                         <option name="7:00" value={"7:00"} >    7:00</option>
                                         <option name="8:00" value={"8:00"} >    8:00</option>
                                         <option name="9:00" value={"9:00"} >    9:00</option>
@@ -326,9 +351,9 @@ return (
                                     </Select>
                             </HStack >
 
-                            <HStack style={{display:findesemana}}>
-                                    <Text color={"blue.400"} as="b"  >Hora:</Text>
-                                    <Select placeholder='Hora'  name="hora"   onChange={onChange}>
+                            <HStack id='findesemana'>
+                                    <Text  color={"blue.400"} as="b"  >Hora:</Text>
+                                    <Select width={"full"} placeholder='Hora'  name="hora"   onChange={onChange}>
                                         <option name="8:00"  value={"8:00"} >   8:00</option>
                                         <option name="9:00"  value={"9:00"} >   9:00</option>
                                         <option name="10:00" value={"10:00"} > 10:00</option>
@@ -348,18 +373,15 @@ return (
                             </HStack>
 
                             <HStack>
-                                    <Text color={"blue.400"} as="b" >Observaciones </Text>
+                                    <Text  color={"blue.400"} as="b" >Observaciones:</Text>
                                     <Textarea
                                             placeholder='Escribe las observaciones de la mantencion'
-                                            width={60} type={"text"}
+                                            width={"full"} type={"text"}
                                             minLength={10}
                                             maxLength={200}
                                             name={"observaciones"}onChange={onChange} >
                                     </Textarea>
                             </HStack>
-                    </VStack>
-
-                    </HStack>
                                 <Button mb="2"
                                     variant="solid"
                                     colorScheme="blue"
@@ -369,7 +391,6 @@ return (
                                         CREAR
                                 </Button>
                 </Stack>
-            </form>
         </Box>
 
             </Flex>

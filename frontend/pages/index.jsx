@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect  } from "react";
 import {
   Flex,
   Heading,
@@ -14,6 +14,8 @@ import {
   RadioGroup,
   FormHelperText,
   InputRightElement,
+  Head,
+  Link 
 
 } from "@chakra-ui/react";
 import axios from 'axios'
@@ -26,7 +28,6 @@ export default function Home() {
 
 
 const router = useRouter()
-
 const [values, setValues]= useState({
   codigo:''
 })
@@ -132,11 +133,17 @@ const onChange = (e) => {
 
 useEffect(() => {
   document.title="Lavanderia 60 minutos";
+
+  window.history.pushState(null,window.location.href);
+  window.onpopstate=function(){
+    window.history.pushState(null,window.location.href);
+  }
 }, []);
 
 
 
   return (
+    
     <Flex
       flexDirection="column"
       width="100wh"
@@ -146,6 +153,10 @@ useEffect(() => {
       justifyContent="center"
       alignItems="center"
     >
+      
+      <Link rel="icon" href="/frontend/public/vercel" type="image/x-icon" />
+    
+      
       <Box minW={{ base: "90%", md: "468px" }}  width={600} height={400} color="blue.500">
         <Stack
         flexDir="column"
@@ -156,7 +167,7 @@ useEffect(() => {
         <Avatar bg="blue.500" />
         <Heading color="blue.500">Lavanderia 60 Minutos </Heading>
         <Box minW={{ base: "90%", md: "468px" } } >
-          <form>
+        
             <Stack
               spacing={4}
               p="1rem"
@@ -200,7 +211,7 @@ useEffect(() => {
                 Iniciar Sesion
               </Button>
             </Stack>
-          </form>
+          
         </Box>
       </Stack>
       </Box>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Text, Box, Stack, HStack, Button,Input,Select} from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { EditIcon } from '@chakra-ui/icons'
+import { EditIcon, ArrowBackIcon } from '@chakra-ui/icons'
 import axios from "axios";
 import Swal from 'sweetalert2'
 

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import { useDisclosure ,Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input, TableContainer, Menu, MenuButton, MenuList,MenuItem,Drawer,DrawerFooter, DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody} from "@chakra-ui/react";
+import { useState, useEffect} from "react";
+import { useDisclosure ,Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, Input, TableContainer,Drawer,DrawerFooter, DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
+import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon } from "@chakra-ui/icons";
 
 
 
@@ -109,22 +110,24 @@ const onSubmit = async(e) => {
     }
 }
 
+const cerrarSesion = async (e) => {
+
+    e.preventDefault()
+    localStorage.clear();
+    router.push("/")
+
+}
+
 
 const showreservas = () => {
-
     const validateDate =(y,m,d)=>{
         const fecha = new Date();
         const year = fecha.getFullYear();
         const mes= fecha.getMonth()+1;
         const dia = fecha.getDate();
-        // console.log(fecha)
-        // console.log(year)
-        // console.log(mes)
-        // console.log(dia)
         const year1 = (parseInt(y))
         const mes1= (parseInt(m))
         const dia1= (parseInt(d))
-        // console.log(year1)
         if (year1>=year){
             if(mes1>=mes-1 || year1>=year){
                 if(dia1>=dia){
@@ -139,14 +142,11 @@ const showreservas = () => {
 
 	return reservas.map(reservas => {
 		return (
-            <Tr key={reservas._id}>
-                <Td>{reservas.dia}</Td>
-                <Td>{reservas.mes}</Td>
-                <Td>{reservas.year}</Td>
+            <Tr key = {reservas._id}>
+                <Td>{reservas.dia+"/"+reservas.mes+"/"+reservas.year}</Td>
 				<Td>{reservas.hora}</Td>
 				<Td>{reservas.servicio.nombre}</Td>
-                <Td>{reservas.vecino.nombre}</Td>
-                <Td>{reservas.vecino.apellido}</Td>
+                <Td>{reservas.vecino.nombre+" "+reservas.vecino.apellido}</Td>
 				<Td>{reservas.num_reserva}</Td>
                     <Td>
                         {validateDate(reservas.year,reservas.mes,reservas.dia) ? (<Button
@@ -154,6 +154,7 @@ const showreservas = () => {
                     variant="solid"
                     colorScheme="blue"
                     rounded="50"
+                    rightIcon={<DeleteIcon /> }
                     onClick={()=> deleteReserva(reservas.num_reserva)}
                     >Eliminar</Button>) :  <Button
                     id={reservas.num_reserva}
@@ -161,6 +162,7 @@ const showreservas = () => {
                         colorScheme="blue"
                         rounded="50"
                         disabled
+                        rightIcon={<DeleteIcon /> }
                         >Eliminar</Button>
                         }
                     </Td>
@@ -187,31 +189,31 @@ return (
         <Button colorScheme='blue' onClick={onOpen} h="16">
         Menu
        </Button>
-       <Button colorScheme='blue' marginLeft="80%" onClick={()=>router.push("/")} h="16">
+       <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
         Cerrar Sesión
        </Button>
        </Box>
 
-        <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
+        <Button mt={10} name="atras" leftIcon={<ArrowBackIcon/>} colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
         onClick={()=>router.push("/Admin/inicio_admin")}>
         Volver atrás</Button>
 
         <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
-          <DrawerBody backgroundColor="blue.300">
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Inicio</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Reservas</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Gastos</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Mensajes</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Multas</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Manteciones</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Vecinos</Button>
+        <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
+        <DrawerBody backgroundColor="blue.300">
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/inicio_admin")}>Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</Button>
 
 
-          </DrawerBody>
-          <DrawerFooter backgroundColor="blue.300">
+        </DrawerBody>
+        <DrawerFooter backgroundColor="blue.300">
             <Button mr={3} onClick={onClose} colorScheme="blue">
               Cerrar
             </Button>
@@ -220,79 +222,67 @@ return (
       </Drawer>
 
       <Text fontSize={50} color="white" mt={30} mb={30} fontFamily="inherit" >Reservas de Servicio</Text>
+      <Button
+            variant = "solid"
+            colorScheme = "blue"
+            width = "30%"
+            rounded = "40"
+            mb={10}
+            rightIcon={<AddIcon/>}
+            onClick = {() => router.push("/Admin/Reservas/agregar_reserva")}
+        >Agregar Reserva
+      </Button>
     <Stack mb={30}>
     <Box  minW={{ base: "10%", md: "468px"}}>
-        <form>
+        
             <Stack spacing={4}
                 p="1rem"
                 backgroundColor="whiteAlpha.900"
                 boxShadow="md"
                 rounded="16"
                 flexDir="column"
+                mb="2"
+                justifyContent="center"
+                alignItems="center">
 
-        mb="2"
-        justifyContent="center"
-        alignItems="center">
-            <HStack>
+                <Stack direction={['column', 'row']}>
                 <VStack>
-                <Text>Dia</Text>
+                <Text color={"blue.400"} as="b">Día</Text>
                 <Input placeholder="Ejemplo: 20" onChange={onChange} name="dia" ></Input>
                 </VStack>
                 <VStack>
-                <Text>Mes</Text>
+                <Text color={"blue.400"} as="b">Mes</Text>
                 <Input placeholder="Ejemplo: 02" onChange={onChange} name="mes" ></Input>
                 </VStack>
                 <VStack>
-                <Text>Año</Text>
+                <Text color={"blue.400"} as="b">Año</Text>
                 <Input placeholder="Ejemplo: 2022" onChange={onChange} name="year" ></Input>
                 </VStack>
 
-            </HStack>
+            </Stack>
             <Button
                         variant = "solid"
                         colorScheme = "blue"
                         width = "30%"
                         rounded = "40"
                         mt={10}
+                        rightIcon={<Search2Icon /> }
                         onClick={onSubmit}
                         >Buscar
                 </Button>
             </Stack>
 
-        </form>
+        
         </Box>
     </Stack>
-    <HStack>
-        <Box  minW={{ base: "10%", md: "468px"}} >
-        <form>
-            <Stack spacing={4}
-                p="1rem"
-                backgroundColor="whiteAlpha.900"
-                boxShadow="md"
-                rounded="16"
-                flexDir="column"
-        mb="2"
-        justifyContent="center"
-        alignItems="center">
-                <Text fontSize={30} color="blue.400" mt={30} mb={30}>Reservas</Text>
-                <Button mb="2"
-                variant="solid"
-                colorScheme="blue"
-                rounded="50"
-                onClick = {() => router.push("/Admin/Reservas/agregar_reserva")}>
-                Agregar Reserva</Button>
-
-                <TableContainer>
-                <Table variant={"simple"} colorScheme="blue">
+                <TableContainer rounded="16" width={"90%"}>
+                <Table variant={"simple"} colorScheme="blue" backgroundColor="whiteAlpha.900">
                     <Thead>
                     <Tr >
-						<Td bgColor={"blue.500"} color={"white"}>Dia</Td>
-						<Td bgColor={"blue.500"} color={"white"}>Mes</Td>
-						<Td bgColor={"blue.500"} color={"white"}>Año</Td>
+						<Td bgColor={"blue.500"} color={"white"}>Fecha</Td>
 						<Td bgColor={"blue.500"} color={"white"}>Hora</Td>
 						<Td bgColor={"blue.500"} color={"white"}>Servicio</Td>
                         <Td bgColor={"blue.500"} color={"white"}>Vecino</Td>
-                        <Td bgColor={"blue.500"} color={"white"}>        </Td>
 						<Td bgColor={"blue.500"} color={"white"}>N° de reserva</Td>
 						<Td bgColor={"blue.500"} color={"white"}>Acciones</Td>
 					</Tr>
@@ -302,11 +292,6 @@ return (
 				</Tbody>
                 </Table>
                 </TableContainer>
-
-            </Stack>
-        </form>
-    </Box>
-    </HStack>
 
 </Flex>
 );

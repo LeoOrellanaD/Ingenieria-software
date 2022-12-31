@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
-import { Flex, Text, Box, Stack, Button,VStack,HStack, Input, Select, Menu, MenuButton, MenuList,MenuItem } from "@chakra-ui/react";
+import {useDisclosure, Flex, Text, Box, Stack, Button,VStack,HStack, Input, Select,  Drawer,DrawerFooter, DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
+import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon } from "@chakra-ui/icons";
 
 const AgregarVecino = () => {
   
   const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [values, setValues]= useState({
     nombre:'',
     apellido:'',
@@ -65,6 +67,13 @@ const onSubmit= async(e) =>{
     })
   }
 }
+const cerrarSesion = async (e) => {
+
+  e.preventDefault()
+  localStorage.clear();
+  router.push("/")
+
+}
 
   return (
     <Flex
@@ -74,65 +83,82 @@ const onSubmit= async(e) =>{
             backgroundColor="blue.300"
             alignItems="center"
             >
-              <Box backgroundColor="blue.500" w={"100%"} h="10">
-                <Menu>
-                <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
-                    Menú
-                </MenuButton>
-                <MenuList >
-                    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
-                    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/Reservas/reservas_admin")} >Reservas</MenuItem>
-                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
-                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
-                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
-                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
-                    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
-                </MenuList>
-                </Menu>
-            </Box>
-            <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" style={{
-            position: "fixed",
-            top: "20px",
-            left: "200px",
-            zIndex: 1,
-            }}
-            onClick={()=>router.push("/Admin/Vecino/vecinos_admin")}>
-            Volver atrás</Button>
+              <Box backgroundColor="blue.500" w={"100%"} h="16">
+        <Button colorScheme='blue' onClick={onOpen} h="16">
+        Menu
+       </Button>
+       <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+        Cerrar Sesión
+       </Button>
+       </Box>
+
+        <Button mt={10} name="atras" leftIcon={<ArrowBackIcon/>} colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
+        onClick={()=>router.push("/Admin/inicio_admin")}>
+        Volver atrás</Button>
+
+        <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+        <DrawerOverlay />
+        <DrawerContent>
+        <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
+        <DrawerBody backgroundColor="blue.300">
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/inicio_admin")}>Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</Button>
+
+
+        </DrawerBody>
+        <DrawerFooter backgroundColor="blue.300">
+            <Button mr={3} onClick={onClose} colorScheme="blue">
+              Cerrar
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
               <Text fontSize={50} color="white" mt={30} mb={30}>Agregar Vecino</Text>
               <Box  minW={{ base: "10%", md: "468px"}} >
-            <form>
+           
                 <Stack spacing={4}
-                    p="1rem"
-                    backgroundColor="whiteAlpha.900"
-                    boxShadow="md"
-                    rounded="16"
-                    flexDir="column"
-            mb="2"
-            justifyContent="center"
-            alignItems="center">
-                  <HStack>
-                    <VStack spacing={6}>
-                      <Text color={"blue.400"} as="b">Nombre</Text>
-                      <Text color={"blue.400"} as="b">Apellido</Text>
-                      <Text color={"blue.400"} as="b"  >Rut</Text>
-                      <Text color={"blue.400"} as="b" >Vivienda</Text>
-                      <Text color={"blue.400"} as="b"  >Horas</Text>
-                      <Text color={"blue.400"} as="b" >Permiso</Text>
-                      <Text color={"blue.400"} as="b" >Codigo</Text>
-                    </VStack>
-                    <VStack>
-                    <Input width={60} type={"text"} maxLength={20} name={"nombre"} onChange={onChange} ></Input>
-                    <Input width={60}  type={"text"} maxLength={20} name={"apellido"} onChange={onChange}></Input>
-                    <Input width={60} type={"text"} maxLength={12} name={"rut"} onChange={onChange}></Input>
-                    <Input width={60} type={"number"} maxLength={2} name={"vivienda"} onChange={onChange}></Input>
-                    <Input width={60} type={"number"} maxLength={2} name={"horas"} onChange={onChange}></Input>
-                    <Select placeholder='Permiso'  name="permiso" onChange={onChange}>
+                        p="1rem"
+                        backgroundColor="whiteAlpha.900"
+                        boxShadow="md"
+                        rounded="16"
+                        mb="2"
+                        width={"full"}>
+                          <HStack>
+                          <Text color={"blue.400"} as="b">Nombre:</Text>
+                          <Input width={"full"} type={"text"} maxLength={20} name={"nombre"} onChange={onChange} ></Input>
+                          </HStack>
+                      <HStack>
+                      <Text color={"blue.400"} as="b">Apellido:</Text>
+                      <Input width={"full"}  type={"text"} maxLength={20} name={"apellido"} onChange={onChange}></Input>
+                      </HStack>
+                      <HStack>
+                      <Text color={"blue.400"} as="b"  >Rut:</Text>
+                      <Input width={"full"} type={"text"} maxLength={12} name={"rut"} onChange={onChange}></Input>
+                      </HStack>
+                      <HStack>
+                      <Text color={"blue.400"} as="b" >Vivienda:</Text>
+                      <Input width={"full"} type={"number"} maxLength={2} name={"vivienda"} onChange={onChange}></Input>
+                      </HStack>
+                      <HStack>
+                      <Text color={"blue.400"} as="b"  >Horas:</Text>
+                      <Input width={"full"} type={"number"} maxLength={2} name={"horas"} onChange={onChange}></Input>
+                      </HStack>
+                      <HStack>
+                      <Text color={"blue.400"} as="b" >Permiso:</Text>
+                      <Select width={"full"} placeholder='Permiso'  name="permiso" onChange={onChange}>
                         <option color={"blue.400"} as="b" >habilitado</option>
                         <option color={"blue.400"} as="b" >inhabilitado</option>
                       </Select>
-                    <Input width={60} type={"number"} maxLength={4} name={"codigo"} onChange={onChange}></Input>
-                    </VStack>
-                    </HStack>
+                      </HStack>
+                      <HStack>
+                      <Text color={"blue.400"} as="b" >Codigo:</Text>
+                      <Input width={"full"} type={"number"} maxLength={4} name={"codigo"} onChange={onChange}></Input>
+                      </HStack>
                           <Button mb="2"
                             variant="solid"
                             colorScheme="blue"
@@ -141,7 +167,6 @@ const onSubmit= async(e) =>{
                             >
                           Agregar</Button>
                 </Stack>
-            </form>
         </Box>
 
             </Flex>

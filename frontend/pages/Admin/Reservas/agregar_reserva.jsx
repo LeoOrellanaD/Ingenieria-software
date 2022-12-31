@@ -1,23 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
-import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select,Label, Menu, MenuButton, MenuList,MenuItem } from "@chakra-ui/react";
+import { useDisclosure, Flex, Text, Box, Stack,Button,HStack, Input, Select,InputGroup,InputLeftElement , Drawer,DrawerFooter, DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody } from "@chakra-ui/react";
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import { useRouter } from "next/router";
-
-
-
-
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 const AgregarReserva=()=> {
-
-
     const [selectedOption, setSelectedOption] = useState('')
     const [valor, setValor] = useState('0')
     const [valor2, setValor2] = useState('0')
     const [open, setOpen] = useState(false)
     const refOne = useRef(null)
     const router = useRouter();
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
+    const[semana, setSemana] = useState('null')
+    const[findesemana, setFindesemana] = useState('null')
 
     const [values, setValues]= useState({
         dia:'',
@@ -31,7 +29,8 @@ const AgregarReserva=()=> {
     })
 
     useEffect(() => {
-
+        document.getElementById('semana').hidden=true
+        document.getElementById('findesemana').hidden=true
         getVecinos()
         getServicios()
         document.addEventListener("keydown", hideOnEscape, true)
@@ -104,6 +103,7 @@ const AgregarReserva=()=> {
      */
     const DateSetter = (e) =>
     {
+        CastTime(e)
         const string = e.target.value
         const year = string.substring(0,4)
         const mes = string.substring(5,7)
@@ -151,6 +151,21 @@ const AgregarReserva=()=> {
         }
     }
 
+    const CastTime = (e) =>
+    {
+        const fechaSelecionada = new Date(e.target.value);
+        const diaS=fechaSelecionada.getDay()+1
+
+        if(diaS<=5)
+        {
+            document.getElementById('semana').hidden= false
+            document.getElementById('findesemana').hidden= true
+        }else
+        {
+            document.getElementById('semana').hidden= true
+            document.getElementById('findesemana').hidden= false
+        }
+    }
 
 
     const Actualizar = () =>{
@@ -240,109 +255,160 @@ const AgregarReserva=()=> {
         return result
     }
 
+    const cerrarSesion = async (e) => {
+
+        e.preventDefault()
+        localStorage.clear();
+        router.push("/")
+    
+    }
+
 
 return (
     <Flex
             flexDirection="column"
-            width="100wh"
-            height="100vh"
+            width="150wh"
+            height="auto"
+            minH={"100vh"}
             backgroundColor="blue.300"
             alignItems="center"
             >
-                <Box backgroundColor="blue.500" w={"100%"} h="10">
-    <Menu>
-  <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
-    Menú
-  </MenuButton>
-  <MenuList >
-    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
-    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/Reservas/reservas_admin")} >Reservas</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
-  </MenuList>
-</Menu>
-    </Box>
-    <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" style={{
-    position: "fixed",
-    top: "20px",
-    left: "200px",
-    zIndex: 1,
-    }}
-    onClick={()=>router.push("/Admin/Reservas/reservas_admin")}>
-    Volver atrás</Button>
+                <Box backgroundColor="blue.500" w={"100%"} h="16">
+        <Button colorScheme='blue' onClick={onOpen} h="16">
+        Menu
+       </Button>
+       <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+        Cerrar Sesión
+       </Button>
+       </Box>
+
+        <Button mt={10} name="atras" leftIcon={<ArrowBackIcon/>} colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
+        onClick={()=>router.push("/Admin/inicio_admin")}>
+        Volver atrás</Button>
+
+        <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+        <DrawerOverlay />
+        <DrawerContent>
+        <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
+        <DrawerBody backgroundColor="blue.300">
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/inicio_admin")}>Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</Button>
+
+
+        </DrawerBody>
+        <DrawerFooter backgroundColor="blue.300">
+            <Button mr={3} onClick={onClose} colorScheme="blue">
+              Cerrar
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
               <Text fontSize={50} color="white" mt={30} mb={30}>Crear Reserva</Text>
               <Box  minW={{ base: "10%", md: "468px"}} >
-            <form>
-                <Stack spacing={4}
-                    p="1rem"
-                    backgroundColor="whiteAlpha.900"
-                    boxShadow="md"
-                    rounded="16"
-                    flexDir="column"
-            mb="2"
-            justifyContent="left"
-            alignItems="left">
-                <HStack>
-                    <VStack spacing={6}>
-                            <HStack>
+                    <Stack
+                        spacing={4}
+                        p="1rem"
+                        backgroundColor="whiteAlpha.900"
+                        boxShadow="md"
+                        rounded="16"
+                        flexDir="column"
+                        mb="2"
+                        justifyContent="left"
+                        alignItems="left">
+                                <HStack mt={6}>
+                                        <Text color={"blue.400"} as="b">Fecha:</Text>
+                                        <Input type="date" id="start"
+                                            date={new Date()}
+                                            onChange={DateSetter}
+                                            min={castMin()} max={castMax()}></Input>
+                                </HStack>
+    
+                                <HStack id='semana'>
+                                    <Text width={"full"} color={"blue.400"}  as="b" >Hora:</Text>
+                                    <Select placeholder='Hora'  name="hora"   onChange={onChange}>
+                                        <option name="7:00" value={"7:00"} >    7:00</option>
+                                        <option name="8:00" value={"8:00"} >    8:00</option>
+                                        <option name="9:00" value={"9:00"} >    9:00</option>
+                                        <option name="10:00" value={"10:00"} > 10:00</option>
+                                        <option name="11:00" value={"11:00"} > 11:00</option>
+                                        <option name="12:00" value={"12:00"} > 12:00</option>
+                                        <option name="13:00" value={"13:00"} > 13:00</option>
+                                        <option name="14:00" value={"14:00"} > 14:00</option>
+                                        <option name="15:00" value={"15:00"} > 15:00</option>
+                                        <option name="16:00" value={"16:00"} > 16:00</option>
+                                        <option name="17:00" value={"17:00"} > 17:00</option>
+                                        <option name="18:00" value={"18:00"} > 18:00</option>
+                                        <option name="19:00" value={"19:00"} > 19:00</option>
+                                    </Select>
+                            </HStack >
 
-                            </HStack>
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Fecha:</Text>
-                                    <Input type="date" id="start"
-                                        date={new Date()}
-                                        onChange={DateSetter}
-                                        min={castMin()} max={castMax()}></Input>
-                            </HStack>
-
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Hora:</Text>
-                                    <Input width={60} 
-                                    type="time"
-                                    pattern="[0-9]{2}:[0-9]{2}" name={"hora"} onChange={onChange} step={3600}></Input>
-                            </HStack>
-                            <HStack>
-                                    <Text  value={selectedOption} color={"blue.400"} name="servicio" as="b" >Servicio:</Text>
-                                    <Select placeholder='seleccione servicio' name="servicio" onChange={onChange}>
-                                        {showServicios()}
+                            <HStack id='findesemana'>
+                                    <Text width={"full"} color={"blue.400"} as="b"  >Hora:</Text>
+                                    <Select placeholder='Hora'  name="hora"   onChange={onChange}>
+                                        <option name="8:00"  value={"8:00"} >   8:00</option>
+                                        <option name="9:00"  value={"9:00"} >   9:00</option>
+                                        <option name="10:00" value={"10:00"} > 10:00</option>
+                                        <option name="11:00" value={"11:00"} > 11:00</option>
+                                        <option name="12:00" value={"12:00"} > 12:00</option>
+                                        <option name="13:00" value={"13:00"} > 13:00</option>
+                                        <option name="14:00" value={"14:00"} > 14:00</option>
+                                        <option name="15:00" value={"15:00"} > 15:00</option>
+                                        <option name="16:00" value={"16:00"} > 16:00</option>
+                                        <option name="17:00" value={"17:00"} > 17:00</option>
+                                        <option name="18:00" value={"18:00"} > 18:00</option>
+                                        <option name="19:00" value={"19:00"} > 19:00</option>
+                                        <option name="20:00" value={"20:00"} > 20:00</option>
+                                        <option name="21:00" value={"21:00"} > 21:00</option>
+                                        <option name="22:00" value={"22:00"} > 22:00</option>
                                     </Select>
                             </HStack>
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Vecino</Text>
-                                    <Select id="vecino_select" placeholder='Vecinos' name="vecino" onChange={onChange}>
-                                    {showVecinos()}
-                                    </Select>
-                            </HStack>
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Costo del Servicio</Text>(
-                                    <Text name='costo_base'>{"$"+valor}</Text>)
-
-                            </HStack>
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Costo Extra </Text>
-                                    <Input width={60} placeholder={'0'} type={"number"} maxLength={5} name={"costo_extra"} onChange={onChange} ></Input>
-                            </HStack>
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Costo total </Text>
-                                    <Text name='costoTotal'> {"$"+Tot()} </Text>
-                            </HStack>
-                    </VStack>
-
-                    </HStack>
-                                <Button mb="2"
-                                    variant="solid"
-                                    colorScheme="blue"
-                                    rounded="50"
-                                    onClick={onSubmit}
-                                    >
-                                        CREAR
-                                </Button>
-                </Stack>
-            </form>
-        </Box>
+                                <HStack>
+                                        <Text  value={selectedOption} color={"blue.400"} name="servicio" as="b" >Servicio:</Text>
+                                        <Select placeholder='Seleccione servicio' name="servicio" onChange={onChange}>
+                                            {showServicios()}
+                                        </Select>
+                                </HStack>
+                                <HStack>
+                                        <Text color={"blue.400"} as="b" >Vecino: </Text>
+                                        <Select id="vecino_select" placeholder='Vecinos' name="vecino" onChange={onChange}>
+                                        {showVecinos()}
+                                        </Select>
+                                </HStack>
+                                <HStack>
+                                        <Text color={"blue.400"} as="b" >Costo del Servicio: </Text>(
+                                        <Text name='costo_base'>{"$"+valor}</Text>)
+    
+                                </HStack>
+                                <HStack >
+                                        <Text width={120} color={"blue.400"} as="b" >Costo Extra: </Text>
+                                        <InputGroup>
+                                        <InputLeftElement
+                                            pointerEvents='none'
+                                            fontSize='1.2em'
+                                            children='$'
+                                        />
+                                        <Input width={"full"} placeholder={'0'} type={"number"} maxLength={5} name={"costo_extra"} onChange={onChange} ></Input>
+                                        </InputGroup>
+                                </HStack>
+                                <HStack>
+                                        <Text color={"blue.400"} as="b" >Costo total: </Text>
+                                        <Text name='costoTotal'> {"$"+Tot()} </Text>
+                                </HStack>
+                                    <Button mb={2}
+                                        variant="solid"
+                                        colorScheme="blue"
+                                        rounded="50"
+                                        onClick={onSubmit}
+                                        >
+                                            CREAR
+                                    </Button>
+                    </Stack>
+            </Box>
 
             </Flex>
 )

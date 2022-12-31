@@ -90,3 +90,14 @@ COSAS POR HACE 2: MAS COSAS Y MAS QUE HACER QUE NUNCA
 -(ACTIVO) updateVecino
 -(ACTIVO) deleteVecino
 
+
+
+
+LISTA DEFINITIVA FINAL FINAL
+
+Iconos
+Controlador update costo Extra
+try catch Revisar
+revisar los input
+realizacion de prueba funcionales
+limpieza general |

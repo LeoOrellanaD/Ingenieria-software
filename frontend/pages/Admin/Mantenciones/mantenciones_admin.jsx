@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import { Button, Flex, Text, Box, Stack , HStack, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel, Menu, MenuButton, MenuList,MenuItem} from "@chakra-ui/react";
+import { useDisclosure,Button, Flex, Text, Box, Stack , HStack, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel, Drawer,DrawerFooter, DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
+import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon } from "@chakra-ui/icons";
 
 
 const MantencionesAdmin = () =>{
 
     const router = useRouter()
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
 const [mantenciones, setMantenciones] = useState([])
 const getMantenciones = async () => {
@@ -63,6 +65,7 @@ const showMantenciones = () =>{
                         variant="solid"
                         colorScheme="blue"
                         rounded="50"
+                        rightIcon={<DeleteIcon/>}
                         onClick={()=>deleteMantencion(mantenciones.num_mantencion)}
                         >Eliminar</Button>
                 </AccordionPanel>
@@ -70,67 +73,81 @@ const showMantenciones = () =>{
     )
     })
 }
+
+const cerrarSesion = async (e) => {
+
+    e.preventDefault()
+    localStorage.clear();
+    router.push("/")
+
+}
+
 return (
     <Flex
-        flexDirection="column"
-        width="100wh"
-        height="100vh"
-        backgroundColor="blue.300"
-        alignItems="center"
+    flexDirection="column"
+    width="100wh"
+    height="auto"
+    backgroundColor="blue.300"
+    alignItems="center"
         >
-    <Box backgroundColor="blue.500" w={"100%"} h="10">
-    <Menu>
-  <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
-    Menú
-  </MenuButton>
-  <MenuList >
-    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
-  </MenuList>
-</Menu>
-    </Box>
-            <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" style={{
-            position: "fixed",
-            top: "20px",
-            left: "200px",
-            zIndex: 1,
-            }}
-            onClick={()=>router.push("/Admin/inicio_admin")}>
-            Volver atrás</Button>
+    <Box backgroundColor="blue.500" w={"100%"} h="16">
+        <Button colorScheme='blue' onClick={onOpen} h="16">
+        Menu
+       </Button>
+       <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+        Cerrar Sesión
+       </Button>
+       </Box>
 
+        <Button mt={10} 
+                name="atras" 
+                leftIcon={<ArrowBackIcon/>} 
+                colorScheme="blue" 
+                as="b" 
+                rounded="40" 
+                marginLeft="-60%"
+        onClick={()=>router.push("/Admin/inicio_admin")}>
+        Volver atrás</Button>
+
+        <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+        <DrawerOverlay />
+        <DrawerContent>
+        <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
+        <DrawerBody backgroundColor="blue.300">
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/inicio_admin")}>Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</Button>
+
+
+        </DrawerBody>
+        <DrawerFooter backgroundColor="blue.300">
+            <Button mr={3} onClick={onClose} colorScheme="blue">
+              Cerrar
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     <Text fontSize={50} color="white" as={"b"} mt={30} mb={30}>Mantenciones</Text>
     
 
     <Button mb="2"
                 variant="solid"
                 colorScheme="blue"
+                rightIcon={<AddIcon/>}
                 rounded="50"
                 onClick = {() => router.push("/Admin/Mantenciones/agregar_mantencion")}>
                     Agregar Mantencion</Button>
 
-    <HStack>
+        <Stack mt={30} width={"90%"} alignItems="center" rounded="16" backgroundColor="whiteAlpha.900" direction={['column']}>
 
-        <Box  minW={{ base: "10%", md: "468px"}} width="700">
-            <Stack spacing={4}
-                p="1rem"
-                backgroundColor="whiteAlpha.900"
-                boxShadow="md"
-                rounded="16"
-                flexDir="column"
-        mb="2"
-        justifyContent="center"
-        alignItems="center">
-                <Accordion allowToggle width={700}>
+            <Accordion allowToggle width={"100%"} mt={5} mb={5}>
                 {showMantenciones()}
-                </Accordion>
-
-            </Stack>
-    </Box>
-    </HStack>
+            </Accordion>
+        </Stack>
     </Flex>
 );
 

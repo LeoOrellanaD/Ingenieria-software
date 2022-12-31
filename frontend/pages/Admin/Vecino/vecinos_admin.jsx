@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,HStack, Input, Menu, MenuButton, MenuList,MenuItem} from "@chakra-ui/react";
+import { useDisclosure,Flex, Text, Box, Table, Thead,Tr,Td,Tbody, Button,TableContainer,Drawer,DrawerFooter, DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
+import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon, EditIcon  } from "@chakra-ui/icons";
+
 
 const VecinosAdmin= () => {
 
     const router = useRouter()
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const [vecinos, setVecinos] = useState([])
     const [reservas, setReservas] = useState([])
 
@@ -91,6 +94,7 @@ const VecinosAdmin= () => {
                         colorScheme="blue"
                         rounded="50"
                         width={"full"}
+                        rightIcon={<EditIcon /> }
                         onClick={()=> router.push({pathname:'/Admin/Vecino/editar_vecino',
                     query:{codigo:vecinos.codigo}})}
                         >Editar</Button>}</Td>
@@ -100,6 +104,7 @@ const VecinosAdmin= () => {
                         colorScheme="blue"
                         rounded="50"
                         width={"80%"}
+                        rightIcon={<DeleteIcon/>}
                         onClick={()=>deleteVecino(vecinos.codigo)}
                         >Eliminar</Button>}</Td>
                 </Tr>
@@ -107,78 +112,86 @@ const VecinosAdmin= () => {
         })
     }
 
+    const cerrarSesion = async (e) => {
+
+        e.preventDefault()
+        localStorage.clear();
+        router.push("/")
+    
+    }
+
 return (
         <Flex
             flexDirection="column"
             width="100wh"
-            height="100vh"
+            height="auto"
+            minH={"100vh"}
             backgroundColor="blue.300"
             alignItems="center"
             >
-    <Box backgroundColor="blue.500" w={"100%"} h="10">
-    <Menu>
-  <MenuButton  color="white" w="10%" h="10" background={"blue.600"}>
-    Menú
-  </MenuButton>
-  <MenuList >
-    <MenuItem color="blue.400" as="b"  onClick={() => router.push("/Admin/inicio_admin")} >Inicio</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</MenuItem>
-    <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</MenuItem>
-  </MenuList>
-</Menu>
-    </Box>
-            <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" style={{
-            position: "fixed",
-            top: "20px",
-            left: "200px",
-            zIndex: 1,
-            }}
-            onClick={()=>router.push("/Admin/inicio_admin")}>
-            Volver atrás</Button>
+    <Box backgroundColor="blue.500" w={"100%"} h="16">
+        <Button colorScheme='blue' onClick={onOpen} h="16">
+        Menu
+       </Button>
+       <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+        Cerrar Sesión
+       </Button>
+       </Box>
+
+        <Button mt={10} name="atras" leftIcon={<ArrowBackIcon/>} colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
+        onClick={()=>router.push("/Admin/inicio_admin")}>
+        Volver atrás</Button>
+
+        <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
+          <DrawerBody backgroundColor="blue.300">
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Mensajes</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Multas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Manteciones</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Vecinos</Button>
+
+
+          </DrawerBody>
+          <DrawerFooter backgroundColor="blue.300">
+            <Button mr={3} onClick={onClose} colorScheme="blue">
+              Cerrar
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
 
         <Text fontSize={50} color="white" as={"b"} mt={30} mb={30}>Vecinos</Text>
         <Button mb="2"
                 variant="solid"
                 colorScheme="blue"
                 rounded="50"
+                rightIcon={<AddIcon/>}
                 onClick = {() => router.push("agregar_vecino")}>
                     Agregar Vecino</Button>
-        <HStack>
-
-            <Box  minW={{ base: "10%", md: "468px"}} width="100wh" >
-            <form>
-                <Stack spacing={4}
-                    p="1rem"
-                    backgroundColor="whiteAlpha.900"
-                    boxShadow="md"
-                    rounded="16"
-                    flexDir="column"
-            mb="2"
-            justifyContent="center"
-            alignItems="center">
-                    <Table variant={"simple"}>
+                    <TableContainer mt={30} rounded="16" width={"90%"}>
+                    <Table variant={"simple"} colorScheme="blue" backgroundColor="whiteAlpha.900">
                         <Thead>
                         <Tr>
-                            <Td color={"blue.400"}>Nombre</Td>
-                            <Td color={"blue.400"}>Apellido</Td>
-                            <Td color={"blue.400"}>Rut</Td>
-                            <Td color={"blue.400"}>Vivienda</Td>
-                            <Td color={"blue.400"}>Horas</Td>
-                            <Td color={"blue.400"}>Permiso</Td>
-                            <Td color={"blue.400"}>Opciones</Td>
+                            <Td bgColor={"blue.500"} color={"white"}>Nombre</Td>
+                            <Td bgColor={"blue.500"} color={"white"}>Apellido</Td>
+                            <Td bgColor={"blue.500"} color={"white"}>Rut</Td>
+                            <Td bgColor={"blue.500"} color={"white"}>Vivienda</Td>
+                            <Td bgColor={"blue.500"} color={"white"}>Horas</Td>
+                            <Td bgColor={"blue.500"} color={"white"}>Permiso</Td>
+                            <Td bgColor={"blue.500"} color={"white"}>Opciones</Td>
+                            <Td bgColor={"blue.500"} color={"white"}></Td>
                         </Tr>
                         </Thead>
                         <Tbody>
                         {showVecinos()}
                     </Tbody>
                     </Table>
-                </Stack>
-            </form>
-        </Box>
-        </HStack>
+                    </TableContainer>
         </Flex>
     );
 };

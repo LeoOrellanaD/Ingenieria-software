@@ -1,16 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { Flex, Text, Box, Stack,Button,VStack,HStack, Input, Select} from "@chakra-ui/react";
-import format from 'date-fns/format'
+import { useDisclosure,DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody,DrawerFooter,Drawer,Flex,InputGroup, InputLeftElement, Text, Box, Stack,Button,VStack,HStack, Input, Select} from "@chakra-ui/react";
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import { useRouter } from "next/router";
+import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon } from "@chakra-ui/icons";
 
 
-import 'react-date-range/dist/styles.css'
-import 'react-date-range/dist/theme/default.css'
-
-const AgregarReserva=()=> {
-
+const AgregarReserva = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const router = useRouter();
     const {
         query: { codigo },
@@ -24,6 +21,7 @@ const AgregarReserva=()=> {
     }
 
     const [vecino1, setVecino] = useState([])
+
     const getVecino = async () => {
     if(codigo){
         setCookieFunction(codigo)
@@ -40,13 +38,16 @@ const AgregarReserva=()=> {
                 ...values,
                 vecino:vecino1._id,
             })
-    }
+        }
     }
 
     const [selectedOption, setSelectedOption] = useState('')
+    const [valor, setValor] = useState('0')
     const [open, setOpen] = useState(false)
-    const [calendar, setCalendar] = useState('')
     const refOne = useRef(null)
+
+    const[semana, setSemana] = useState('null')
+    const[findesemana, setFindesemana] = useState('null')
 
     const [values, setValues]= useState({
         dia:'',
@@ -60,8 +61,9 @@ const AgregarReserva=()=> {
     })
 
     useEffect(() => {
+        document.getElementById('semana').hidden=true
+        document.getElementById('findesemana').hidden=true
         getServicios()
-        setCalendar(format(new Date(), 'dd/MM/yyyy'))
         document.addEventListener("keydown", hideOnEscape, true)
         document.addEventListener("click", hideOnClickOutside, true)
     }, [])
@@ -78,26 +80,11 @@ const AgregarReserva=()=> {
         }
     }
 
-    //posiblemente hay que eliminar
-    const handleSelect = (date) => {
-        console.log("FECHA AAA")
-        console.log(date)
-        setCalendar(format(date, 'dd/MM/yyyy'))
-        const a=date.getDate();
-        const b=date.getMonth()+1;
-        const c=date.getFullYear();
-        const dia=  a.toString();
-        const mes=  b.toString();
-        const year= c.toString();
-        setValues({...values,dia,mes,year});
-    }
-
-
     const onChange = async (e) => {
-
         if(e.target.name=="servicio"){
 
-            const response1 = await axios.get(`${process.env.API_URL}/servicio/search/${e.target.value}`)
+            const response1 = await axios.get(`${process.env.API_URL}/servicio/search/${codigo}`)
+            setValor(response1.data.costo)
             setValues({
                 ...values,
                 servicio:response1.data._id,
@@ -118,6 +105,7 @@ const AgregarReserva=()=> {
      */
     const DateSetter = (e) =>
     {
+        CastTime(e)
         const string = e.target.value
         const timestamp = Date.parse(string)
         const date2 = new Date(timestamp)
@@ -131,7 +119,21 @@ const AgregarReserva=()=> {
 
         setValues({...values,dia,mes,year});
     }
+    const CastTime = (e) =>
+    {
+        const fechaSelecionada = new Date(e.target.value);
+        const diaS=fechaSelecionada.getDay()+1
 
+        if(diaS<=5)
+        {
+            document.getElementById('semana').hidden= false
+            document.getElementById('findesemana').hidden= true
+        }else
+        {
+            document.getElementById('semana').hidden= true
+            document.getElementById('findesemana').hidden= false
+        }
+    }
 
     /**
      *Funciones que permiten establecer las fechas limites para un input Date
@@ -228,70 +230,122 @@ return (
             backgroundColor="blue.400"
             alignItems="center"
             >
+                <Box backgroundColor="blue.500" w={"100%"} h="16">
+        <Button colorScheme='blue' onClick={onOpen} h="16">
+        Menu
+       </Button>
+       <Button colorScheme='blue' marginLeft="80%" onClick={()=>router.push("/")} h="16">
+        Cerrar Sesión
+       </Button>
+       </Box>
+
+        <Button mt={10} name="atras" 
+                colorScheme="blue" 
+                as="b" rounded="40" 
+                marginLeft="-60%"
+                leftIcon={<ArrowBackIcon/>}
+                onClick={()=>router.push("/Vecino/reservas_vecino")}>
+        Volver atrás</Button>
+
+        <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
+          <DrawerBody backgroundColor="blue.300">
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Mensajes</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Multas</Button>
+
+          </DrawerBody>
+          <DrawerFooter backgroundColor="blue.300">
+            <Button mr = {3} onClick={onClose} colorScheme="blue">
+              Cerrar
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
               <Text fontSize={50} color="white" mt={30} mb={30}>Crear Reserva</Text>
               <Box  minW={{ base: "10%", md: "468px"}} >
-            <form>
-                <Stack spacing={4}
-                    p="1rem"
-                    backgroundColor="whiteAlpha.900"
-                    boxShadow="md"
-                    rounded="16"
-                    flexDir="column"
-            mb="2"
-            justifyContent="left"
-            alignItems="left">
-                <HStack>
-                    <VStack spacing={6}>
-                            <HStack>
+                    <Stack
+                        spacing={4}
+                        p="1rem"
+                        backgroundColor="whiteAlpha.900"
+                        boxShadow="md"
+                        rounded="16"
+                        flexDir="column"
+                        mb="2"
+                        justifyContent="left"
+                        alignItems="left">
+                                <HStack mt={6}>
+                                        <Text color={"blue.400"} as="b">Fecha:</Text>
+                                        <Input type="date" id="start"
+                                            date={new Date()}
+                                            onChange={DateSetter}
+                                            min={castMin()} max={castMax()}></Input>
+                                </HStack>
+    
+                                <HStack id='semana'>
+                                    <Text color={"blue.400"}  as="b" >Hora:</Text>
+                                    <Select placeholder='Hora'  name="hora"   onChange={onChange}>
+                                        <option name="7:00" value={"7:00"} >    7:00</option>
+                                        <option name="8:00" value={"8:00"} >    8:00</option>
+                                        <option name="9:00" value={"9:00"} >    9:00</option>
+                                        <option name="10:00" value={"10:00"} > 10:00</option>
+                                        <option name="11:00" value={"11:00"} > 11:00</option>
+                                        <option name="12:00" value={"12:00"} > 12:00</option>
+                                        <option name="13:00" value={"13:00"} > 13:00</option>
+                                        <option name="14:00" value={"14:00"} > 14:00</option>
+                                        <option name="15:00" value={"15:00"} > 15:00</option>
+                                        <option name="16:00" value={"16:00"} > 16:00</option>
+                                        <option name="17:00" value={"17:00"} > 17:00</option>
+                                        <option name="18:00" value={"18:00"} > 18:00</option>
+                                        <option name="19:00" value={"19:00"} > 19:00</option>
+                                    </Select>
+                            </HStack >
 
-                            </HStack>
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Hora:</Text>
-                                    <Input type="date" id="start"
-                                        date={new Date()}
-                                        onChange={DateSetter}
-                                        min={castMin()} max={castMax()}></Input>
-                            </HStack>
-
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Hora:</Text>
-                                    <Input width={60}
-                                    type="time"
-                                    pattern="[0-9]{2}:[0-9]{2}" name={"hora"} onChange={onChange} step={3600}></Input>
-                            </HStack>
-                            <HStack>
-                                    <Text  value={selectedOption} color={"blue.400"} name="servicio" as="b" >Servicio:</Text>
-                                    <Select placeholder='seleccione servicio' name="servicio" onChange={onChange}>
-                                        {showServicios()}
+                            <HStack id='findesemana'>
+                                    <Text color={"blue.400"} as="b"  >Hora:</Text>
+                                    <Select placeholder='Hora'  name="hora"   onChange={onChange}>
+                                        <option name="8:00"  value={"8:00"} >   8:00</option>
+                                        <option name="9:00"  value={"9:00"} >   9:00</option>
+                                        <option name="10:00" value={"10:00"} > 10:00</option>
+                                        <option name="11:00" value={"11:00"} > 11:00</option>
+                                        <option name="12:00" value={"12:00"} > 12:00</option>
+                                        <option name="13:00" value={"13:00"} > 13:00</option>
+                                        <option name="14:00" value={"14:00"} > 14:00</option>
+                                        <option name="15:00" value={"15:00"} > 15:00</option>
+                                        <option name="16:00" value={"16:00"} > 16:00</option>
+                                        <option name="17:00" value={"17:00"} > 17:00</option>
+                                        <option name="18:00" value={"18:00"} > 18:00</option>
+                                        <option name="19:00" value={"19:00"} > 19:00</option>
+                                        <option name="20:00" value={"20:00"} > 20:00</option>
+                                        <option name="21:00" value={"21:00"} > 21:00</option>
+                                        <option name="22:00" value={"22:00"} > 22:00</option>
                                     </Select>
                             </HStack>
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Costo del Servicio</Text>(
-                                    <Text name='costo_base'>{values.costo_base}</Text>)
-
-                            </HStack>
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Costo Extra </Text>
-                                    <Input width={60} type={"number"} name={"costo_extra"}onChange={onChange} ></Input>
-                            </HStack>
-                            <HStack>
-                                    <Text color={"blue.400"} as="b" >Costo total </Text>
-                                    <Text></Text>
-                            </HStack>
-                    </VStack>
-
-                    </HStack>
-                                <Button mb="2"
-                                    variant="solid"
-                                    colorScheme="blue"
-                                    rounded="50"
-                                    onClick={onSubmit}
-                                    >
-                                        CREAR
-                                </Button>
-                </Stack>
-            </form>
-        </Box>
+                                <HStack>
+                                        <Text  value={selectedOption} color={"blue.400"} name="servicio" as="b" >Servicio:</Text>
+                                        <Select placeholder='Seleccione servicio' name="servicio" onChange={onChange}>
+                                            {showServicios()}
+                                        </Select>
+                                </HStack>
+                                <HStack>
+                                        <Text color={"blue.400"} as="b" >Costo del Servicio: </Text>(
+                                        <Text name='costo_base'>{"$"+valor}</Text>)
+    
+                                </HStack>
+                                    <Button mb={2}
+                                        variant="solid"
+                                        colorScheme="blue"
+                                        rounded="50"
+                                        onClick={onSubmit}
+                                        >
+                                            CREAR
+                                    </Button>
+                    </Stack>
+            </Box>
 
             </Flex>
 )
