@@ -62,7 +62,7 @@ const VecinosAdmin= () => {
         // Eliminar al vecino
         const response1 = await axios.put(`${process.env.API_URL}/vecino/update/estado/${x}`)
         setVecinos(response1.data)
-        //window.location.reload();
+        window.location.reload();
         }
 
 

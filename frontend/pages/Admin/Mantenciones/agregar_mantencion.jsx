@@ -14,7 +14,35 @@ const agregarMantencion = () => {
             year:''
         }
     )
+    const today = new Date();
+    const day = today.getDate();
+    const month= today.getMonth()+1;
+    const year= today.getFullYear();
     const router = useRouter();
+    const[semana, setSemana] = useState('none')
+    const[findesemana, setFindesemana] = useState('none')
+    const [veci,setVeci]=useState([]);
+
+
+    const [administrador, setAdmin] = useState([])
+
+    const getAdmin = async()=>{
+    const response = await axios.get(`${process.env.API_URL}/administrador/search/${localStorage.getItem('codigo')}`)
+    setAdmin(response.data);
+    setMensaje({...mensaje,administrador: response.data._id})
+    console.log(response.data._id)
+}
+const [vecinos, setVecinos] = useState([])
+
+  const getVecinos = async () => {
+    const response = await axios.get(`${process.env.API_URL}/vecinos`)
+    console.log(response.data)
+    const vecinosIds = response.data.map(vecino => vecino._id)
+    console.log(vecinosIds)
+     setVecinos(vecinosIds);
+     setMensaje({...mensaje, vecino: vecinosIds});
+
+  }
 
     const [values, setValues]= useState({
         nombre_empresa:'',
@@ -22,12 +50,26 @@ const agregarMantencion = () => {
         giro:'',
         descripcion:'',
         valor:'',
+        hora:'',
         dia:'',
         mes:'',
         year:'',
         hora:'',
         observaciones:''
       })
+
+      
+      const [mensaje,setMensaje]= useState({
+        vecino:vecinos,
+        administrador:administrador._id,
+        dia:day.toString(),
+        mes:month.toString(),
+        year:year.toString(),
+        asunto:'Notificación de Mantención',
+        contenido:''
+      })
+
+
   // open close
     const [open, setOpen] = useState(false)
 
@@ -35,9 +77,8 @@ const agregarMantencion = () => {
     const refOne = useRef(null)
 
     useEffect(() => {
-        
-        document.addEventListener("keydown", hideOnEscape, true)
-        document.addEventListener("click", hideOnClickOutside, true)
+        getVecinos()
+        getAdmin()
     }, [])
 
   // hide dropdown on ESC press
@@ -52,6 +93,22 @@ const agregarMantencion = () => {
     const hideOnClickOutside = (e) => {
         if( refOne.current && !refOne.current.contains(e.target) ) {
             setOpen(false)
+        }
+    }
+
+    const CastTime = (e) =>
+    {
+        const fechaSelecionada = new Date(e.target.value);
+        const diaS=fechaSelecionada.getDay()+1
+
+        if(diaS<=5)
+        {
+            setSemana('inLine')
+            setFindesemana('none')
+        }else
+        {
+            setFindesemana('inLine')
+            setSemana('none')
         }
     }
 
@@ -91,6 +148,7 @@ const agregarMantencion = () => {
 
     const DateSetter = (e) =>
     {
+        CastTime(e)
         const string = e.target.value
         const timestamp = Date.parse(string)
         const date2 = new Date(timestamp)
@@ -103,10 +161,14 @@ const agregarMantencion = () => {
         const year= c.toString();
 
         setValues({...values,dia,mes,year});
+        setMensaje({...mensaje,
+        contenido:`Mediante este mensaje se notifica a todos los vecinos que se realizara una mantención el dia ${dia}/${mes}/${year}`})
     }
 
 
     const onChange = (e) => {
+
+      
       setValues({
         ...values,
         [e.target.name]:e.target.value
@@ -119,6 +181,8 @@ const agregarMantencion = () => {
           e.target.value=e.target.value.substring(0,6);
         }
       }
+
+      setMensaje({...mensaje, vecino: vecinos});
   }
 
     const onSubmit= async(e) =>{
@@ -133,8 +197,20 @@ const agregarMantencion = () => {
               title:"Mantención Registrada",
               icon:'success',
               confirmButtonText:'OK'
-            }).then(()=>{
-              window.location.reload();
+            }).then(async ()=>{
+              try {
+                console.log(vecinos)
+                console.log(mensaje)
+                  const response1 = await axios.post(`${process.env.API_URL}/mensaje`,mensaje)
+                  console.log(response1.status)
+                  Swal.fire({
+                    title:"Mensajes Enviado",
+                    icon:'success',
+                    confirmButtonText:'OK'
+                  })
+              } catch (error) {
+                
+              }
           })
           }
         } catch (error) {
@@ -172,6 +248,7 @@ return (
                     <MenuItem color="blue.400" as="b" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</MenuItem>
                 </MenuList>
                 </Menu>
+
             </Box>
             <Button mt={10} name="atras" colorScheme="blue" as="b" rounded="40" style={{
             position: "fixed",
@@ -229,8 +306,47 @@ return (
                                         date={new Date()}
                                         onChange={DateSetter}
                                         min={castMin()} max={castMax()}></Input>
-                                
                             </HStack>
+                            <HStack style={{display:semana}}>
+                                    <Text color={"blue.400"}  as="b" >Hora:</Text>
+                                    <Select placeholder='Hora'  name="hora"   onChange={onChange}>
+                                        <option name="7:00" value={"7:00"} >    7:00</option>
+                                        <option name="8:00" value={"8:00"} >    8:00</option>
+                                        <option name="9:00" value={"9:00"} >    9:00</option>
+                                        <option name="10:00" value={"10:00"} > 10:00</option>
+                                        <option name="11:00" value={"11:00"} > 11:00</option>
+                                        <option name="12:00" value={"12:00"} > 12:00</option>
+                                        <option name="13:00" value={"13:00"} > 13:00</option>
+                                        <option name="14:00" value={"14:00"} > 14:00</option>
+                                        <option name="15:00" value={"15:00"} > 15:00</option>
+                                        <option name="16:00" value={"16:00"} > 16:00</option>
+                                        <option name="17:00" value={"17:00"} > 17:00</option>
+                                        <option name="18:00" value={"18:00"} > 18:00</option>
+                                        <option name="19:00" value={"19:00"} > 19:00</option>
+                                    </Select>
+                            </HStack >
+
+                            <HStack style={{display:findesemana}}>
+                                    <Text color={"blue.400"} as="b"  >Hora:</Text>
+                                    <Select placeholder='Hora'  name="hora"   onChange={onChange}>
+                                        <option name="8:00"  value={"8:00"} >   8:00</option>
+                                        <option name="9:00"  value={"9:00"} >   9:00</option>
+                                        <option name="10:00" value={"10:00"} > 10:00</option>
+                                        <option name="11:00" value={"11:00"} > 11:00</option>
+                                        <option name="12:00" value={"12:00"} > 12:00</option>
+                                        <option name="13:00" value={"13:00"} > 13:00</option>
+                                        <option name="14:00" value={"14:00"} > 14:00</option>
+                                        <option name="15:00" value={"15:00"} > 15:00</option>
+                                        <option name="16:00" value={"16:00"} > 16:00</option>
+                                        <option name="17:00" value={"17:00"} > 17:00</option>
+                                        <option name="18:00" value={"18:00"} > 18:00</option>
+                                        <option name="19:00" value={"19:00"} > 19:00</option>
+                                        <option name="20:00" value={"20:00"} > 20:00</option>
+                                        <option name="21:00" value={"21:00"} > 21:00</option>
+                                        <option name="22:00" value={"22:00"} > 22:00</option>
+                                    </Select>
+                            </HStack>
+
                             <HStack>
                                     <Text color={"blue.400"} as="b" >Observaciones </Text>
                                     <Textarea

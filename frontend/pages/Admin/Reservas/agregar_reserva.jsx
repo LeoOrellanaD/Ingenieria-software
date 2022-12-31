@@ -295,7 +295,7 @@ return (
                                     <Input type="date" id="start"
                                         date={new Date()}
                                         onChange={DateSetter}
-                                         max={castMax()}></Input>
+                                        min={castMin()} max={castMax()}></Input>
                             </HStack>
 
                             <HStack>
