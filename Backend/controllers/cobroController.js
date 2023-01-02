@@ -42,18 +42,6 @@ const getCobros = (req, res) => {
     })
 }
 
-const getCobroF = (req, res) => {
-    const {mes, year} = req.params
-    Cobro.find({mes, year}).populate({ path: 'vecino'}).exec((error, cobro) => {
-        if(error){
-            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
-        }
-        if(!cobro){
-            return res.status(404).send({ message: "No se ha encontrado el cobro"})
-        }
-        return res.status(200).send(cobro)
-    })
-}
 
 const updateCobro = (req, res) => {
     const { num_cobro } = req.params
@@ -94,7 +82,6 @@ const deleteCobro = (req, res) => {
 module.exports ={
     createCobro,
     getCobros,
-    getCobroF,
     updateCobro,
     deleteCobro
 }

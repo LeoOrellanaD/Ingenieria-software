@@ -54,32 +54,8 @@ const getMantenciones = (req, res) => {
     })
 }
 
-const getMantencionH = (req, res) => {
-    const {hora, dia, mes, year} = req.params
-    Mantencion.find({hora, dia, mes, year}, (error, mantencion) => {
-        if(error){
-            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
-        }
-        if(!mantencion){
-            return res.status(404).send({ message: "No se ha encontrado la mantencion"})
-        }
-        return res.status(200).send(mantencion)
-    })
-}
 
-const getMantencionN = (req, res) => {
-    const { nombre_empresa } = req.params
-    Mantencion.find({nombre_empresa}, (error, mantencion) => {
-        if(error){
-            console.log(error);
-            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
-        }
-        if(!mantencion){
-            return res.status(404).send({ message: "No se ha encontrado la mantencion"})
-        }
-        return res.status(200).send(mantencion)
-    })
-}
+
 
 const deleteMantencion = (req, res) => {
     const { num_mantencion } = req.params
@@ -112,8 +88,6 @@ module.exports = {
     createMantencion,
     getMantencion,
     getMantenciones,
-    getMantencionH,
-    getMantencionN,
     deleteMantencion,
     updateMantencion
 }

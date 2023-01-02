@@ -28,8 +28,8 @@ const vecinoSchema = new Schema({
             type:'String',
             required:true,
             enum:[
-                'habilitado',
-                'inhabilitado'
+                'Habilitado',
+                'Inhabilitado'
             ]
         },
 

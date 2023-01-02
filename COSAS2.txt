@@ -96,8 +96,11 @@ COSAS POR HACE 2: MAS COSAS Y MAS QUE HACER QUE NUNCA
 LISTA DEFINITIVA FINAL FINAL
 
 Iconos
-Controlador update costo Extra
+(LISTOOOO)Controlador update costo Extra LISTO
 try catch Revisar
-revisar los input
+(de administrador Listos)revisar los input
 realizacion de prueba funcionales
-limpieza general |
+limpieza general del codigo
+
+arreglar el buscar
+(LISTOOOO)arreglar que el agregar mensaje no pueda mandar mensajes a vecinos muertos

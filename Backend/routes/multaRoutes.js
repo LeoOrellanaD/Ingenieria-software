@@ -6,7 +6,6 @@ const { validateMulta } = require('../validators/multaValidacion')
 api.post('/multa/:codigo',validateMulta, multaController.createMulta);
 api.get('/multas', multaController.getMultas);
 api.get('/multa/search/:cod_multa', multaController.getMulta);
-api.get('/multa/search/:dia/:mes/:year', multaController.getMultaF);
 api.delete('/multa/delete/:cod_multa', multaController.deleteMulta);
 
 module.exports = api;

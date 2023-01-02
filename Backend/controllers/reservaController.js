@@ -52,7 +52,7 @@ const createReserva = async (req, res) => {
 
 const getReserva = (req, res) => {
     const { num_reserva} = req.params
-    Reserva.find({num_reserva}).populate({ path: 'vecino servicio'}).exec((error, reserva) => {
+    Reserva.findOne({num_reserva}).populate({ path: 'vecino servicio'}).exec((error, reserva) => {
         if(error){
             return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
         }
@@ -76,18 +76,6 @@ const getReservaF = (req, res) => {
     })
 }
 
-const getReservaH = (req, res) => {
-    const {hora, dia, mes, year} = req.params
-    Reserva.find({hora, dia, mes, year}).populate({ path: 'vecino'}).exec((error, reserva) => {
-        if(error){
-            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
-        }
-        if(!reserva){
-            return res.status(404).send({ message: "No se ha encontrado la reserva"})
-        }
-        return res.status(200).send(reserva)
-    })
-}
 
 const getReservaD = (req, res) => {
     const {dia, mes, year} = req.params
@@ -143,16 +131,19 @@ const deleteReservas = (req, res) =>
     })
 }
 
-// const deleteReservasVecino =(req, res) =>{
-// const {vecino} =req.params;
-// const today = new Date();
-// const day = today.getDate().toString();
-// const month= today.getMonth().toString();
-// const year= today.getFullYear().toString();
-
-// Reserva.deleteMany({vecino:vecino},{dia:{$sgt:day},mes:{$sgt:month},year:{$sgt:year}}
-
-// }
+const updateReserva = (req, res) =>{
+    const {costo_extra} = req.body;
+    const {num_reserva} = req.params;
+    Reserva.findOneAndUpdate({num_reserva}, {costo_extra}, (error, reserva) =>{
+        if(error){
+            return res.status(400).send({message: 'Error al actualizar reserva'});
+        }
+        if(!reserva){
+            return res.status(404).send({message:'No se encontro la reserva'});
+        }
+        return res.status(200).send(reserva);
+    })
+}
 
 
 
@@ -160,11 +151,11 @@ module.exports = {
     createReserva,
     getReserva,
     getReservaF,
-    getReservaH,
     getReservaD,
     getReservas,
     deleteReserva,
-    deleteReservas
+    deleteReservas,
+    updateReserva
 }
 
 

@@ -60,18 +60,7 @@ const getMulta = (req, res) => {
     })
 }
 
-const getMultaF = (req, res) => {
-    const {dia, mes, year} = req.params
-    Multa.find({dia ,mes, year}).populate({ path: 'vecino'}).exec((error, multa) => {
-        if(error){
-            return res.status(400).send({ message: "No se ha podido realizar la busqueda"})
-        }
-        if(!multa){
-            return res.status(404).send({ message: "No se ha encontrado la multa"})
-        }
-        return res.status(200).send(multa)
-    })
-}
+
 
 
 const deleteMulta =  (req, res) => {
@@ -91,6 +80,5 @@ module.exports={
     createMulta,
     getMultas,
     getMulta,
-    getMultaF,
     deleteMulta
 }
