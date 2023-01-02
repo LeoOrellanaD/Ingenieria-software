@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter} from "@chakra-ui/react";
+import { useDisclosure,Text, Box, Stack, Button, HStack, Card, CardHeader, CardBody, CardFooter, Flex, DrawerHeader,DrawerBody,DrawerFooter,Drawer,DrawerOverlay,DrawerContent  } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { BsFillHouseFill,BsFillDoorClosedFill,BsWrench,BsFillPersonFill, BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill, } from "react-icons/bs";
+import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
 const Inicio_vecino = () => {
     const router = useRouter();
@@ -14,7 +16,7 @@ const Inicio_vecino = () => {
     };
 
     const router1 = useRouter();
-
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const [vecino, setVecino] = useState([]);
 
     const setCookieFunction = (codigo) => {
@@ -43,19 +45,60 @@ const Inicio_vecino = () => {
         );
     };
 
+    const cerrarSesion = async (e) => {
+        e.preventDefault()
+        localStorage.clear();
+        router.push("/")
+    }
+
     return (
-        <Stack
+        <Flex
             flexDirection = "column"
-            width="150wh"
-            height="auto"
-            minH={"100vh"}
-            backgroundColor = "blue.400"
+            width="100wh"
+      height="auto"
+      minH={"100vh"}
+            backgroundColor="blue.300"
             alignItems={"center"}
         >
+            <Box backgroundColor="blue.500" w={"100%"} h="16">
+                <Button colorScheme='blue' onClick={onOpen} h="16">
+                <AiOutlineMenu size="20"/> &nbsp;  Menú
+                </Button>
+                <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+                <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
+                </Button>
+            </Box>
 
-            <HStack>
-                <Text fontSize = {50} color = "white" mt = {30} mb = {30} as='b'>
-                    INICIO
+
+            <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+        <DrawerOverlay />
+        <DrawerContent>
+        <DrawerHeader  backgroundColor="blue.500" color="white" alignItems="center" display="flex"> 
+  <AiOutlineMenu size="20"/> 
+  &nbsp; 
+  Menú
+</DrawerHeader>
+          <DrawerBody backgroundColor="blue.300">
+          <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/inicio_vecino")}><BsFillHouseFill size="20"/>&nbsp;   Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/reservas_vecino")}><BsCalendar3 size="20"/>&nbsp; Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/multas_vecino")}><BsFillFileEarmarkExcelFill size="20"/>&nbsp; Multas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/gastos_vecino")}><BsFillCreditCard2BackFill size="20"/>&nbsp; Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/mensajes_vecino")}><BsFillEnvelopeFill size="20"/>&nbsp; Mensajes</Button>
+
+
+          </DrawerBody>
+          <DrawerFooter backgroundColor="blue.300">
+            <Button mr={3} onClick={onClose} colorScheme="blue">
+            <AiOutlineClose size="20"/>&nbsp;Cerrar
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
+            <HStack mt = {30} mb = {30}>
+                <BsFillHouseFill color="white" size="50"/>
+                <Text fontSize = {50} color = "white"as='b'>
+                    Inicio
                 </Text>
             </HStack>
 
@@ -71,8 +114,9 @@ const Inicio_vecino = () => {
                     alignItems = "center"
                 >
                     <HStack>
+                    <BsFillPersonFill style={{ color: '#3182CE' }} size="30"/>
                         <Text as='b' fontSize = {30} color = "blue.500">
-                            DATOS PERSONALES
+                            Datos Personales
                         </Text>
                     </HStack>
 
@@ -102,9 +146,12 @@ const Inicio_vecino = () => {
                 >
                     <Stack width={"100%"} >
                     <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
-                        <CardHeader backgroundColor="blue.400" rounded = "16">
-                            <Text color = "whiteAlpha.900" textTransform={'uppercase'} as='b'>Historial Reservas</Text>
-                        </CardHeader>
+                    <CardHeader backgroundColor="blue.400" rounded = "16" alignItems="center">
+                        <Text color = "whiteAlpha.900" textAlign={'center'} justifyContent="center" textTransform={'uppercase'} as='b' display="flex">
+                        <BsCalendar3 size="20"/>
+                        &nbsp; Historial Reservas
+                        </Text>
+                    </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
@@ -127,9 +174,12 @@ const Inicio_vecino = () => {
 
                     <Stack width={"100%"} >
                     <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
-                    <CardHeader backgroundColor="blue.400" rounded = "16">
-                            <Text color = "whiteAlpha.900" textAlign={'center'} textTransform={'uppercase'} as='b' >Multas</Text>
-                        </CardHeader>
+                    <CardHeader backgroundColor="blue.400" rounded = "16" alignItems="center">
+                        <Text color = "whiteAlpha.900" textAlign={'center'} justifyContent="center" textTransform={'uppercase'} as='b' display="flex">
+                        <BsFillFileEarmarkExcelFill size="20"/>
+                        &nbsp;Multas
+                        </Text>
+                    </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
@@ -153,9 +203,12 @@ const Inicio_vecino = () => {
 
                     <Stack width={"100%"}>
                     <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
-                    <CardHeader backgroundColor="blue.400" rounded = "16">
-                            <Text color = "whiteAlpha.900" textAlign={'center'} textTransform={'uppercase'} as='b' >Gastos</Text>
-                        </CardHeader>
+                    <CardHeader backgroundColor="blue.400" rounded = "16" alignItems="center">
+                        <Text color = "whiteAlpha.900" textAlign={'center'} justifyContent="center" textTransform={'uppercase'} as='b' display="flex">
+                        <BsFillCreditCard2BackFill size="20"/>
+                        &nbsp;Gastos
+                        </Text>
+                    </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
@@ -179,9 +232,12 @@ const Inicio_vecino = () => {
 
                     <Stack width={"100%"}>
                     <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
-                    <CardHeader backgroundColor="blue.400" rounded = "16">
-                            <Text color = "whiteAlpha.900"textAlign={'center'} textTransform={'uppercase'} as='b' >Mensajes</Text>
-                        </CardHeader>
+                    <CardHeader backgroundColor="blue.400" rounded = "16" alignItems="center">
+                        <Text color = "whiteAlpha.900" textAlign={'center'} justifyContent="center" textTransform={'uppercase'} as='b' display="flex">
+                        <BsFillEnvelopeFill size="20"/>
+                        &nbsp;Mensajes
+                        </Text>
+                    </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
@@ -203,7 +259,7 @@ const Inicio_vecino = () => {
                     </Card>
                     </Stack>
                 </Stack>
-        </Stack>
+        </Flex>
     );
 };
 

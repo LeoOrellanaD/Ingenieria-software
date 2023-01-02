@@ -4,6 +4,8 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 import { useRouter } from "next/router";
 import { ArrowBackIcon } from "@chakra-ui/icons";
+import { BsFillHouseFill,BsFillDoorClosedFill,BsWrench,BsFillPeopleFill, BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill,BsMenuApp,BsFillCalendar2PlusFill } from "react-icons/bs";
+import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
 const AgregarReserva=()=> {
     const [selectedOption, setSelectedOption] = useState('')
@@ -35,10 +37,10 @@ const AgregarReserva=()=> {
         getServicios()
         document.addEventListener("keydown", hideOnEscape, true)
         document.addEventListener("click", hideOnClickOutside, true)
+        localStorage.setItem('reserva', 0)
     }, [])
 
     const hideOnEscape = (e) => {
-        console.log(e.key)
         if( e.key === "Escape" ) {
             setOpen(false)
         }
@@ -56,7 +58,7 @@ const AgregarReserva=()=> {
     const onChange = async (e) => {
         
         if(e.target.name=="servicio"){
-
+            if(e.target.value){
             const response1 = await axios.get(`${process.env.API_URL}/servicio/search/${e.target.value}`)
             setValor(response1.data.costo)
             setValues({
@@ -64,33 +66,37 @@ const AgregarReserva=()=> {
                 servicio:response1.data._id,
                 costo_base:response1.data.costo
                 })
-                console.log(e.target.name, response1.data.costo);
+            }else{
+                setValor(0)
+                setValues({
+                    ...values,
+                     servicio:'',costo_base:0
+                    })
+            }
         }else
         if(e.target.name == "vecino"){
+            if(e.target.value){
             const response = await axios.get(`${process.env.API_URL}/vecino/search/${e.target.value}`)
 
             setValues({
                 ...values,
                 [e.target.name]:response.data._id
                 })
-                console.log(e.target.name,response.data._id);
+            }
         }else
         if(e.target.name != "vecino" || e.target.name != "servicio"){
             setValues({
                 ...values,
                 [e.target.name]:e.target.value
                 })
-                console.log(e.target.name,e.target.value);
         }
         if(e.target.name=="costo_extra"){
-            console.log(e.target.value)
             if(!e.target.value)
             {
                 setValues({
                     ...values,
                     costo_extra:0
                     })
-                    console.log(e.target.name,e.target.value);
             }
             if(e.target.value.length>4){
               e.target.value=e.target.value.substring(0,4);
@@ -139,16 +145,17 @@ const AgregarReserva=()=> {
         const mes2='01'
         const mes= (parseInt(dateString2, 10)+1);
         const year2 = (parseInt(dateString3, 10)+1);
-
-        if(dateString2==12)
+        
+          if(dateString2==12)
         {
                 const fechaMaxima = (year2 + '-' + mes2 + '-' + dia2)
             return fechaMaxima;
         }else
         {
-                const fechaMaxima = (dateString3 + '-' + mes + '-' + dateString1)
+            const fechaMaxima = (dateString3 + '-' + '0'+mes + '-' + dateString1)
             return fechaMaxima;
         }
+     
     }
 
     const CastTime = (e) =>
@@ -185,9 +192,6 @@ const AgregarReserva=()=> {
 
         e.preventDefault()
         Actualizar();
-        console.log(values)
-
-
 
         try {
         const response = await axios.post(`${process.env.API_URL}/reserva/${vecino_select.value}`,values)
@@ -203,7 +207,6 @@ const AgregarReserva=()=> {
         })
         }
         } catch (error) {
-            console.log(error.status)
         Swal.fire({
             title:"No se pudo agendar la Reserva",
             text:'Por favor revise los datos ingresado',
@@ -267,48 +270,63 @@ const AgregarReserva=()=> {
 return (
     <Flex
             flexDirection="column"
-            width="150wh"
-            height="auto"
-            minH={"100vh"}
+            width="100wh"
+      height="auto"
+      minH={"100vh"}
             backgroundColor="blue.300"
             alignItems="center"
             >
-                <Box backgroundColor="blue.500" w={"100%"} h="16">
-        <Button colorScheme='blue' onClick={onOpen} h="16">
-        Menu
-       </Button>
-       <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
-        Cerrar Sesión
-       </Button>
-       </Box>
+        <Box backgroundColor="blue.500" w={"100%"} h="16">
+            <Button colorScheme='blue' onClick={onOpen} h="16">
+                <AiOutlineMenu size="20"/> &nbsp;  Menú
+            </Button>
+            <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+                <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
+            </Button>
+        </Box>
 
-        <Button mt={10} name="atras" leftIcon={<ArrowBackIcon/>} colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
-        onClick={()=>router.push("/Admin/inicio_admin")}>
-        Volver atrás</Button>
+            <Button mt={10} 
+                    name="atras" 
+                    leftIcon={<ArrowBackIcon/>} 
+                    colorScheme="blue" as="b" 
+                    rounded="40" 
+                    marginLeft="-60%"
+                    onClick={()=>router.push("/Admin/Reservas/reservas_admin")}>
+                Volver atrás
+            </Button>
 
-        <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+      <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
         <DrawerOverlay />
         <DrawerContent>
-        <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
-        <DrawerBody backgroundColor="blue.300">
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/inicio_admin")}>Inicio</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</Button>
+            <DrawerHeader  
+                backgroundColor="blue.500" 
+                color="white" 
+                alignItems="center" 
+                display="flex"> 
+                <AiOutlineMenu size="20"/> 
+                &nbsp; Menú
+            </DrawerHeader>
 
-
-        </DrawerBody>
-        <DrawerFooter backgroundColor="blue.300">
-            <Button mr={3} onClick={onClose} colorScheme="blue">
-              Cerrar
-            </Button>
+            <DrawerBody backgroundColor="blue.300">
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/inicio_admin")}><BsFillHouseFill size="20"/>&nbsp;   Inicio</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Reservas/reservas_admin")}><BsCalendar3 size="20"/>&nbsp; Reservas</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Gastos/gastos_admin")}><BsFillCreditCard2BackFill size="20"/>&nbsp; Gastos</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}><BsFillEnvelopeFill size="20"/>&nbsp; Mensajes</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Multas/multas_admin")}><BsFillFileEarmarkExcelFill size="20"/>&nbsp; Multas</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}><BsWrench size="20"/>&nbsp; Manteciones</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}><BsFillPeopleFill size="20"/>&nbsp; Vecinos</Button>
+          </DrawerBody>
+          <DrawerFooter backgroundColor="blue.300">
+                <Button mr={3} onClick={onClose} colorScheme="blue">
+                    <AiOutlineClose size="20"/>&nbsp;Cerrar
+                </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-              <Text fontSize={50} color="white" mt={30} mb={30}>Crear Reserva</Text>
+      <HStack mt={30} mb={30}>
+       <BsFillCalendar2PlusFill color='white' size="50"/>
+       <Text fontSize={50} color="white" >Crear Reserva</Text>
+      </HStack>
               <Box  minW={{ base: "10%", md: "468px"}} >
                     <Stack
                         spacing={4}
@@ -329,8 +347,8 @@ return (
                                 </HStack>
     
                                 <HStack id='semana'>
-                                    <Text width={"full"} color={"blue.400"}  as="b" >Hora:</Text>
-                                    <Select placeholder='Hora'  name="hora"   onChange={onChange}>
+                                    <Text color={"blue.400"}  as="b" >Hora:</Text>
+                                    <Select width={"full"} placeholder='Hora'  name="hora"   onChange={onChange}>
                                         <option name="7:00" value={"7:00"} >    7:00</option>
                                         <option name="8:00" value={"8:00"} >    8:00</option>
                                         <option name="9:00" value={"9:00"} >    9:00</option>
@@ -348,8 +366,8 @@ return (
                             </HStack >
 
                             <HStack id='findesemana'>
-                                    <Text width={"full"} color={"blue.400"} as="b"  >Hora:</Text>
-                                    <Select placeholder='Hora'  name="hora"   onChange={onChange}>
+                                    <Text color={"blue.400"} as="b"  >Hora:</Text>
+                                    <Select width={"full"} placeholder='Hora'  name="hora"   onChange={onChange}>
                                         <option name="8:00"  value={"8:00"} >   8:00</option>
                                         <option name="9:00"  value={"9:00"} >   9:00</option>
                                         <option name="10:00" value={"10:00"} > 10:00</option>
@@ -405,7 +423,7 @@ return (
                                         rounded="50"
                                         onClick={onSubmit}
                                         >
-                                            CREAR
+                                            Crear
                                     </Button>
                     </Stack>
             </Box>

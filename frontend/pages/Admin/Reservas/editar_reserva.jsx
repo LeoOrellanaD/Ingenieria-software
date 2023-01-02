@@ -1,102 +1,106 @@
 import { useState, useEffect } from "react";
-import { useDisclosure,Text, Box,Flex, Stack, HStack, Button,Input,Select, Drawer,DrawerFooter, DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody} from "@chakra-ui/react";
+import { useDisclosure,Text, Box, Stack,Flex, HStack, Input,Button,Drawer,DrawerFooter, DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody} from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { ArrowBackIcon,EditIcon } from '@chakra-ui/icons'
 import axios from "axios";
 import Swal from 'sweetalert2'
-import { ArrowBackIcon, EditIcon } from "@chakra-ui/icons";
-import { BsFillHouseFill,BsFillDoorClosedFill,BsWrench,BsFillPeopleFill,BsFillPersonFill, BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill } from "react-icons/bs";
+import { BsFillHouseFill,BsFillDoorClosedFill,BsWrench,BsFillPeopleFill, BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill,BsCalendarEvent } from "react-icons/bs";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
-const EditarVecino = () => {
+
+const EditarReserva = () =>  {
+
 
     const router = useRouter();
     const {
-        query: { codigo },
+        query: { num_reserva },
     } = router;
 
     const props = {
-        codigo,
+        num_reserva,
     };
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [visible, setVisible] = useState(false);
-    const [vecino, setVecino] = useState([])
-    const getVecino = async () => {
-        const response = await axios.get(`${process.env.API_URL}/vecino/search/${props.codigo}`)
-        setVecino(response.data)
+    const [reserva, setReserva] = useState({});
+    const getReserva = async () => {
+        const response = await axios.get(`${process.env.API_URL}/reserva/search/${props.num_reserva}`)
+        setReserva(response.data)
         }
 
     useEffect(() => {
-        getVecino()
+        getReserva()
         localStorage.setItem('reserva', 0)
     }, [])
 
-    const showVecino = () => {
-        const arreglo = [vecino.nombre, vecino.apellido, vecino.rut, vecino.vivienda, vecino.horas,vecino.permiso]
-        return (
+    const [values, setValues]= useState({
+        costo_extra:''
+        })
+
+    const showReserva = () => {
+        const arreglo =[reserva.dia , reserva.mes, reserva.year , reserva.hora ,reserva.vecino?.nombre,reserva.vecino?.apellido, reserva.servicio?.nombre,reserva.num_reserva,reserva.costo_base, reserva.costo_extra]
+        return(
             arreglo
         );
     };
-
-    const [values, setValues]= useState({
-        horas:'',
-        permiso:''
-        })
 
     const onChange = (e) => {
 
         setValues({
             ...values,
             [e.target.name]:e.target.value
-          })
-
-        }
-
-    const onSubmit = async(e) =>{
-        e.preventDefault()
-        
-        try {
-            const response =await axios.put(`${process.env.API_URL}/vecino/update/${props.codigo}`,{permiso:values.permiso , horas:values.horas})
-           
-            if(response.status===200){
-                Swal.fire({
-                  title:"Vecino Actualizado",
-                  icon:'success',
-                  confirmButtonText:'OK'
-                }).then(()=>{
-                  router.push("/Admin/Vecino/vecinos_admin")
-              })
-              }
-        } catch (error) {
-            Swal.fire({
-                title:"No se pudo actualizar al vecino",
-                text:'Por favor revise los datos ingresado',
-                icon:'warning',
-                confirmButtonText:'OK'
-              })
-        }
+        })
 
     }
 
+    const onSubmit = async(e) =>{
+        e.preventDefault()
+
+        try {
+            const response =await axios.put(`${process.env.API_URL}/reserva/update/${props.num_reserva}`,{costo_extra:values.costo_extra})
+            if(response.status===200){
+                Swal.fire({
+                title:"Reserva Actualizado",
+                icon:'success',
+                confirmButtonText:'OK'
+                }).then(()=>{
+                router.push("/Admin/Reservas/reservas_admin")
+            })
+            }
+        } catch (error) {
+            Swal.fire({
+                title:"No se pudo actualizar la Reserva",
+                text:'Por favor revise los datos ingresado',
+                icon:'warning',
+                confirmButtonText:'OK'
+            })
+        }
+
+
+        
+    }
     const cerrarSesion = async (e) => {
+
         e.preventDefault()
         localStorage.clear();
         router.push("/")
     
     }
 
+    return (
 
-return (
         <Flex
-            flexDirection = "column"
-            width = "100wh"
-            height = "130vh"
+        flexDirection = "column"
+        width="100wh"
+        height="auto"
+        minH={"100vh"}
             backgroundColor="blue.300"
-            alignItems = "center"
-        >
-       <Box backgroundColor="blue.500" w={"100%"} h="16">
+            alignItems = "center">
+            
+
+            <Box backgroundColor="blue.500" w={"100%"} h="16">
             <Button colorScheme='blue' onClick={onOpen} h="16">
-                <AiOutlineMenu size="20"/> &nbsp;  Menu
+                <AiOutlineMenu size="20"/> &nbsp;  Menú
             </Button>
             <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
                 <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
@@ -109,7 +113,7 @@ return (
                     colorScheme="blue" as="b" 
                     rounded="40" 
                     marginLeft="-60%"
-                    onClick={()=>router.push("/Admin/Vecino/vecinos_admin")}>
+                    onClick={()=>router.push("/Admin/Reservas/reservas_admin")}>
                 Volver atrás
             </Button>
 
@@ -122,7 +126,7 @@ return (
                 alignItems="center" 
                 display="flex"> 
                 <AiOutlineMenu size="20"/> 
-                &nbsp; Menu
+                &nbsp; Menú
             </DrawerHeader>
 
             <DrawerBody backgroundColor="blue.300">
@@ -142,10 +146,10 @@ return (
         </DrawerContent>
       </Drawer>
 
-            <HStack>
-                <BsFillPersonFill color="white" size="50"/>
-                <Text fontSize = {50} color = "white" mt = {30} mb = {30}>
-                    Vecino
+            <HStack mt = {30} mb = {30}>
+                <BsCalendarEvent color="white" size="50"/>
+                <Text fontSize = {50} color = "white" >
+                    Reserva
                 </Text>
             </HStack>
 
@@ -159,43 +163,45 @@ return (
                     flexDir = "column"
                     mb = "10"
                     justifyContent = "center"
-                    alignItems = "center"
+                    alignItems = "le"
                 >
                     <HStack >
                         <Text as='b' fontSize = {20} color = "blue.500" >
-                            Datos del Vecino
+                            Datos de la Reserva
                         </Text>
                     </HStack>
                     <HStack>
-                        <Text as='b'>Nombre:</Text>
-                        <Text>{showVecino()[0]}</Text>
+                        <Text as='b'>Fecha:</Text>
+                        <Text>{showReserva()[0]+"/"+showReserva()[1]+"/"+showReserva()[2]}</Text>
                     </HStack>
                     <HStack>
-                        <Text as='b'>Apellido:</Text>
-                        <Text>{showVecino()[1]}</Text>
+                        <Text as='b'>Hora:</Text>
+                        <Text>{showReserva()[3]}</Text>
                     </HStack>
                     <HStack>
-                        <Text as='b'>Rut:</Text>
-                        <Text>{showVecino()[2]}</Text>
+                        <Text as='b'>Vecino:</Text>
+                        <Text>{showReserva()[4]+" "+showReserva()[5]}</Text>
                     </HStack>
                     <HStack>
-                        <Text as='b'>Vivienda:</Text>
-                        <Text>{showVecino()[3]}</Text>
+                        <Text as='b'>Servicio:</Text>
+                        <Text>{showReserva()[6]}</Text>
                     </HStack>
                     <HStack>
-                        <Text as='b'>*Horas:</Text>
-                        <Input  required type="number" name="horas" width={"24"} onChange={onChange} style={{display: visible ? 'inline' : 'none'}}></Input>
-                        <Text style={{display: visible ? 'none' : 'inline'}} >{showVecino()[4]}</Text>
+                        <Text as='b'>N° Reserva:</Text>
+                        <Text>{showReserva()[7]}</Text>
+                    </HStack>
+
+                    <HStack>
+                        <Text as='b'>Costo base:</Text>
+                        <Text>{"$"+showReserva()[8]}</Text>
+                    </HStack>
+                    <HStack>
+                        <Text as='b'>Costo extra:</Text>
+                        <Input type="number" name="costo_extra" width={"24"} onChange={onChange} style={{display: visible ? 'inline' : 'none'}}></Input>
+                        <Text style={{display: visible ? 'none' : 'inline'}}>{"$"+showReserva()[9]}</Text>
                         
                     </HStack>
-                    <HStack>
-                        <Text as='b'>*Permiso:</Text>
-                        <Text style={{display: visible ? 'none' : 'inline'}}>{showVecino()[5]}</Text>
-                        <Select required placeholder='Tipo de permiso' name="permiso" onChange={onChange} display={visible ? 'inline' : 'none'}>
-                            <option color={"blue.400"} as="b">Habilitado</option>
-                            <option color={"blue.400"} as="b">Inhabilitado</option>
-                        </Select>
-                    </HStack>
+                    
                     <Button
                             borderRadius = {20}
                             type = "submit"
@@ -240,11 +246,15 @@ return (
                         Cancelar
                     </Button>
                     </HStack>
-                    <Text>*Campos obligatorios</Text>
+
+
                 </Stack>
-            </Box>
+                </Box>
         </Flex>
-)
+    )
+
+
 }
 
-export default EditarVecino
+
+export default EditarReserva

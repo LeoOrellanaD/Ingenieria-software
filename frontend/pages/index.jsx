@@ -181,6 +181,7 @@ useEffect(() => {
                   <Input type="number" maxLength={4} placeholder="Codigo de Ingreso" name={"codigo"} onChange={onChange}/>
                 </InputGroup>
               </FormControl>
+
               <FormControl>
                 <InputGroup>
                   <InputLeftElement pointerEvents="none" color="gray.300" />
@@ -207,8 +208,7 @@ useEffect(() => {
                 width="full"
                 rounded="50"
                 onClick={onSubmit}
-              >
-                Iniciar Sesion
+                >     Iniciar Sesion
               </Button>
             </Stack>
           

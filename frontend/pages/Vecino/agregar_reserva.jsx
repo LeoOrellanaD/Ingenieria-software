@@ -4,7 +4,8 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 import { useRouter } from "next/router";
 import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon } from "@chakra-ui/icons";
-
+import { BsFillHouseFill,BsFillDoorClosedFill, BsFillCalendar2PlusFill,BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill,BsMenuApp } from "react-icons/bs";
+import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
 const AgregarReserva = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -23,23 +24,19 @@ const AgregarReserva = () => {
     const [vecino1, setVecino] = useState([])
 
     const getVecino = async () => {
-    if(codigo){
-        setCookieFunction(codigo)
-        const response = await axios.get(`${process.env.API_URL}/vecino/search/${props.codigo}`)
-        setVecino(response.data);
-        setValues({
-            ...values,
-            vecino:vecino1._id,
-        })
-    }else{
-            const response = await axios.get(`${process.env.API_URL}/vecino/search/${localStorage.getItem('codigo')}`)
-            setVecino(response.data);
-            setValues({
-                ...values,
-                vecino:vecino1._id,
-            })
+        if (codigo) {
+          setCookieFunction(codigo);
+          const response = await axios.get(
+            `${process.env.API_URL}/vecino/search/${props.codigo}`
+          );
+          setVecino(response.data);
+        } else {
+          const response = await axios.get(
+            `${process.env.API_URL}/vecino/search/${localStorage.getItem("codigo")}`
+          );
+          setVecino(response.data);
         }
-    }
+      };
 
     const [selectedOption, setSelectedOption] = useState('')
     const [valor, setValor] = useState('0')
@@ -64,12 +61,12 @@ const AgregarReserva = () => {
         document.getElementById('semana').hidden=true
         document.getElementById('findesemana').hidden=true
         getServicios()
+        getVecino()
         document.addEventListener("keydown", hideOnEscape, true)
         document.addEventListener("click", hideOnClickOutside, true)
     }, [])
 
     const hideOnEscape = (e) => {
-        console.log(e.key)
         if( e.key === "Escape" ) {
             setOpen(false)
         }
@@ -81,24 +78,30 @@ const AgregarReserva = () => {
     }
 
     const onChange = async (e) => {
-        if(e.target.name=="servicio"){
 
-            const response1 = await axios.get(`${process.env.API_URL}/servicio/search/${codigo}`)
+        if(e.target.name=="servicio"){
+            if(e.target.value){
+            const response1 = await axios.get(`${process.env.API_URL}/servicio/search/${e.target.value}`)
             setValor(response1.data.costo)
             setValues({
                 ...values,
                 servicio:response1.data._id,
                 costo_base:response1.data.costo
                 })
-                console.log(e.target.name, response1.data.costo);
-        }else
-        if( e.target.name != "servicio"){
+        }else{
+            setValor(0)
             setValues({
                 ...values,
-                [e.target.name]:e.target.value
+                 servicio:'',costo_base:0
                 })
-                console.log(e.target.name,e.target.value);
         }
+        }
+
+        if( e.target.name != "servicio")
+            setValues({
+                ...values,
+                [e.target.name]:e.target.value,vecino: vecino1._id
+                })
     }
 
     /**Funcion que permite agregar los valores de: Día, Mes y Año
@@ -107,18 +110,13 @@ const AgregarReserva = () => {
     {
         CastTime(e)
         const string = e.target.value
-        const timestamp = Date.parse(string)
-        const date2 = new Date(timestamp)
-
-        const a=date2.getDate()+1;
-        const b=date2.getMonth()+1;
-        const c=date2.getFullYear();
-        const dia=  a.toString();
-        const mes=  b.toString();
-        const year= c.toString();
+        const year = string.substring(0,4)
+        const mes = string.substring(5,7)
+        const dia = string.substring(8,10)
 
         setValues({...values,dia,mes,year});
     }
+    
     const CastTime = (e) =>
     {
         const fechaSelecionada = new Date(e.target.value);
@@ -168,7 +166,7 @@ const AgregarReserva = () => {
             return fechaMaxima;
         }else
         {
-                const fechaMaxima = (dateString3 + '-' + mes + '-' + dateString1)
+            const fechaMaxima = (dateString3 + '-' + '0'+mes + '-' + dateString1)
             return fechaMaxima;
         }
     }
@@ -178,23 +176,20 @@ const AgregarReserva = () => {
     const onSubmit= async (e) =>{
 
         e.preventDefault()
-        console.log(values)
-
         try {
-        const response = await axios.post(`${process.env.API_URL}/reserva/${codigo}`,values)
-        console.log(response)
+        const response = await axios.post(`${process.env.API_URL}/reserva/${localStorage.getItem("codigo")}`,values)
+       
 
         if(response.status===201){
             Swal.fire({
             title:"Reserva Registrada",
             icon:'success',
             confirmButtonText:'OK'
-            }).then(()=>{
-            window.location.reload();
-        })
+            }).then(() =>{
+                window.location.reload();
+              })
         }
         } catch (error) {
-            console.log(error.status)
         Swal.fire({
             title:"No se pudo agendar la Reserva",
             text:'Por favor revise los datos ingresado',
@@ -222,51 +217,64 @@ const AgregarReserva = () => {
         })
     }
 
+    const cerrarSesion = async (e) => {
+
+        e.preventDefault()
+        localStorage.clear();
+        router.push("/")
+    
+    }
+
 return (
     <Flex
             flexDirection="column"
             width="100wh"
-            height="100vh"
-            backgroundColor="blue.400"
+      height="auto"
+      minH={"100vh"}
+            backgroundColor="blue.300"
             alignItems="center"
             >
                 <Box backgroundColor="blue.500" w={"100%"} h="16">
-        <Button colorScheme='blue' onClick={onOpen} h="16">
-        Menu
-       </Button>
-       <Button colorScheme='blue' marginLeft="80%" onClick={()=>router.push("/")} h="16">
-        Cerrar Sesión
-       </Button>
-       </Box>
+                <Button colorScheme='blue' onClick={onOpen} h="16">
+                <AiOutlineMenu size="20"/> &nbsp;  Menú
+                </Button>
+                <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+                <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
+                </Button>
+            </Box>
 
-        <Button mt={10} name="atras" 
-                colorScheme="blue" 
-                as="b" rounded="40" 
-                marginLeft="-60%"
-                leftIcon={<ArrowBackIcon/>}
-                onClick={()=>router.push("/Vecino/reservas_vecino")}>
+            <Button mt={10} name="atras" leftIcon={<ArrowBackIcon/>} colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
+        onClick={()=>router.push("/Vecino/reservas_vecino")}>
         Volver atrás</Button>
 
-        <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+            <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
+        <DrawerHeader  backgroundColor="blue.500" color="white" alignItems="center" display="flex"> 
+  <AiOutlineMenu size="20"/> 
+  &nbsp; 
+  Menú
+</DrawerHeader>
           <DrawerBody backgroundColor="blue.300">
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Inicio</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Reservas</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Gastos</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Mensajes</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Multas</Button>
+          <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/inicio_vecino")}><BsFillHouseFill size="20"/>&nbsp;   Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/reservas_vecino")}><BsCalendar3 size="20"/>&nbsp; Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/multas_vecino")}><BsFillFileEarmarkExcelFill size="20"/>&nbsp; Multas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/gastos_vecino")}><BsFillCreditCard2BackFill size="20"/>&nbsp; Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/mensajes_vecino")}><BsFillEnvelopeFill size="20"/>&nbsp; Mensajes</Button>
+
 
           </DrawerBody>
           <DrawerFooter backgroundColor="blue.300">
-            <Button mr = {3} onClick={onClose} colorScheme="blue">
-              Cerrar
+            <Button mr={3} onClick={onClose} colorScheme="blue">
+            <AiOutlineClose size="20"/>&nbsp;Cerrar
             </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-              <Text fontSize={50} color="white" mt={30} mb={30}>Crear Reserva</Text>
+      <HStack mt={30} mb={30}>
+       <BsFillCalendar2PlusFill color='white' size="50"/>
+       <Text fontSize={50} color="white" >Crear Reserva</Text>
+      </HStack>
               <Box  minW={{ base: "10%", md: "468px"}} >
                     <Stack
                         spacing={4}
@@ -342,7 +350,7 @@ return (
                                         rounded="50"
                                         onClick={onSubmit}
                                         >
-                                            CREAR
+                                            Crear
                                     </Button>
                     </Stack>
             </Box>

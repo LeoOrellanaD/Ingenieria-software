@@ -4,8 +4,9 @@ import { useRouter } from "next/router";
 import { EditIcon } from '@chakra-ui/icons'
 import axios from "axios";
 import Swal from 'sweetalert2'
-import { BsFillHouseFill,BsFillPersonFill,BsPower,BsWrench } from "react-icons/bs";
-
+import { BsFillHouseFill,BsFillPersonFill,BsFillDoorClosedFill,BsWrench,BsFillPeopleFill, BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill,BsMenuApp } from "react-icons/bs";
+import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import { BiSave } from "react-icons/bi";
 
 const Inicio_admin = () => {
     const router = useRouter();
@@ -55,9 +56,7 @@ const [visible, setVisible] = useState(false);
 
 const onSubmit = async(e) => {
     e.preventDefault()
-        console.log(input)
         const inputType = typeof input;
-        console.log(inputType);
     try{
         const response =await axios.put(`${process.env.API_URL}/administrador/update/${props.codigo}`,{telefono:input})
 
@@ -70,13 +69,9 @@ const onSubmit = async(e) => {
                 setVisible(true)
                 window.location.reload();
             })
-
-
-
         }
     }
     catch(error){
-       console.log(error.status)
        Swal.fire({
         title:"Numero de teléfono no valido",
         text:"Ingrese un Número de teléfono valido por favor",
@@ -109,40 +104,48 @@ const cerrarSesion = async (e) => {
     return (
         <Stack
         flexDirection = "column"
-        width="150wh"
-        height="auto"
-        minH={"100vh"}
+        width="100wh"
+      height="auto"
+      minH={"100vh"}
         backgroundColor = "blue.300"
         alignItems = "center"
         >
-            <Box backgroundColor="blue.500" w={"100%"} h="16">
-                <Button colorScheme='blue' onClick={onOpen} h="16">
-                    Menu
-                </Button>
-                <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
-                <BsPower size="20"/> &nbsp; Cerrar Sesión
-                </Button>
-            </Box>
+      <Box backgroundColor="blue.500" w={"100%"} h="16">
+            <Button colorScheme='blue' onClick={onOpen} h="16">
+                <AiOutlineMenu size="20"/> &nbsp;  Menú
+            </Button>
+            <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+                <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
+            </Button>
+      </Box>
 
-            <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+
+
+      <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
-          <DrawerBody backgroundColor="blue.300">
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Inicio</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Reservas</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Gastos</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Mensajes</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Multas</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Manteciones</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Vecinos</Button>
+            <DrawerHeader  
+                backgroundColor="blue.500" 
+                color="white" 
+                alignItems="center" 
+                display="flex"> 
+                <AiOutlineMenu size="20"/> 
+                &nbsp; Menú
+            </DrawerHeader>
 
-
+            <DrawerBody backgroundColor="blue.300">
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/inicio_admin")}><BsFillHouseFill size="20"/>&nbsp;   Inicio</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Reservas/reservas_admin")}><BsCalendar3 size="20"/>&nbsp; Reservas</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Gastos/gastos_admin")}><BsFillCreditCard2BackFill size="20"/>&nbsp; Gastos</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}><BsFillEnvelopeFill size="20"/>&nbsp; Mensajes</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Multas/multas_admin")}><BsFillFileEarmarkExcelFill size="20"/>&nbsp; Multas</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}><BsWrench size="20"/>&nbsp; Manteciones</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}><BsFillPeopleFill size="20"/>&nbsp; Vecinos</Button>
           </DrawerBody>
           <DrawerFooter backgroundColor="blue.300">
-            <Button mr={3} onClick={onClose} colorScheme="blue">
-              Cerrar
-            </Button>
+                <Button mr={3} onClick={onClose} colorScheme="blue">
+                    <AiOutlineClose size="20"/>&nbsp;Cerrar
+                </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -186,13 +189,13 @@ const cerrarSesion = async (e) => {
                     </Stack>
 
                     <Button
-                            type = "submit"
+                            //type = "submit"
                             variant = "solid"
                             colorScheme = "blue"
                             width = {150}
                             height = {50}
-                            rounded = "50"
-                            rightIcon={<EditIcon /> }
+                            rounded = "40"
+                            leftIcon={<EditIcon/> }
                             id="editar"
                             onClick={() => setVisible(true)}
                             style={{display: visible ? 'none' : 'inline'}}
@@ -202,14 +205,12 @@ const cerrarSesion = async (e) => {
 
                     <HStack>
                     <Button
-                            borderRadius = {20}
-                            type = "submit"
                             variant = "solid"
                             colorScheme = "blue"
                             width = {150}
                             height = {50}
-                            rounded = "50"
-                            rightIcon={<EditIcon /> }
+                            rounded = "40"
+                            rightIcon={<BiSave size="20"/> }
                             id="guardar"
                             onClick={onSubmit}
                             style={{display: visible ? 'inline' : 'none'}}
@@ -245,9 +246,12 @@ const cerrarSesion = async (e) => {
             >
                 <Stack width={"100%"}>
                 <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
-                    <CardHeader backgroundColor="blue.400" rounded = "16">
-                            <Text color = "whiteAlpha.900" textTransform={'uppercase'} as='b'>Reservas</Text>
-                        </CardHeader>
+                <CardHeader backgroundColor="blue.400" rounded = "16" alignItems="center">
+                        <Text color = "whiteAlpha.900" textAlign={'center'} justifyContent="center" textTransform={'uppercase'} as='b' display="flex">
+                        <BsCalendar3 size="20"/>
+                        &nbsp;Reservas
+                        </Text>
+                    </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
@@ -268,12 +272,14 @@ const cerrarSesion = async (e) => {
                         </CardFooter>
                     </Card>
                 </Stack>
-                    
                 <Stack width={"100%"}>
                 <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
-                    <CardHeader backgroundColor="blue.400" rounded = "16">
-                            <Text color = "whiteAlpha.900" textAlign={'center'} textTransform={'uppercase'} as='b' >Gastos</Text>
-                        </CardHeader>
+                <CardHeader backgroundColor="blue.400" rounded = "16" alignItems="center">
+                        <Text color = "whiteAlpha.900" textAlign={'center'} justifyContent="center" textTransform={'uppercase'} as='b' display="flex">
+                        <BsFillCreditCard2BackFill size="20"/>
+                        &nbsp;Gastos
+                        </Text>
+                    </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
@@ -297,9 +303,12 @@ const cerrarSesion = async (e) => {
                     
                 <Stack width={"100%"}>
                 <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
-                    <CardHeader backgroundColor="blue.400" rounded = "16">
-                            <Text color = "whiteAlpha.900" textAlign={'center'} textTransform={'uppercase'} as='b' >Mensajes</Text>
-                        </CardHeader>
+                <CardHeader backgroundColor="blue.400" rounded = "16" alignItems="center">
+                        <Text color = "whiteAlpha.900" textAlign={'center'} justifyContent="center" textTransform={'uppercase'} as='b' display="flex">
+                        <BsFillEnvelopeFill size="20"/>
+                        &nbsp;Mensajes
+                        </Text>
+                    </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
@@ -323,9 +332,12 @@ const cerrarSesion = async (e) => {
                     
                     <Stack width={"100%"}>
                     <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
-                    <CardHeader backgroundColor="blue.400" rounded = "16">
-                            <Text color = "whiteAlpha.900" textAlign={'center'} textTransform={'uppercase'} as='b' >Multas</Text>
-                        </CardHeader>
+                    <CardHeader backgroundColor="blue.400" rounded = "16" alignItems="center">
+                        <Text color = "whiteAlpha.900" textAlign={'center'} justifyContent="center" textTransform={'uppercase'} as='b' display="flex">
+                        <BsFillFileEarmarkExcelFill size="20"/>
+                        &nbsp;Multas
+                        </Text>
+                    </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
@@ -349,9 +361,12 @@ const cerrarSesion = async (e) => {
                     
                     <Stack width={"100%"}>
                     <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
-                    <CardHeader backgroundColor="blue.400" rounded = "16">
-                            <Text color = "whiteAlpha.900"  textAlign={'center'} textTransform={'uppercase'} as='b' > < BsWrench size="20"/>Mantenciones</Text>
-                        </CardHeader>
+                    <CardHeader backgroundColor="blue.400" rounded = "16" alignItems="center">
+                        <Text color = "whiteAlpha.900" textAlign={'center'} justifyContent="center" textTransform={'uppercase'} as='b' display="flex">
+                        <BsWrench size="20"/>
+                        &nbsp;Mantenciones
+                        </Text>
+                    </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>
@@ -375,9 +390,12 @@ const cerrarSesion = async (e) => {
                     
                     <Stack width={"100%"}>
                     <Card rounded = "16" textAlign={'center'} backgroundColor="whiteAlpha.900" height={"full"}>
-                    <CardHeader backgroundColor="blue.400" rounded = "16">
-                            <Text color = "whiteAlpha.900" textAlign={'center'} textTransform={'uppercase'} as='b' >Vecinos</Text>
-                        </CardHeader>
+                    <CardHeader backgroundColor="blue.400" rounded = "16" alignItems="center">
+                        <Text color = "whiteAlpha.900" textAlign={'center'} justifyContent="center" textTransform={'uppercase'} as='b' display="flex">
+                        <BsFillPeopleFill size="20"/>
+                        &nbsp;Vecinos
+                        </Text>
+                    </CardHeader>
 
                         <CardBody>
                             <Text textAlign={'justify'}>

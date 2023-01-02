@@ -3,7 +3,10 @@ import { useDisclosure ,Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
-import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon,EditIcon } from "@chakra-ui/icons";
+import { BsFillHouseFill,BsFillDoorClosedFill,BsWrench,BsFillPeopleFill, BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill,BsMenuApp } from "react-icons/bs";
+import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+
 
 
 
@@ -16,23 +19,56 @@ const ReservasAdmin= () => {
         if(localStorage.getItem('reserva')==0){
             try {
                 const response = await axios.get(`${process.env.API_URL}/reservas`)
-            setReservas(response.data)
+                setReservas(response.data)
             } catch (error) {
+                Swal.fire({
+                    text:'No existe registro de reservas',
+                    icon:'warning',
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    cancelButtonText: 'Volver atras',
+                    confirmButtonText:'Crear reserva',
+                    reverseButtons: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33'
+                }).then((result) =>{
+                    if(result.isDismissed){
+                        router.push("/Admin/inicio_admin")
+                    }
+                    if(result.isConfirmed){
+                        router.push("/Admin/Reservas/agregar_reserva")
+                    }
+                })
             }
         }else
         if(localStorage.getItem('reserva')==1){
-            console.log(1)
             try {
                 const response = await axios.get(`${process.env.API_URL}/reserva/search/${values.mes}/${values.year}`)
-            setReservas(response.data)
+                setReservas(response.data)
+                if(response.data.length == 0){
+                    Swal.fire({
+                        title:"No se encotraron reservas",
+                        text:'Por favor intente otra fecha',
+                        icon:'warning',
+                        confirmButtonText:'OK'
+                    })
+                }
             } catch (error) {
+                
             }
         }else
         if(localStorage.getItem('reserva')==2){
-            console.log(2)
             try {
                 const response = await axios.get(`${process.env.API_URL}/reserva/search/${values.dia}/${values.mes}/${values.year}`)
             setReservas(response.data)
+            if(response.data.length == 0){
+                Swal.fire({
+                    title:"No se encotraron reservas",
+                    text:'Por favor intente otra fecha',
+                    icon:'warning',
+                    confirmButtonText:'OK'
+                })
+            }
             } catch (error) {
             }
         }
@@ -70,8 +106,7 @@ const ReservasAdmin= () => {
 
 useEffect(() => {
     getReservas()
-    document.title="Lavanderia 60 minutos";
-    //console.log(localStorage.getItem('reserva'))
+    document.title = "Lavanderia 60 minutos";
 }, [])
 
 const onChange = async (e) => {
@@ -80,8 +115,6 @@ const onChange = async (e) => {
         ...values,
         [e.target.name]:e.target.value
         })
-        console.log(e.target.name,e.target.value);
-
 }
 
 const onSubmit = async(e) => {
@@ -101,11 +134,9 @@ const onSubmit = async(e) => {
     }else
     if(values.dia==''){
         localStorage.setItem('reserva', 1)
-        console.log(localStorage.getItem('reserva'))
         getReservas()
     }else{
         localStorage.setItem('reserva',2)
-        console.log(localStorage.getItem('reserva'))
         getReservas()
     }
 }
@@ -148,6 +179,25 @@ const showreservas = () => {
 				<Td>{reservas.servicio.nombre}</Td>
                 <Td>{reservas.vecino.nombre+" "+reservas.vecino.apellido}</Td>
 				<Td>{reservas.num_reserva}</Td>
+                <Td>
+                        {validateDate(reservas.year,reservas.mes,reservas.dia) ? (<Button
+                id={reservas.num_reserva}
+                    variant="solid"
+                    colorScheme="blue"
+                    rounded="50"
+                    rightIcon={<EditIcon /> }
+                    onClick={()=> router.push({pathname:"/Admin/Reservas/editar_reserva",
+                    query:{num_reserva:reservas.num_reserva}})}
+                    >Editar</Button>) :  <Button
+                    id={reservas.num_reserva}
+                        variant="solid"
+                        colorScheme="blue"
+                        rounded="50"
+                        disabled
+                        rightIcon={<EditIcon /> }
+                        >Editar</Button>
+                        }
+                    </Td>
                     <Td>
                         {validateDate(reservas.year,reservas.mes,reservas.dia) ? (<Button
                 id={reservas.num_reserva}
@@ -185,47 +235,61 @@ return (
         backgroundColor="blue.300"
         alignItems="center"
         >
-        <Box backgroundColor="blue.500" w={"100%"} h="16">
-        <Button colorScheme='blue' onClick={onOpen} h="16">
-        Menu
-       </Button>
-       <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
-        Cerrar Sesión
-       </Button>
-       </Box>
+      <Box backgroundColor="blue.500" w={"100%"} h="16">
+            <Button colorScheme='blue' onClick={onOpen} h="16">
+                <AiOutlineMenu size="20"/> &nbsp;  Menú
+            </Button>
+            <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+                <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
+            </Button>
+      </Box>
 
-        <Button mt={10} name="atras" leftIcon={<ArrowBackIcon/>} colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
-        onClick={()=>router.push("/Admin/inicio_admin")}>
-        Volver atrás</Button>
+            <Button mt={10} 
+                    name="atras" 
+                    leftIcon={<ArrowBackIcon/>} 
+                    colorScheme="blue" as="b" 
+                    rounded="40" 
+                    marginLeft="-60%"
+                    onClick={()=>router.push("/Admin/inicio_admin")}>
+                Volver atrás
+            </Button>
 
-        <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+      <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
         <DrawerOverlay />
         <DrawerContent>
-        <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
-        <DrawerBody backgroundColor="blue.300">
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/inicio_admin")}>Inicio</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Reservas/reservas_admin")}>Reservas</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Gastos/gastos_admin")}>Gastos</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}>Mensajes</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Multas/multas_admin")}>Multas</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}>Manteciones</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}>Vecinos</Button>
+            <DrawerHeader  
+                backgroundColor="blue.500" 
+                color="white" 
+                alignItems="center" 
+                display="flex"> 
+                <AiOutlineMenu size="20"/> 
+                &nbsp; Menú
+            </DrawerHeader>
 
-
-        </DrawerBody>
-        <DrawerFooter backgroundColor="blue.300">
-            <Button mr={3} onClick={onClose} colorScheme="blue">
-              Cerrar
-            </Button>
+            <DrawerBody backgroundColor="blue.300">
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/inicio_admin")}><BsFillHouseFill size="20"/>&nbsp;   Inicio</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Reservas/reservas_admin")}><BsCalendar3 size="20"/>&nbsp; Reservas</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Gastos/gastos_admin")}><BsFillCreditCard2BackFill size="20"/>&nbsp; Gastos</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mensajes/mensajes_admin")}><BsFillEnvelopeFill size="20"/>&nbsp; Mensajes</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Multas/multas_admin")}><BsFillFileEarmarkExcelFill size="20"/>&nbsp; Multas</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Mantenciones/mantenciones_admin")}><BsWrench size="20"/>&nbsp; Manteciones</Button>
+                <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Admin/Vecino/vecinos_admin")}><BsFillPeopleFill size="20"/>&nbsp; Vecinos</Button>
+          </DrawerBody>
+          <DrawerFooter backgroundColor="blue.300">
+                <Button mr={3} onClick={onClose} colorScheme="blue">
+                    <AiOutlineClose size="20"/>&nbsp;Cerrar
+                </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-
-      <Text fontSize={50} color="white" mt={30} mb={30} fontFamily="inherit" >Reservas de Servicio</Text>
+      <HStack mt={30} mb={30}>
+        <BsCalendar3 color="white" size="50"/>
+        <Text fontSize={50} color="white"  fontFamily="inherit" >Reservas de Servicio</Text>
+      </HStack>
+      
       <Button
             variant = "solid"
             colorScheme = "blue"
-            width = "30%"
             rounded = "40"
             mb={10}
             rightIcon={<AddIcon/>}
@@ -251,14 +315,13 @@ return (
                 <Input placeholder="Ejemplo: 20" onChange={onChange} name="dia" ></Input>
                 </VStack>
                 <VStack>
-                <Text color={"blue.400"} as="b">Mes</Text>
+                <Text color={"blue.400"} as="b">Mes *</Text>
                 <Input placeholder="Ejemplo: 02" onChange={onChange} name="mes" ></Input>
                 </VStack>
                 <VStack>
-                <Text color={"blue.400"} as="b">Año</Text>
+                <Text color={"blue.400"} as="b">Año *</Text>
                 <Input placeholder="Ejemplo: 2022" onChange={onChange} name="year" ></Input>
                 </VStack>
-
             </Stack>
             <Button
                         variant = "solid"
@@ -269,9 +332,10 @@ return (
                         rightIcon={<Search2Icon /> }
                         onClick={onSubmit}
                         >Buscar
-                </Button>
+            </Button>
+                <Text color={"blue.400"} as="b">* Campos obligatorios</Text>
             </Stack>
-
+            
         
         </Box>
     </Stack>
@@ -284,7 +348,8 @@ return (
 						<Td bgColor={"blue.500"} color={"white"}>Servicio</Td>
                         <Td bgColor={"blue.500"} color={"white"}>Vecino</Td>
 						<Td bgColor={"blue.500"} color={"white"}>N° de reserva</Td>
-						<Td bgColor={"blue.500"} color={"white"}>Acciones</Td>
+						<Td bgColor={"blue.500"} color={"white"}>Opciones</Td>
+                        <Td bgColor={"blue.500"} color={"white"}></Td>
 					</Tr>
                     </Thead>
                     <Tbody>

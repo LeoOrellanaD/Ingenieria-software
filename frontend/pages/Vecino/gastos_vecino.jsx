@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
-import { useDisclosure,DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody,DrawerFooter,Drawer,Flex, Text, Box, Stack, Table, Thead,Tr,Td,Tbody, Button,VStack,HStack, TableContainer} from "@chakra-ui/react";
+import { useDisclosure,DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody,DrawerFooter,Drawer,Flex, Text, Box,Table, Thead,Tr,Td,Tbody, Button,TableContainer} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { BsFillHouseFill,BsFillDoorClosedFill, BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill } from "react-icons/bs";
+import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+
 
 const GastosVecino= () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -31,14 +35,12 @@ const GastosVecino= () => {
                 Swal.fire({
                     text:'Vecino no tiene historial de gastos',
                     icon:'warning',
-                    iconColor: '#3085d6',
                     showCancelButton: true,
                     showConfirmButton: false,
                     cancelButtonText: 'Volver atras',
                     cancelButtonColor: '#d33'
                 }).then((result)=>{
                     if(result.isDismissed){
-                        console.log(codigo)
                         router.push({pathname:'/Vecino/inicio_vecino', query:{codigo: codigo},});
                     }
                 })
@@ -51,14 +53,12 @@ const GastosVecino= () => {
                 Swal.fire({
                     text:'Vecino no tiene historial de gastos',
                     icon:'warning',
-                    iconColor: '#3085d6',
                     showCancelButton: true,
                     showConfirmButton: false,
                     cancelButtonText: 'Volver atras',
                     cancelButtonColor: '#d33'
                 }).then((result)=>{
                     if(result.isDismissed){
-                        console.log(codigo)
                         router.push({pathname:'/Vecino/inicio_vecino', query:{codigo: codigo},});
                     }
                 })
@@ -69,6 +69,14 @@ const GastosVecino= () => {
 useEffect(() => {
     getCobros()
 }, [])
+
+const cerrarSesion = async (e) => {
+
+    e.preventDefault()
+    localStorage.clear();
+    router.push("/")
+
+}
 
 const showCobros = () => {return cobros.map(cobros => {
         return (
@@ -88,46 +96,45 @@ return (
     <Flex
         flexDirection="column"
         width="100wh"
-        height="100vh"
-        backgroundColor="blue.400"
+      height="auto"
+      minH={"100vh"}
+        backgroundColor="blue.300"
         alignItems="center"
         >
-<Box backgroundColor="blue.500" w={"100%"} h="16">
-        <Button colorScheme='blue' onClick={onOpen} h="16">
-        Menu
-       </Button>
-       <Button  colorScheme='blue' 
-                marginLeft="80%" 
-                onClick={()=>router.push("/")} h="16">
-        Cerrar Sesión
-       </Button>
-       </Box>
+                <Box backgroundColor="blue.500" w={"100%"} h="16">
+                <Button colorScheme='blue' onClick={onOpen} h="16">
+                <AiOutlineMenu size="20"/> &nbsp;  Menú
+                </Button>
+                <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+                <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
+                </Button>
+            </Box>
 
-        <Button mt={10} 
-                name="atras" 
-                colorScheme="blue" 
-                as="b" 
-                rounded="40" 
-                marginLeft="-60%"
-                leftIcon={<ArrowBackIcon/>}
-        onClick={()=>router.push("/Vecino/inicio_vecino")}>
-        Volver atrás</Button>
-
-        <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
+            <Button mt={10} name="atras" leftIcon={<ArrowBackIcon/>} colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
+                onClick={()=>router.push("/Vecino/inicio_vecino")}>
+                Volver atrás
+            </Button>
+            
+            <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader  backgroundColor="blue.500" color="white">Menu</DrawerHeader>
+        <DrawerHeader  backgroundColor="blue.500" color="white" alignItems="center" display="flex"> 
+  <AiOutlineMenu size="20"/> 
+  &nbsp; 
+  Menú
+</DrawerHeader>
           <DrawerBody backgroundColor="blue.300">
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Inicio</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Reservas</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Gastos</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Mensajes</Button>
-            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20">Multas</Button>
+          <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/inicio_vecino")}><BsFillHouseFill size="20"/>&nbsp;   Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/reservas_vecino")}><BsCalendar3 size="20"/>&nbsp; Reservas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/multas_vecino")}><BsFillFileEarmarkExcelFill size="20"/>&nbsp; Multas</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/gastos_vecino")}><BsFillCreditCard2BackFill size="20"/>&nbsp; Gastos</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/mensajes_vecino")}><BsFillEnvelopeFill size="20"/>&nbsp; Mensajes</Button>
+
 
           </DrawerBody>
           <DrawerFooter backgroundColor="blue.300">
-            <Button mr = {3} onClick={onClose} colorScheme="blue">
-              Cerrar
+            <Button mr={3} onClick={onClose} colorScheme="blue">
+            <AiOutlineClose size="20"/>&nbsp;Cerrar
             </Button>
           </DrawerFooter>
         </DrawerContent>
