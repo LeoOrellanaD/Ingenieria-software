@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDisclosure,DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody,DrawerFooter,Drawer,Flex, Text, Box,Table, Thead,Tr,Td,Tbody, Button,TableContainer} from "@chakra-ui/react";
+import { useDisclosure,HStack,DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody,DrawerFooter,Drawer,Flex, Text, Box,Table, Thead,Tr,Td,Tbody, Button,TableContainer} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import axios from 'axios'
 import Swal from 'sweetalert2'
@@ -81,8 +81,7 @@ const cerrarSesion = async (e) => {
 const showCobros = () => {return cobros.map(cobros => {
         return (
             <Tr key={cobros._id}>
-                <Td>{cobros.mes}</Td>
-                <Td>{cobros.year}</Td>
+                <Td>{cobros.mes+"/"+cobros.year}</Td>
                 <Td>{"$"+cobros.reserva_total}</Td>
 				<Td>{"$"+cobros.multa_total}</Td>
 				<Td>{"$"+cobros.costo_total}</Td>
@@ -105,7 +104,7 @@ return (
                 <Button colorScheme='blue' onClick={onOpen} h="16">
                 <AiOutlineMenu size="20"/> &nbsp;  Menú
                 </Button>
-                <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+                <Button colorScheme='blue' position="absolute" right="0" onClick={cerrarSesion} h="16">
                 <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
                 </Button>
             </Box>
@@ -124,13 +123,11 @@ return (
   Menú
 </DrawerHeader>
           <DrawerBody backgroundColor="blue.300">
-          <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/inicio_vecino")}><BsFillHouseFill size="20"/>&nbsp;   Inicio</Button>
+            <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/inicio_vecino")}><BsFillHouseFill size="20"/>&nbsp;   Inicio</Button>
             <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/reservas_vecino")}><BsCalendar3 size="20"/>&nbsp; Reservas</Button>
             <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/multas_vecino")}><BsFillFileEarmarkExcelFill size="20"/>&nbsp; Multas</Button>
             <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/gastos_vecino")}><BsFillCreditCard2BackFill size="20"/>&nbsp; Gastos</Button>
             <Button width={"100%"} colorScheme="blue" mb="2" height="20" fontSize="20" onClick={() => router.push("/Vecino/mensajes_vecino")}><BsFillEnvelopeFill size="20"/>&nbsp; Mensajes</Button>
-
-
           </DrawerBody>
           <DrawerFooter backgroundColor="blue.300">
             <Button mr={3} onClick={onClose} colorScheme="blue">
@@ -141,15 +138,25 @@ return (
       </Drawer>
 
 
-    <Text fontSize={50} color="white" mt={30} mb={30}>Cobros de Vecinos</Text>
+      <HStack mt = {30} mb = {30}>
+                <BsFillCreditCard2BackFill color = "white" size = "50"/>
+                <Text 
+                    fontSize = {50} 
+                    color = "white" 
+                    as = {"b"} 
+                    mt = {30} 
+                    mb = {30}
+                >
+                    Cobros
+                </Text>
+            </HStack>
     <TableContainer rounded="16" width={"90%"}>
 
     
                 <Table variant={"simple"} colorScheme="blue" backgroundColor="whiteAlpha.900">
                     <Thead>
                     <Tr>
-						<Td bgColor={"blue.500"} color={"white"}>Mes</Td>
-						<Td bgColor={"blue.500"} color={"white"}>Año</Td>
+						<Td bgColor={"blue.500"} color={"white"}>Mes/Año</Td>
 						<Td bgColor={"blue.500"} color={"white"}>Servicios</Td>
 						<Td bgColor={"blue.500"} color={"white"}>Multas</Td>
 						<Td bgColor={"blue.500"} color={"white"}>Total</Td>

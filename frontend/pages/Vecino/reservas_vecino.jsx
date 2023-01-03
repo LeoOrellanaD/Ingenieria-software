@@ -3,8 +3,8 @@ import { useDisclosure,DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody,Drawe
 import { useRouter } from "next/router";
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon } from "@chakra-ui/icons";
-import { BsFillHouseFill,BsFillPersonFill,BsFillDoorClosedFill,BsWrench,BsFillPeopleFill, BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill,BsMenuApp } from "react-icons/bs";
+import { ArrowBackIcon, AddIcon } from "@chakra-ui/icons";
+import { BsFillHouseFill,BsFillDoorClosedFill,BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill,BsMenuApp } from "react-icons/bs";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
 const ReservasVecino = () => {
@@ -109,28 +109,6 @@ const ReservasVecino = () => {
                     <Td>{reservas.servicio.nombre}</Td>
                     <Td>{"$"+reservas.servicio.costo}</Td>
                     <Td>{reservas.num_reserva}</Td>
-                    <Td>
-                        {validateDate(reservas.year,reservas.mes,reservas.dia) ?
-                        (<Button id = {reservas.num_reserva}
-                            variant = "solid"
-                            colorScheme = "blue"
-                            rounded = "50"
-                            rightIcon={<DeleteIcon /> }
-                            onClick = {()=> deleteReserva(reservas.num_reserva)}
-                        >
-                            Eliminar
-                        </Button>) :
-                        <Button
-                            id = {reservas.num_reserva}
-                            variant = "solid"
-                            colorScheme = "blue"
-                            rounded = "50"
-                            rightIcon={<DeleteIcon /> }
-                            disabled
-                        >
-                            Eliminar
-                        </Button>}
-                    </Td>
                 </Tr>
             )
         })
@@ -157,7 +135,7 @@ const ReservasVecino = () => {
                 <Button colorScheme='blue' onClick={onOpen} h="16">
                 <AiOutlineMenu size="20"/> &nbsp;  Menú
                 </Button>
-                <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+                <Button colorScheme='blue' position="absolute" right="0" onClick={cerrarSesion} h="16">
                 <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
                 </Button>
             </Box>
@@ -195,7 +173,7 @@ const ReservasVecino = () => {
 
       <HStack mt={30} mb={30}>
         <BsCalendar3 color="white" size="50"/>
-        <Text fontSize={50} color="white"  fontFamily="inherit" >Reservas de Servicio</Text>
+        <Text fontSize={50} color="white" as={"b"} >Reservas de Servicio</Text>
       </HStack>
       <Button
             variant = "solid"
@@ -213,9 +191,8 @@ const ReservasVecino = () => {
 						<Td bgColor={"blue.500"} color={"white"}>Fecha</Td>
 						<Td bgColor={"blue.500"} color={"white"}>Hora</Td>
 						<Td bgColor={"blue.500"} color={"white"}>Servicio</Td>
-                        <Td bgColor={"blue.500"} color={"white"}>Vecino</Td>
+                        <Td bgColor={"blue.500"} color={"white"}>Costo</Td>
 						<Td bgColor={"blue.500"} color={"white"}>N° de reserva</Td>
-						<Td bgColor={"blue.500"} color={"white"}>Acciones</Td>
 					</Tr>
                     </Thead>
                     <Tbody>

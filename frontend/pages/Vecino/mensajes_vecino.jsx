@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { useDisclosure,DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody,DrawerFooter,Drawer,Flex, Text, Box, Stack , Button, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel} from "@chakra-ui/react";
+import { Divider,HStack, useDisclosure,DrawerOverlay,DrawerContent,DrawerHeader,DrawerBody,DrawerFooter,Drawer,Flex, Text, Box, Stack , Button, Accordion, AccordionItem, AccordionButton, AccordionIcon, AccordionPanel} from "@chakra-ui/react";
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter } from "next/router";
-import { ArrowBackIcon, DeleteIcon, Search2Icon, AddIcon } from "@chakra-ui/icons";
-import { BsFillHouseFill,BsFillPersonFill,BsFillDoorClosedFill,BsWrench,BsFillPeopleFill, BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill,BsMenuApp } from "react-icons/bs";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import { BsFillHouseFill,BsFillDoorClosedFill, BsFillCreditCard2BackFill,BsCalendar3,BsFillEnvelopeFill, BsFillFileEarmarkExcelFill} from "react-icons/bs";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
-
 
 const MensajesVecino = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -82,9 +81,9 @@ const showMensajes = () =>{
     return mensajes.map(mensajes =>{
         return (
 
-                <AccordionItem key={mensajes._id}>
+                <AccordionItem key={mensajes._id} borderColor={"blue.400"}>
                 <h2>
-                <AccordionButton>
+                <AccordionButton _expanded={{ bg: 'blue.400', color: 'white' }}>
                 <Box as="span" flex='1' textAlign='left' width={700}>
                     <Text><b>Fecha:</b> {mensajes.dia}/{mensajes.mes}/{mensajes.year}</Text>
                     <Text><b>Asunto:</b> {mensajes.asunto}</Text>
@@ -92,7 +91,8 @@ const showMensajes = () =>{
                 <AccordionIcon />
                 </AccordionButton>
                 </h2>
-        <AccordionPanel pb={4}>
+                <Divider colorScheme = {"white"} height = {"1.4"}/>
+        <AccordionPanel pb = {4} bgColor = {'blue.400'} textColor = {'white'} >
             <Text> <b>De:</b> {mensajes.administrador.nombre} {mensajes.administrador.apellido} </Text>
             <Text> <b>Para: </b>
             {mensajes.vecino.map(vecinos=>{
@@ -122,13 +122,13 @@ const showMensajes = () =>{
                 <Button colorScheme='blue' onClick={onOpen} h="16">
                 <AiOutlineMenu size="20"/> &nbsp;  Menú
                 </Button>
-                <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+                <Button colorScheme='blue' position="absolute" right="0" onClick={cerrarSesion} h="16">
                 <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
                 </Button>
             </Box>
 
             <Button mt={10} name="atras" leftIcon={<ArrowBackIcon/>} colorScheme="blue" as="b" rounded="40" marginLeft="-60%"
-        onClick={()=>router.push("/Vecino/reservas_vecino")}>
+        onClick={()=>router.push("/Vecino/inicio_vecino")}>
         Volver atrás</Button>
 
             <Drawer placement='left'  onClose={onClose} isOpen={isOpen} >
@@ -156,7 +156,10 @@ const showMensajes = () =>{
         </DrawerContent>
       </Drawer>
 
-        <Text fontSize={50} color="white" mt={30} mb={30}>Mensajes</Text>
+      <HStack mt={30} mb={30}>
+            <BsFillEnvelopeFill color="white" size="50"/>
+            <Text fontSize={50} color="white" as={"b"} >Mensajes</Text>
+        </HStack>
         <Stack mt={30} width={"90%"} alignItems="center" rounded="16" backgroundColor="whiteAlpha.900" direction={['column']}>
 
                     <Accordion allowToggle key={mensajes._id} width={"100%"} mt={5} mb={5}>

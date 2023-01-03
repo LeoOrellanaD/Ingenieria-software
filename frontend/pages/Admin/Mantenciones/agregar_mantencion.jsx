@@ -222,9 +222,9 @@ const agregarMantencion = () =>{
         <Button colorScheme = 'blue' onClick = {onOpen} h = "16">
           <AiOutlineMenu size = "20"/> &nbsp;  Menú
         </Button>
-        <Button colorScheme = 'blue' marginLeft = "80%" onClick = {cerrarSesion} h = "16">
-          <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
-        </Button>
+        <Button colorScheme='blue' position="absolute" right="0" onClick={cerrarSesion} h="16">
+                <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
+                </Button>
       </Box>
 
       <Button 
@@ -272,7 +272,7 @@ const agregarMantencion = () =>{
       </Drawer>
       <HStack mt = {30} mb = {30}>
         <BsWrench color = 'white' size = "50"/>
-        <Text fontSize = {50} color = "white">Crear Mantención</Text>
+        <Text fontSize = {50} as={'b'} color = "white">Crear Mantención</Text>
       </HStack>
       <Box minW={{ base: "20%", md: "250px"}}>
         <Stack 

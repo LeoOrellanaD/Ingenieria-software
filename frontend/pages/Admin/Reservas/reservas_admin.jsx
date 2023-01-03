@@ -239,9 +239,9 @@ return (
             <Button colorScheme='blue' onClick={onOpen} h="16">
                 <AiOutlineMenu size="20"/> &nbsp;  Menú
             </Button>
-            <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+            <Button colorScheme='blue' position="absolute" right="0" onClick={cerrarSesion} h="16">
                 <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
-            </Button>
+                </Button>
       </Box>
 
             <Button mt={10} 
@@ -284,7 +284,7 @@ return (
       </Drawer>
       <HStack mt={30} mb={30}>
         <BsCalendar3 color="white" size="50"/>
-        <Text fontSize={50} color="white"  fontFamily="inherit" >Reservas de Servicio</Text>
+        <Text fontSize={50} color="white"  as={'b'}>Reservas de Servicio</Text>
       </HStack>
       
       <Button

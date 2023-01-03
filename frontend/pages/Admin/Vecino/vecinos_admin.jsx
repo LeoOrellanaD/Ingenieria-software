@@ -155,9 +155,9 @@ return (
             <Button colorScheme='blue' onClick={onOpen} h="16">
                 <AiOutlineMenu size="20"/> &nbsp;  Menu
             </Button>
-            <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+            <Button colorScheme='blue' position="absolute" right="0" onClick={cerrarSesion} h="16">
                 <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
-            </Button>
+                </Button>
       </Box>
 
             <Button mt={10} 

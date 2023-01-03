@@ -280,9 +280,9 @@ return (
             <Button colorScheme='blue' onClick={onOpen} h="16">
                 <AiOutlineMenu size="20"/> &nbsp;  Menú
             </Button>
-            <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
+            <Button colorScheme='blue' position="absolute" right="0" onClick={cerrarSesion} h="16">
                 <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
-            </Button>
+                </Button>
         </Box>
 
             <Button mt={10} 
@@ -325,7 +325,7 @@ return (
       </Drawer>
       <HStack mt={30} mb={30}>
        <BsFillCalendar2PlusFill color='white' size="50"/>
-       <Text fontSize={50} color="white" >Crear Reserva</Text>
+       <Text fontSize={50} color="white" as={'b'}>Crear Reserva</Text>
       </HStack>
               <Box  minW={{ base: "10%", md: "468px"}} >
                     <Stack

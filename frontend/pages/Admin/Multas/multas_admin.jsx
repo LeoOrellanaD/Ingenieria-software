@@ -49,9 +49,7 @@ const [multas, setMultas] = useState([])
         return multas.map(multas =>{
             return (
                 <Tr key={multas._id}>
-                <Td>{multas.dia}</Td>
-                <Td>{multas.mes}</Td>
-                <Td>{multas.year}</Td>
+                <Td>{multas.dia+"/"+multas.mes+"/"+multas.year}</Td>
                 <Td>{multas.vecino.nombre}</Td>
                 <Td>{multas.vecino.apellido}</Td>
                 <Td>{multas.tipo}</Td>
@@ -104,8 +102,8 @@ const [multas, setMultas] = useState([])
                 <Button colorScheme='blue' onClick={onOpen} h="16">
                     <AiOutlineMenu size="20"/> &nbsp;  Menú
                 </Button>
-                <Button colorScheme='blue'  marginLeft="80%" onClick={cerrarSesion} h="16">
-                    <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
+                <Button colorScheme='blue' position="absolute" right="0" onClick={cerrarSesion} h="16">
+                <BsFillDoorClosedFill size="20"/> &nbsp; Cerrar Sesión
                 </Button>
             </Box>
 
@@ -164,9 +162,7 @@ const [multas, setMultas] = useState([])
                         <Table variant={"simple"} colorScheme="blue" backgroundColor="whiteAlpha.900">
                         <Thead>
                         <Tr>
-                        <Td bgColor={"blue.500"} color={"white"}>Día</Td>
-                            <Td bgColor={"blue.500"} color={"white"}>Mes</Td>
-                            <Td bgColor={"blue.500"} color={"white"}>Año</Td>
+                        <Td bgColor={"blue.500"} color={"white"}>Fecha</Td>
                             <Td bgColor={"blue.500"} color={"white"}>Nombre</Td>
                             <Td bgColor={"blue.500"} color={"white"}>Apellido</Td>
                             <Td bgColor={"blue.500"} color={"white"}>Tipo</Td>
